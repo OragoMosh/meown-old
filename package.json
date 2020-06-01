@@ -1,0 +1,19 @@
+{
+  "name": "JoinAndChat",
+  "version": "1.6.1",
+  "description": "Join mulitiple rooms and chat based on socket.io",
+  "author": "GW19",
+  "private": true,
+  "license": "BSD",
+  "main": "server.js",
+  "dependencies": {
+    "express": "^4.17.1",
+    "socket.io": "^2.3.0"
+  },
+  "engines": {
+    "node": "12.x"
+  },
+  "scripts": {
+    "start": "node server/server.js"
+  }
+}

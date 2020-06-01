@@ -1,0 +1,89 @@
+<!--Info Fill -->
+
+<!-- Author GW19 <imgw19@gmail.com> -->
+<!doctype html>
+<html lang="En">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Mittz Chat</title>
+  <link href="style.css" rel="stylesheet" >
+  <meta name="google-signin-client_id" content="992058418175-6ttca63fm6ja767n9qq1f0pl2dvie5b5.apps.googleusercontent.com">
+  <!--<script src="https://use.typekit.net/ama5eep.js"></script>-->
+  <script>try{Typekit.load({ async: true });}catch(e){}</script>
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <link rel="stylesheet"
+        href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/base/jquery-ui.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
+          integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
+          crossorigin="anonymous"></script>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/main.js"></script>
+  <script src="/google.js"></script>
+  <script src="/extra-cmd.js"></script>
+  
+  
+</head>
+
+<body>
+  <ul class="pages" id="all-page">
+
+    <li class="chat page" id="chat-page">
+      <div class="chatArea">
+        <ul class="messages"></ul>
+      </div>
+
+      <button class="btn btn-tips" title="Help">?</button>
+
+      <div id="effect-tips" class="ui-tips">
+        <h3 class="tips-title">Help</h3>
+        <div class="tips">
+          <h3>System Commands</h3>
+          <h4>$help or $commands</h4>
+          This command will show a list of other commands that can be used<br><br>
+          <br>
+          <div class="g-signin2" data-onsuccess="onSignIn"></div>
+          <br>
+          Creator: Orago 
+          <br>
+          &nbsp;
+          &lt; <a href="https://mittens.glitch.me">Home Page</a> &gt;<br>
+          <!--Github：<a href='https://github.com/gw19/join-and-chat'
+                    target='_blank'>join-and-chat</a>-->
+        </div>
+      </div>
+
+      <input class="inputMessage" placeholder="Say something..."/>
+    </li>
+
+    <li class="login page" id="login-page">
+      <div class="form">
+        <h1 class="title">Mittz Chat</h1>
+        <h3 class="subtitle">Please login with google.</h3>
+
+        <label>
+
+              
+          
+          
+          
+          
+          <!-- Text input for name--><input class="usernameInput" type="text" minlength="1" maxlength="14" title="Nickname is limited to 1 to 14 characters" autofocus/>
+        </label>
+      </div>
+    </li>
+
+    <li class="room page" id="room-page">
+      <h1 class="room-title">Room list</h1>
+      <p class="room-hint">Click the room block to join the room.</p>
+      <ul class="room-list"></ul>
+    </li>
+
+  </ul>
+
+</body>
+</html>
