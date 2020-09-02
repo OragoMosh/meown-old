@@ -1,9 +1,9 @@
-// Created by Orago>
+/* Author: Orago <Orago#0051>*/
 // Based on Socket.io
 var botname = '⚙️ !v! ittz' //The username of the bot
-var prefix = '$' //The symbol used to call a command
-var cmdlist = ''+prefix+'join, '+prefix+'help, '+prefix+'refresh, '+prefix+'reload, '+prefix+'info, '+prefix+'time '+prefix+'fun, '//simple list of the commands that are easier to reach
+var cmdlist = '/join, /help, /refresh, /reload, /info, /time /fun, '//simple list of the commands that are easier to reach
 var ver = '1.04'//The version of the command used
+var prefix = '$' //The symbol used to call a command
 var pname = "Mittz Chat"
 
 function passWord() {
@@ -163,7 +163,7 @@ var time = new Date();
         break;
         
       case 'help': // Command /help lists all commands
-        message = 'Help list: '+prefix+'help1, '+prefix+'help2, '+prefix+'help3 ';
+        message = 'Help list: /help1, /help2, /help3 ';
         log(message);
         break;
         
@@ -171,9 +171,9 @@ var time = new Date();
         log('--------------------');
         log('-- Help List --');
         log('-_- Page - 1 Useful Commands -_-');
-        log(prefix+'help - Shows a list of helping commands'); log(prefix+'fun - shows a list of fun commands'); log(prefix+'ree - Basically just says ree with audio (turn ur volume up)');
-        log(prefix+'commands - Shows a list of useable commands'); log(prefix+'updates - shows a list of new updates'); log(prefix+'refresh - This command refreshes the room list if new ones arent loading');
-        log('-- use '+prefix+'help2 for more info --');
+        log('/help - Shows a list of helping commands'); log('/fun - shows a list of fun commands'); log('/ree - Basically just says ree with audio (turn ur volume up)');
+        log('/commands - Shows a list of useable commands'); log('/updates - shows a list of new updates'); log('/refresh - This command refreshes the room list if new ones arent loading');
+        log('-- use /help2 for more info --');
         log('--------------------');
         break;
         
@@ -181,9 +181,9 @@ var time = new Date();
         log('--------------------');
         log('-- Help List --');
         log('-_- Page - 2 Useful Commands -_-');
-        log(prefix+'info - Shows server version and creator info'); log(prefix+'time - Shows the current time'); log(prefix+'reload - This command will reload the server page');
+        log('/info - Shows server version and creator info'); log('/time - Shows the current time'); log('/reload - This command will reload the server page');
         log(''); log(''); log('');
-        log('-- use '+prefix+'help3 for more info --');
+        log('-- use /help3 for more info --');
         log('--------------------');
         break;
         
@@ -191,42 +191,34 @@ var time = new Date();
         log('--------------------');
         log('-- Help List --');
         log('-_- Page - 3 Fun Commands -_-');
-        log(prefix+' '); log(prefix+'pet - Shows a list of pets that can be used'); log(prefix+'cf - Flips a coin which will either end up with a heads or tails');
-        log(prefix+'bored - Will make a bot say this user is bored'); log(''); log('');
-        log('-- use '+prefix+'help for more info --');
+        log('/ob - Makes you say okay boomer and jesus listens'); log('/pet - Shows a list of pets that can be used'); log('/cf - Flips a coin which will either end up with a heads or tails');
+        log('/bored - Will make a bot say this user is bored'); log(''); log('');
+        log('-- use /help for more info --');
         log('--------------------');
-        break;
-        
-        case '': // Command /help lists all commands
-        log('Please type `'+prefix+'help` for more info.');
-        break;
-        
-        case 'login': // Command /help lists all commands
-        log('<div class="g-signin2" data-onsuccess="onSignIn"></div>');
         break;
         
       case 'updates': // Command /help lists all commands
         log('--------------------');
         log('-- Updates List --');
         log('-_- Useful Commands -_-');
-        log('- Fixed Coin Flipping, '+prefix+'cf'); log('- Fixed pets not functioning');
-        log('- Added a '+prefix+'ree command for fun'); log('- Added a month and day for '+prefix+'time'); log('- Added a '+prefix+'update function');
-        log('-- use '+prefix+'help2 for more info --');
+        log('- Fixed Coin Flipping, /cf'); log('- Fixed the ob command'); log('- Fixed pets not functioning');
+        log('- Added a /ree command for fun'); log('- Added a month and day for /time'); log('- Added a /update function');
+        log('-- use /help2 for more info --');
         log('--------------------');
         break;
         
       case 'commands': // Command /help lists all commands
-        message = 'Commands: '+cmdlist+prefix+'help';
+        message = 'Commands: '+cmdlist+'/help';
         log(message);
         break;
         
       case 'fun': // Command /fun a list of fun commands
-        message = 'Fun Commands: '+prefix+'slap, '+prefix+'bored, '+prefix+'cf, '+prefix+'pets, '+prefix+'ree';
+        message = 'Fun Commands: /slap, /bored, /cf, /pets, /ob, /ree';
         log(message);
         break;
         
       case 'pets': // Command /fun a list of fun commands
-        message = 'Pets: '+prefix+'cat, '+prefix+'dog';
+        message = 'Pets: /cat, /dog';
         log(message);
         break;
         
@@ -238,6 +230,19 @@ var time = new Date();
         passWord()
         break;
         
+      case 'my':// Command /refresh = reload room list.
+        words.shift();
+        var jchat = words.join(' ');
+        if (jchat == "username"){
+          alert(username);
+        }
+        break;
+      case 'set-username':// Command /refresh = reload room list.
+        words.shift();
+        var jchat = words.join(' ');
+          
+          alert(username);
+        break; 
       case 'info':// Command /info = Server info
         message = 'This server is running V'+ver;
         log(message);
@@ -289,7 +294,7 @@ var time = new Date();
         socket.emit('i-chat',jchat);}
         else{
           log('Please use the command correctly, also must have less than 10 letters, ' +
-              'Example '+prefix+'slap cat', {})}
+              'Example /slap cat', {})}
         break;
 
       case 'say':// Slaps the text given
@@ -299,12 +304,12 @@ var time = new Date();
       if (cat='kitty') {
       addChatMessage({
           username: botname,
-          message: "has said "+jchat+" from User:("+username+")."
+          message: jchat
         });
         socket.emit('sbot',jchat);}
         else{
           log('Please use the command correctly, also must have less than 10 letters, ' +
-              'Example '+prefix+'say hello!', {})}
+              'Example /slap cat', {})}
         break;
         
       case 'ree':// Slaps the text given
@@ -317,18 +322,7 @@ var time = new Date();
         socket.emit('new message','REE');
 
         break;
-
-        case 'rand': //coinflip
-          var prob1 = Math.floor(Math.random() * 15) +1;
-
-          socket.emit('cf-heads');
-          addChatMessage({
-          username: botname,
-          message:username+' flipped a coin and got Heads'
-          });
-       
-        break;
-        
+      
         
         case 'cf': //coinflip
           var prob1 = Math.floor(Math.random() * 2) +1;
