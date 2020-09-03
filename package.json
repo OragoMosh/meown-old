@@ -7,11 +7,12 @@
   "license": "BSD",
   "main": "server.js",
   "dependencies": {
-    "express": "4.13.4"
+    "express": "^4.17.1"
   },
   "scripts": {
     "start": "node server/server.js"
-  } , "engines": {
+  },
+  "engines": {
     "node": "12.x"
   }
 }
