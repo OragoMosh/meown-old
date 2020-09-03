@@ -171,8 +171,8 @@ var time = new Date();
         log('--------------------');
         log('-- Help List --');
         log('-_- Page - 1 Useful Commands -_-');
-        log('/help - Shows a list of helping commands'); log('/fun - shows a list of fun commands'); log('/ree - Basically just says ree with audio (turn ur volume up)');
-        log('/commands - Shows a list of useable commands'); log('/updates - shows a list of new updates'); log('/refresh - This command refreshes the room list if new ones arent loading');
+        log(prefix+'help - Shows a list of helping commands'); log(prefix+'fun - shows a list of fun commands'); log(prefix+'ree - Basically just says ree with audio (turn ur volume up)');
+        log(prefix+'commands - Shows a list of useable commands'); log(prefix+'updates - shows a list of new updates'); log(prefix+'refresh - This command refreshes the room list if new ones arent loading');
         log('-- use /help2 for more info --');
         log('--------------------');
         break;
@@ -181,9 +181,9 @@ var time = new Date();
         log('--------------------');
         log('-- Help List --');
         log('-_- Page - 2 Useful Commands -_-');
-        log('/info - Shows server version and creator info'); log('/time - Shows the current time'); log('/reload - This command will reload the server page');
+        log(prefix+'info - Shows server version and creator info'); log(prefix+'time - Shows the current time'); log('/reload - This command will reload the server page');
         log(''); log(''); log('');
-        log('-- use /help3 for more info --');
+        log('-- use '+prefix+'help3 for more info --');
         log('--------------------');
         break;
         
@@ -191,9 +191,9 @@ var time = new Date();
         log('--------------------');
         log('-- Help List --');
         log('-_- Page - 3 Fun Commands -_-');
-        log('/ob - Makes you say okay boomer and jesus listens'); log('/pet - Shows a list of pets that can be used'); log('/cf - Flips a coin which will either end up with a heads or tails');
-        log('/bored - Will make a bot say this user is bored'); log(''); log('');
-        log('-- use /help for more info --');
+        log(prefix+'pet - Shows a list of pets that can be used'); log(prefix+'cf - Flips a coin which will either end up with a heads or tails');
+        log(prefix+'bored - Will make a bot say this user is bored'); log(''); log('');
+        log('-- use '+prefix+'help for more info --');
         log('--------------------');
         break;
         
@@ -201,24 +201,24 @@ var time = new Date();
         log('--------------------');
         log('-- Updates List --');
         log('-_- Useful Commands -_-');
-        log('- Fixed Coin Flipping, /cf'); log('- Fixed the ob command'); log('- Fixed pets not functioning');
-        log('- Added a /ree command for fun'); log('- Added a month and day for /time'); log('- Added a /update function');
-        log('-- use /help2 for more info --');
+        log('- Fixed Coin Flipping, '+prefix+'cf'); log('- Fixed the ob command'); log('- Fixed pets not functioning');
+        log('- Added a '+prefix+'ree command for fun'); log('- Added a month and day for '+prefix+'time'); log('- Added a '+prefix+'update function');
+        log('-- use '+prefix+'help2 for more info --');
         log('--------------------');
         break;
         
       case 'commands': // Command /help lists all commands
-        message = 'Commands: '+cmdlist+'/help';
+        message = 'Commands: '+cmdlist+prefix+'help';
         log(message);
         break;
         
       case 'fun': // Command /fun a list of fun commands
-        message = 'Fun Commands: /slap, /bored, /cf, /pets, /ob, /ree';
+        message = 'Fun Commands: '+prefix+'slap, '+prefix+'bored, '+prefix+'cf, '+prefix+'pets, '+prefix+'ree';
         log(message);
         break;
         
       case 'pets': // Command /fun a list of fun commands
-        message = 'Pets: /cat, /dog';
+        message = 'Pets: '+prefix+'cat, '+prefix+'dog';
         log(message);
         break;
         
@@ -294,7 +294,7 @@ var time = new Date();
         socket.emit('i-chat',jchat);}
         else{
           log('Please use the command correctly, also must have less than 10 letters, ' +
-              'Example /slap cat', {})}
+              'Example '+prefix+'inverted joe', {})}
         break;
 
       case 'say':// Slaps the text given
@@ -309,7 +309,7 @@ var time = new Date();
         socket.emit('sbot',jchat);}
         else{
           log('Please use the command correctly, also must have less than 10 letters, ' +
-              'Example /slap cat', {})}
+              'Example '+prefix+'say cat', {})}
         break;
         
       case 'ree':// Slaps the text given
