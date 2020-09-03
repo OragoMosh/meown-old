@@ -163,7 +163,7 @@ var time = new Date();
         break;
         
       case 'help': // Command /help lists all commands
-        message = 'Help list: /help1, /help2, /help3 ';
+        message = 'Help list: '+prefix+'help1, '+prefix+'help2, '+prefix+'help3 ';
         log(message);
         break;
         
