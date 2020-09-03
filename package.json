@@ -12,5 +12,7 @@
   },
   "scripts": {
     "start": "node server/server.js"
+  } , "engines": {
+    "node": "12.x"
   }
 }
