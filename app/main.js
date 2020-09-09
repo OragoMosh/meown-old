@@ -600,7 +600,7 @@ var time = new Date();
   });
 
   socket.on('get account', function (data) {
-    var deets = /*JSON.stringify(*/data/*);*/
+    var deets = JSON.stringify(data);
     log("The stuff");log(deets);
   });
   
