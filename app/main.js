@@ -600,13 +600,14 @@ var time = new Date();
   });
 
   socket.on('get account', function (data) {
-    alert(data);
+    log(data);
   });
   
   // Whenever the server emits 'new message', update the chat body
   socket.on('new message', function (data) {
     addChatMessage(data);
-    alert(data)
+    log(data);
+
   });
 
   // Whenever the server emits 'user joined', log it in the chat body
