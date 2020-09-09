@@ -49,7 +49,6 @@ socket.on('create account', function (data) {
   
   socket.on('get account', function (data) {
     // we tell the client to execute 'new message'
-    
     socket.broadcast.to(curRoomName).emit('get account', {
       everything: database.user[socket.username]
     });
@@ -61,7 +60,6 @@ socket.on('create account', function (data) {
       username: socket.username,
       password: data//data
     });
-  database.profiles.push(socket.username)
   });
   // when the client emits 'new message', this listens and executes
   socket.on('new message', function (data) {
