@@ -5,7 +5,7 @@ var cmdlist = '/join, /help, /refresh, /reload, /info, /time /fun, '//simple lis
 var ver = '1.04'//The version of the command used
 var prefix = '$' //The symbol used to call a command
 var pname = "Mittz Chat"
-
+var registered;
 function passWord() {
 var testV = 1;
 var pass1 = prompt('Please Enter Your Password',' ');//Password Request Text
@@ -102,7 +102,7 @@ var time = new Date();
     // If user name is input, get and then emit 'add user' event.
     // trim(): remove the whitespace from the beginning and end of a string.
     username = cleanInput($usernameInput.val().trim());
-
+    alert(username)
     // If the username is valid
     if (username) {
       $loginPage.fadeOut();
@@ -113,6 +113,7 @@ var time = new Date();
 
       // Tell the server your username
       socket.emit('add user', username);
+      
     }
   }
 
@@ -221,7 +222,10 @@ var time = new Date();
         message = 'Pets: '+prefix+'cat, '+prefix+'dog';
         log(message);
         break;
-        
+        case 'username': // Command /fun a list of fun commands
+        message = username;
+        log(message);
+        break;
       case 'refresh':// Command /refresh = reload room list.
         socket.emit('room list');
         break;
@@ -296,6 +300,27 @@ var time = new Date();
           log('Please use the command correctly, also must have less than 10 letters, ' +
               'Example '+prefix+'inverted joe', {})}
         break;
+        
+        case 'register':// Slaps the text given
+        if (registered == true){return}
+      words.shift();
+      var password = words.join(' ');
+      if (password){
+        var txt;
+      var r = confirm("Are you sure you want the password \""+password+"\"");
+      if (r == true) {
+        var registered = true;
+        log("Your password is now "+password+", "+registered);
+      } else {
+        log("You have canceled")
+      }
+    
+    }
+        else{
+          log('Please use the command correctly, also must have less than 10 letters, ' +
+              'Example '+prefix+'register Password12345')}
+        break;
+        
 
       case 'say':// Slaps the text given
       words.shift();

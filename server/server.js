@@ -1,11 +1,13 @@
 // Setup basic express server
 var express = require('express');
+const fs = require("fs");
+
 var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
 var port = process.env.PORT || 3232;
 var botname = '⚙️ !v! ittz'
-
+let db = JSON.parse(fs.readFileSync(__dirname+"/database.json"));
 server.listen(port, function () {
   console.log('Server listening at port %d', port);
 });
