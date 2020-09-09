@@ -102,7 +102,7 @@ var time = new Date();
     // If user name is input, get and then emit 'add user' event.
     // trim(): remove the whitespace from the beginning and end of a string.
     username = cleanInput($usernameInput.val().trim());
-    alert(username)
+    
     // If the username is valid
     if (username) {
       $loginPage.fadeOut();
@@ -301,16 +301,15 @@ var time = new Date();
               'Example '+prefix+'inverted joe', {})}
         break;
         
-        case 'register':// Slaps the text given
-        if (registered == true){return}
+        case 'register':
       words.shift();
       var password = words.join(' ');
       if (password){
         var txt;
       var r = confirm("Are you sure you want the password \""+password+"\"");
       if (r == true) {
-        var registered = true;
         log("Your password is now "+password+", "+registered);
+        socket.emit('create account', password);
       } else {
         log("You have canceled")
       }

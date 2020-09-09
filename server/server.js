@@ -35,7 +35,15 @@ var logRoom = ' room ';
 io.on('connection', function (socket) {
   var addedUser = false;
   var curRoomName = 'Lobby';
-
+  
+socket.on('create account', function (data) {
+    // we tell the client to execute 'new message'
+    socket.broadcast.to(curRoomName).emit('new message', {
+      username: socket.username,
+      message: data
+    });
+  });
+  
   // when the client emits 'new message', this listens and executes
   socket.on('new message', function (data) {
     // we tell the client to execute 'new message'
