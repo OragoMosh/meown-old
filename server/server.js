@@ -43,12 +43,21 @@ socket.on('create account', function (data) {
       message: socket.username+" has just registered!"//data
     });
   database.profiles.push(socket.username)
+  database.password[socket.username]=data;
   });
+  
   socket.on('get account', function (data) {
     // we tell the client to execute 'new message'
     socket.broadcast.to(curRoomName).emit('get account', {
-      username: botname,
-      message: data//data
+      everything: database
+    });
+  });
+  
+    socket.on('get user', function (data) {
+    // we tell the client to execute 'new message'
+    socket.broadcast.to(curRoomName).emit('get account', {
+      username: socket.username,
+      password: data//data
     });
   database.profiles.push(socket.username)
   });

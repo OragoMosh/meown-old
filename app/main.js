@@ -1,7 +1,7 @@
 /* Author: Orago <Orago#0051>*/
 // Based on Socket.io
 var botname = '⚙️ !v! ittz' //The username of the bot
-var cmdlist = '/join, /help, /refresh, /reload, /info, /time /fun, '//simple list of the commands that are easier to reach
+var cmdlist = prefix+'join, '+prefix+'help, '+prefix+'refresh, '+prefix+'reload, '+prefix+'info, '+prefix+'time '+prefix+'fun, '//simple list of the commands that are easier to reach
 var ver = '1.04'//The version of the command used
 var prefix = '$' //The symbol used to call a command
 var pname = "Mittz Chat"
@@ -102,7 +102,7 @@ var time = new Date();
     // If user name is input, get and then emit 'add user' event.
     // trim(): remove the whitespace from the beginning and end of a string.
     username = cleanInput($usernameInput.val().trim());
-    
+    socket.emit('get account', username);
     // If the username is valid
     if (username) {
       $loginPage.fadeOut();
@@ -309,7 +309,7 @@ var time = new Date();
       var r = confirm("Are you sure you want the password \""+password+"\"");
       if (r == true) {
         log("Your password is now "+password+", @"+username);
-        socket.emit('get account', password);
+        socket.emit('create account', password);
       } else {
         log("You have canceled")
       }
@@ -600,7 +600,7 @@ var time = new Date();
   });
 
   socket.on('get account', function (data) {
-    log(JSON.stringify(data));
+    var deets = JSON.stringify(data);
   });
   
   // Whenever the server emits 'new message', update the chat body
