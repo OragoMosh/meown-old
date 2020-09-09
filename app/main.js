@@ -605,7 +605,7 @@ var time = new Date();
   
   // Whenever the server emits 'new message', update the chat body
   socket.on('new message', function (data) {
-    //addChatMessage(data);
+    addChatMessage(data);
 
   });
 
