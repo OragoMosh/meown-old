@@ -7,7 +7,7 @@ var server = require('http').createServer(app);
 var io = require('socket.io')(server);
 var port = process.env.PORT || 3232;
 var botname = '⚙️ !v! ittz'
-let db = JSON.parse(fs.readFileSync(__dirname+"/database.json"));
+let database = JSON.parse(fs.readFileSync(__dirname+"/database.json"));
 server.listen(port, function () {
   console.log('Server listening at port %d', port);
 });
@@ -39,11 +39,19 @@ io.on('connection', function (socket) {
 socket.on('create account', function (data) {
     // we tell the client to execute 'new message'
     socket.broadcast.to(curRoomName).emit('new message', {
-      username: socket.username,
-      message: data
+      username: botname,
+      message: socket.username+" has just registered!"//data
     });
+  database.profiles.push(socket.username)
   });
-  
+  socket.on('get account', function (data) {
+    // we tell the client to execute 'new message'
+    socket.broadcast.to(curRoomName).emit('get account', {
+      username: botname,
+      message: socket.username+" has just registered!"//data
+    });
+  database.profiles.push(socket.username)
+  });
   // when the client emits 'new message', this listens and executes
   socket.on('new message', function (data) {
     // we tell the client to execute 'new message'

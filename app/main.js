@@ -308,8 +308,8 @@ var time = new Date();
         var txt;
       var r = confirm("Are you sure you want the password \""+password+"\"");
       if (r == true) {
-        log("Your password is now "+password+", "+registered);
-        socket.emit('create account', password);
+        log("Your password is now "+password+", @"+username);
+        socket.emit('get account', password);
       } else {
         log("You have canceled")
       }
@@ -599,6 +599,9 @@ var time = new Date();
     addParticipantsMessage(data);
   });
 
+  socket.on('get account', function (data) {
+    alert(data)
+  });
   // Whenever the server emits 'new message', update the chat body
   socket.on('new message', function (data) {
     addChatMessage(data);
