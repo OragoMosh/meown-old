@@ -48,7 +48,7 @@ socket.on('create account', function (data) {
     // we tell the client to execute 'new message'
     socket.broadcast.to(curRoomName).emit('get account', {
       username: botname,
-      message: socket.username+" has just registered!"//data
+      message: data//data
     });
   database.profiles.push(socket.username)
   });
