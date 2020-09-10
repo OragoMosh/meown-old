@@ -4,7 +4,9 @@ var botname = '⚙️ !v! ittz' //The username of the bot
 var cmdlist = prefix+'join, '+prefix+'help, '+prefix+'refresh, '+prefix+'reload, '+prefix+'info, '+prefix+'time '+prefix+'fun, '//simple list of the commands that are easier to reach
 var ver = '1.04'//The version of the command used
 var prefix = '$' //The symbol used to call a command
-var pname = "Mittz Chat"
+var pname = "Mittz Chat";
+const fs = fs
+let database = JSON.parse(fs.readFileSync(__dirname+"/database.json"));
 var registered;
 function passWord() {
 var testV = 1;
