@@ -1,7 +1,5 @@
 // Setup basic express server
 var express = require('express');
-
-
 var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
@@ -35,32 +33,7 @@ var logRoom = ' room ';
 io.on('connection', function (socket) {
   var addedUser = false;
   var curRoomName = 'Lobby';
-  
-socket.on('create account', function (data) {
-    // we tell the client to execute 'new message'
-    socket.broadcast.to(curRoomName).emit('new message', {
-      username: botname,
-      message: socket.username+" has just registered!"//data
-    });
-  database.profiles.push(socket.username)
-  database.user[socket.username]=data;
-  fs.writeFileSync(__dirname+"database.json", JSON.stringify(database, null, 2));
-  });
-  
-  socket.on('get account', function (data) {
-    // we tell the client to execute 'new message'
-    socket.broadcast.to(curRoomName).emit('get account', {
-      everything: database.user[socket.username]
-    });
-  });
-  
-    socket.on('get user', function (data) {
-    // we tell the client to execute 'new message'
-    socket.broadcast.to(curRoomName).emit('get account', {
-      username: socket.username,
-      password: data//data
-    });
-  });
+
   // when the client emits 'new message', this listens and executes
   socket.on('new message', function (data) {
     // we tell the client to execute 'new message'

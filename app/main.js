@@ -1,13 +1,11 @@
 /* Author: Orago <Orago#0051>*/
 // Based on Socket.io
 var botname = '⚙️ !v! ittz' //The username of the bot
-var cmdlist = prefix+'join, '+prefix+'help, '+prefix+'refresh, '+prefix+'reload, '+prefix+'info, '+prefix+'time '+prefix+'fun, '//simple list of the commands that are easier to reach
+var cmdlist = '/join, /help, /refresh, /reload, /info, /time /fun, '//simple list of the commands that are easier to reach
 var ver = '1.04'//The version of the command used
 var prefix = '$' //The symbol used to call a command
-var pname = "Mittz Chat";
-const fs = fs
-let database = JSON.parse(fs.readFileSync(__dirname+"/database.json"));
-var registered;
+var pname = "Mittz Chat"
+
 function passWord() {
 var testV = 1;
 var pass1 = prompt('Please Enter Your Password',' ');//Password Request Text
@@ -104,7 +102,7 @@ var time = new Date();
     // If user name is input, get and then emit 'add user' event.
     // trim(): remove the whitespace from the beginning and end of a string.
     username = cleanInput($usernameInput.val().trim());
-    socket.emit('get account', username);
+
     // If the username is valid
     if (username) {
       $loginPage.fadeOut();
@@ -115,7 +113,6 @@ var time = new Date();
 
       // Tell the server your username
       socket.emit('add user', username);
-      
     }
   }
 
@@ -224,10 +221,7 @@ var time = new Date();
         message = 'Pets: '+prefix+'cat, '+prefix+'dog';
         log(message);
         break;
-        case 'username': // Command /fun a list of fun commands
-        message = username;
-        log(message);
-        break;
+        
       case 'refresh':// Command /refresh = reload room list.
         socket.emit('room list');
         break;
@@ -302,26 +296,6 @@ var time = new Date();
           log('Please use the command correctly, also must have less than 10 letters, ' +
               'Example '+prefix+'inverted joe', {})}
         break;
-        
-        case 'register':
-      words.shift();
-      var password = words.join(' ');
-      if (password){
-        var txt;
-      var r = confirm("Are you sure you want the password \""+password+"\"");
-      if (r == true) {
-        log("Your password is now "+password+", @"+username);
-        socket.emit('create account', password);
-      } else {
-        log("You have canceled")
-      }
-    
-    }
-        else{
-          log('Please use the command correctly, also must have less than 10 letters, ' +
-              'Example '+prefix+'register Password12345')}
-        break;
-        
 
       case 'say':// Slaps the text given
       words.shift();
@@ -601,14 +575,9 @@ var time = new Date();
     addParticipantsMessage(data);
   });
 
-  socket.on('get account', function (data) {
-    log("The stuff");log(JSON.stringify(data));
-  });
-  
   // Whenever the server emits 'new message', update the chat body
   socket.on('new message', function (data) {
     addChatMessage(data);
-
   });
 
   // Whenever the server emits 'user joined', log it in the chat body
