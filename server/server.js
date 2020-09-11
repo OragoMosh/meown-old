@@ -1,10 +1,12 @@
 // Setup basic express server
 var express = require('express');
+const fs = require("fs");
+let database = JSON.parse(fs.readFileSync(__dirname+"/database.json"));
 var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
 var port = process.env.PORT || 3232;
-var botname = '⚙️ !v! ittz'
+var botname = '⚙️ !v! ittz';
 
 server.listen(port, function () {
   console.log('Server listening at port %d', port);
@@ -33,7 +35,36 @@ var logRoom = ' room ';
 io.on('connection', function (socket) {
   var addedUser = false;
   var curRoomName = 'Lobby';
-
+  
+socket.on('create account', function (data) {
+    // we tell the client to execute 'new message'
+    socket.broadcast.to(curRoomName).emit('new message', {
+      username: botname,
+      message: socket.username+" has just registered!"//data
+    });
+  database.profiles.push(socket.username.toLowerCase())
+  database.user[socket.username.toLowerCase()]=data
+  database.coins[socket.username.toLowerCase()]=0;
+  fs.writeFileSync(__dirname+"database.json", JSON.stringify(database, null, 2));
+  });
+  
+  app.get("/data", (request, response) => {
+  // express helps us take JS objects and send them as JSON
+  response.json(database);
+});
+  socket.on('get account', function (data) {
+    // we tell the client to execute 'new message'
+    (req, res) => res.send('Hello World!')
+    socket.broadcast.to(curRoomName).emit('get account', database/*.user[socket.username]*/);
+  });
+  
+    socket.on('get user', function (data) {
+    // we tell the client to execute 'new message'
+    socket.broadcast.to(curRoomName).emit('get account', {
+      username: socket.username,
+      password: data//data
+    });
+  });
   // when the client emits 'new message', this listens and executes
   socket.on('new message', function (data) {
     // we tell the client to execute 'new message'

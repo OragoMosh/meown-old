@@ -1,11 +1,31 @@
 /* Author: Orago <Orago#0051>*/
 // Based on Socket.io
 var botname = '⚙️ !v! ittz' //The username of the bot
-var cmdlist = '/join, /help, /refresh, /reload, /info, /time /fun, '//simple list of the commands that are easier to reach
+var cmdlist = prefix+'join, '+prefix+'help, '+prefix+'refresh, '+prefix+'reload, '+prefix+'info, '+prefix+'time '+prefix+'fun, '//simple list of the commands that are easier to reach
 var ver = '1.04'//The version of the command used
 var prefix = '$' //The symbol used to call a command
-var pname = "Mittz Chat"
+var pname = "Mittz Chat";
+var database = "d";
+//window.onload = async function() {}
+fetch("/data")
+  .then(response => response.json()) // parse the JSON from the server
+  .then(data => {
+database = data;
+  });
+  
+function data(){
+  fetch("/data")
+  .then(response => response.json()) // parse the JSON from the server
+  .then(data => {
+database = data;
+  });
+}
 
+
+
+
+
+var registered;
 function passWord() {
 var testV = 1;
 var pass1 = prompt('Please Enter Your Password',' ');//Password Request Text
@@ -82,9 +102,12 @@ var time = new Date();
   var $currentInput = $usernameInput.focus();
   var $roomDiv;
   var roomNameRule = /^(?!\s*$)[a-zA-Z0-9_\u4e00-\u9fa5 \f\n\r\t\v]{1,14}$/;
-
-  var socket = io();
   
+  
+  var socket = io();
+
+  //var file = fs();
+  //var db = database();
   function addParticipantsMessage (data) {
     var message;
     if (!data.userJoinOrLeftRoom) {
@@ -96,13 +119,23 @@ var time = new Date();
     }
     log(message);
   }
+  
+  //setTimeout(function(){ alert(database.user["orago"]); }, 500);
 
   // Sets the client's username
   function setUsername () {
     // If user name is input, get and then emit 'add user' event.
     // trim(): remove the whitespace from the beginning and end of a string.
     username = cleanInput($usernameInput.val().trim());
-
+    if (database.profiles.includes(username.toLowerCase())) {
+    var pass_input = prompt("Please input the password for the account @"+username, "");
+  if (pass_input == null || pass_input == "") {
+    {location.reload();return}
+  } else {
+    /*text given*/   /*alert(pass_input);*/if (database.user[username]==pass_input){alert("Success!")}else{alert("Wrong password!");return location.reload();}
+  }
+    }
+    
     // If the username is valid
     if (username) {
       $loginPage.fadeOut();
@@ -113,6 +146,7 @@ var time = new Date();
 
       // Tell the server your username
       socket.emit('add user', username);
+      
     }
   }
 
@@ -221,7 +255,10 @@ var time = new Date();
         message = 'Pets: '+prefix+'cat, '+prefix+'dog';
         log(message);
         break;
-        
+        case 'username': // Command /fun a list of fun commands
+        message = username;
+        log(message);
+        break;
       case 'refresh':// Command /refresh = reload room list.
         socket.emit('room list');
         break;
@@ -236,6 +273,9 @@ var time = new Date();
         if (jchat == "username"){
           alert(username);
         }
+        break;
+        case 'info':// Command /refresh = reload room list.
+        alert(database)
         break;
       case 'set-username':// Command /refresh = reload room list.
         words.shift();
@@ -296,6 +336,60 @@ var time = new Date();
           log('Please use the command correctly, also must have less than 10 letters, ' +
               'Example '+prefix+'inverted joe', {})}
         break;
+        
+        /*case 'regidwster':
+      words.shift();
+        
+      var password = words.join(' ');
+      if (password){
+        var txt;
+      var r = confirm("Are you sure you want the password \""+password+"\"");
+      if (r == true) {
+        log("Your password is now "+password+", @"+username+" you have 15 seconds to save this password somewhere.");
+        socket.emit('create account', password);
+        setTimeout(function(){ window.location.reload(); }, 15000);
+      } else {
+        log("You have canceled")
+      }
+    }
+        else{
+          log('Please use the command correctly, also must have less than 10 letters, ' +
+              'Example '+prefix+'register Password12345')}
+        break;*/
+        
+        
+        case 'register':
+      words.shift();
+        //log(database.profiles.includes(username.toLowerCase()))
+        if (database.profiles.includes(username.toLowerCase())){return log("You are already logged in!")}
+      var password = words.join(' ');
+      if (password){
+        var txt;
+      var r = confirm("Are you sure you want the password \""+password+"\"");
+      if (r == true) {
+        log("Your password is now \""+password+"\", @"+username+" Please write this somewhere so it doesn't get forgotten, currently we do not have the service to reset passwords!");
+        socket.emit('create account', password);
+        data();
+        //setTimeout(function(){ window.location.reload(); }, 15000);
+      } else {
+        log("You have canceled")
+      }
+    }
+        else{
+          log('Please use the command correctly, also must have less than 10 letters, ' +
+              'Example '+prefix+'register Password12345')}
+        break;
+        
+        case 'coins':
+      words.shift();
+        if (!database.profiles.includes(username.toLowerCase())){return log("Please create a user with '"+prefix+"register' !")}
+        log("You have "+database.coins[username.toLowerCase()]+" coins.");
+        data();
+        break;
+        
+        
+        
+        
 
       case 'say':// Slaps the text given
       words.shift();
@@ -575,9 +669,14 @@ var time = new Date();
     addParticipantsMessage(data);
   });
 
+  socket.on('get account', function (data) {
+    log("The stuff");log(JSON.stringify(data));
+  });
+  
   // Whenever the server emits 'new message', update the chat body
   socket.on('new message', function (data) {
     addChatMessage(data);
+
   });
 
   // Whenever the server emits 'user joined', log it in the chat body

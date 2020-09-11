@@ -32,5 +32,5 @@ This will start the local server, open the browser and type <b>localhost:3232</b
 MIT license.<br><br>
 
 ## Information
-Author: &nbsp;GW19 &nbsp;\<imgw19@gmail.com\><br>
+<br>
 If you think there is any need for improvement in the code, please let me know, I will thank you very much! <br><br>
