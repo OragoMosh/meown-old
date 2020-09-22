@@ -1,12 +1,9 @@
 // Setup basic express server
 var express = require('express');
 const fs = require("fs");
-const bodyParser = require("body-parser");
-var urlencodedParser = bodyParser.urlencoded({ extended: true })
 var database_location = __dirname+"/database.json";
 let database = JSON.parse(fs.readFileSync(database_location));
 var app = express();
-
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
 var port = process.env.PORT || 3232;
@@ -56,20 +53,6 @@ socket.on('create account', function (data) {
   // express helps us take JS objects and send them as JSON
   response.json(database);
 });
-  
-  
-  app.get("/database", (request, response) => {response.render('database', {qs: request.query});});
-
-app.post("/database", urlencodedParser, (request, response) => {
-  
-  console.log(request.body)
-  if ((request.body.sentpass).toLowerCase()==server.password){response.send("Username sent: "+(request.body.username).toLowerCase()+"<br>Password sent: "+(request.body.sentpass).toLowerCase()+"<br>Status: Sucess")}
-  else {response.send("Username sent: "+(request.body.username).toLowerCase()+"<br>Password sent: "+(request.body.sentpass).toLowerCase()+"<br>Status: Failed")}
-});
-  
-  
-  
-  
   
   
   socket.on('claim daily', function (data) {

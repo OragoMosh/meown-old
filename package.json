@@ -1,15 +1,14 @@
 {
-  "name": "MittzChat",
+  "name": "JoinAndChat",
   "version": "1.6.1",
   "description": "Join mulitiple rooms and chat based on socket.io",
-  "author": "Orago",
+  "author": "GW19",
   "private": true,
   "license": "BSD",
   "main": "server.js",
   "dependencies": {
     "express": "^4.17.1",
-    "socket.io": "^2.3.0",
-    "body-parser": "^1.19.0"
+    "socket.io": "^2.3.0"
   },
   "scripts": {
     "start": "node server/server.js"
