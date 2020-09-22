@@ -50,7 +50,7 @@ socket.on('create account', function (data) {
   });
   
   app.get("/data", (request, response) => {
-  // express helps us take JS objects and send them as JSON
+  response.send("hi")
   response.json(database);
 });
   
