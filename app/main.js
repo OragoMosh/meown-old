@@ -5,14 +5,23 @@ var cmdlist = prefix+'join, '+prefix+'help, '+prefix+'refresh, '+prefix+'reload,
 var ver = '1.04'//The version of the command used
 var prefix = '$' //The symbol used to call a command
 var pname = "Mittz Chat";
+var staff_only = "This option is for staff only."
 var database = "d";
+var time_value;
+var time;
 //window.onload = async function() {}
 fetch("/data")
   .then(response => response.json()) // parse the JSON from the server
   .then(data => {
 database = data;
   });
-  
+  function new_time(){
+time_value = new Date
+time = time_value.getTime()
+}
+
+
+
 function data(){
   fetch("/data")
   .then(response => response.json()) // parse the JSON from the server
@@ -20,7 +29,13 @@ function data(){
 database = data;
   });
 }
-
+function new_coin(){
+  fetch("/add_coin")
+  .then(response => response.json()) // parse the JSON from the server
+  .then(data => {
+database = data;
+  });
+}
 
 
 
@@ -132,7 +147,7 @@ var time = new Date();
   if (pass_input == null || pass_input == "") {
     {location.reload();return}
   } else {
-    /*text given*/   /*alert(pass_input);*/if (database.user[username]==pass_input){alert("Success!")}else{alert("Wrong password!");return location.reload();}
+    /*text given*/   /*alert(pass_input);*/if (database.user[username.toLowerCase()]==pass_input.toLowerCase()){alert("Success!")}else{alert("Wrong password!");return location.reload();}
   }
     }
     
@@ -336,27 +351,7 @@ var time = new Date();
           log('Please use the command correctly, also must have less than 10 letters, ' +
               'Example '+prefix+'inverted joe', {})}
         break;
-        
-        /*case 'regidwster':
-      words.shift();
-        
-      var password = words.join(' ');
-      if (password){
-        var txt;
-      var r = confirm("Are you sure you want the password \""+password+"\"");
-      if (r == true) {
-        log("Your password is now "+password+", @"+username+" you have 15 seconds to save this password somewhere.");
-        socket.emit('create account', password);
-        setTimeout(function(){ window.location.reload(); }, 15000);
-      } else {
-        log("You have canceled")
-      }
-    }
-        else{
-          log('Please use the command correctly, also must have less than 10 letters, ' +
-              'Example '+prefix+'register Password12345')}
-        break;*/
-        
+
         
         case 'register':
       words.shift();
@@ -380,13 +375,44 @@ var time = new Date();
               'Example '+prefix+'register Password12345')}
         break;
         
-        case 'coins':
+        case 'daily':
       words.shift();
-        if (!database.profiles.includes(username.toLowerCase())){return log("Please create a user with '"+prefix+"register' !")}
-        log("You have "+database.coins[username.toLowerCase()]+" coins.");
+        time_value = new Date
+        var get_data = parseInt(database.last_daily[username.toLowerCase()])+86400000
+        
+        var coin_amount = 50;
+        if (!database.profiles.includes(username.toLowerCase())){return log("You have not registered yet!")}
+        if (time >= get_data){return log("You need to wait a a whole day to do this again!")}
+        log("HRM"+time);
+        log(String(get_data));
+        log(`You have claimed your daily ${coin_amount} coins!`);
+        socket.emit('claim daily', time);
         data();
         break;
         
+        case 'coins':
+      words.shift();
+        data();
+        if (!database.profiles.includes(username.toLowerCase())){return log("Please create a user with '"+prefix+"register' !")}
+        log("You have "+database.coins[username.toLowerCase()]+" coins.");
+        
+        break;
+        
+        case 'give':
+      words.shift();
+        if (!database.moderators.includes(username.toLowerCase())||!database.admins.includes(username.toLowerCase())){return log(staff_only)}
+        if (!database.profiles.includes(username.toLowerCase())){return log("Please create a user with '"+prefix+"register' !")}
+        var amount = words.join(' ');
+      if (amount){
+        socket.emit('add coin',amount);
+        data();
+        log("You have "+database.coins[username.toLowerCase()]+" coins.");
+    }
+        else{
+          log('Please use the command correctly, also must have less than 10 letters, ' +
+              'Example '+prefix+'give 12345')}
+
+        break;
         
         
         
@@ -420,48 +446,14 @@ var time = new Date();
         
         case 'cf': //coinflip
           var prob1 = Math.floor(Math.random() * 2) +1;
-
           var prob2 = Math.floor(Math.random() * 2) +1;
-
           if( prob1 === prob2){
-          socket.emit('cf-heads');
-          addChatMessage({
-          username: botname,
-          message:username+' flipped a coin and got Heads'
-          });
+          socket.emit('bot message',`${username}, flipped a coin and got heads!`);
+          addChatMessage({username: botname,message:username+' flipped a coin and got Heads'});
           }else{
-          socket.emit('cf-tails');
-          addChatMessage({
-          username: botname,
-          message:username+' flipped a coin and got Tails'
-        });}
-        break;
-        
-        //pets
-      case 'cat':
-        socket.emit('new message', 'Here Kitty!');
-                addChatMessage({
-        username: username,
-        message: 'Here Kitty!'
-        });
-        addChatMessage({
-        username: '🐈',
-        message: 'Meow!'
-        });
-        socket.emit('cat message');
-        break;
-        
-      case 'dog':
-        socket.emit('new message', 'Here Boy!');
-                addChatMessage({
-        username: username,
-        message: 'Here Boy!'
-        });
-        addChatMessage({
-        username: '🐕',
-        message: 'Woof!'
-        });
-        socket.emit('dog message');
+          addChatMessage({username: botname,message:username+' flipped a coin and got Heads'});
+          socket.emit('new message',`${username}, flipped a coin and got tails!`);
+          }
         break;
         
       default:

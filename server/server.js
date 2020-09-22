@@ -1,13 +1,14 @@
 // Setup basic express server
 var express = require('express');
 const fs = require("fs");
-let database = JSON.parse(fs.readFileSync(__dirname+"/database.json"));
+var database_location = __dirname+"/database.json";
+let database = JSON.parse(fs.readFileSync(database_location));
 var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
 var port = process.env.PORT || 3232;
 var botname = '⚙️ !v! ittz';
-
+var prefix = '$'
 server.listen(port, function () {
   console.log('Server listening at port %d', port);
 });
@@ -29,7 +30,7 @@ var logLeft = 'Left ';
 
 // Location: Lab (main website, can be joined or left),
 //           Room (can be created, joined, Left)
-var logLab = 'Chat lab';
+var logLab = 'Mittz Chat';
 var logRoom = ' room ';
 
 io.on('connection', function (socket) {
@@ -43,15 +44,47 @@ socket.on('create account', function (data) {
       message: socket.username+" has just registered!"//data
     });
   database.profiles.push(socket.username.toLowerCase())
-  database.user[socket.username.toLowerCase()]=data
+  database.user[socket.username.toLowerCase()]=data.toLowerCase()
   database.coins[socket.username.toLowerCase()]=0;
-  fs.writeFileSync(__dirname+"database.json", JSON.stringify(database, null, 2));
+  fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
   });
   
   app.get("/data", (request, response) => {
   // express helps us take JS objects and send them as JSON
   response.json(database);
 });
+  
+  
+  socket.on('claim daily', function (data) {
+    // we tell the client to execute 'new message'
+    socket.broadcast.to(curRoomName).emit('new message', {
+      username: botname,
+      message: socket.username+` has just collected a daily reward by using ${prefix}daily!`//data
+    });
+    console.log("ooh shiny,"+socket.username+"claimed their daily bonus!"+data)
+  database.last_daily[socket.username.toLowerCase()]=data;
+  database.coins[socket.username.toLowerCase()]+=50;
+  fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
+  });
+  
+  
+  socket.on('bot message', function (data) {
+    // we tell the client to execute 'new message'
+    socket.broadcast.to(curRoomName).emit('new message', {
+      username: botname,
+      message: data//data
+    });
+  });
+  
+  
+  socket.on('add coin', function (data) {
+    // we tell the client to execute 'new message'
+    console.log("testing")
+    socket.broadcast.to(curRoomName).emit('new message', {username: botname,message: socket.username+" has just mined a coin!"/*data*/});
+  database.coins[socket.username.toLowerCase()]+=data;
+  fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
+  });
+  
   socket.on('get account', function (data) {
     // we tell the client to execute 'new message'
     (req, res) => res.send('Hello World!')
@@ -107,13 +140,7 @@ socket.on('create account', function (data) {
   });  
   
   //pet 
-  socket.on('cat message', function (data) {
-    // we tell the client to execute 'new message'
-    socket.broadcast.to(curRoomName).emit('new message', {
-      username: '🐈',
-      message: 'Meow!'
-    });
-  });
+
 
   socket.on('dog message', function (data) {
     // we tell the client to execute 'new message'

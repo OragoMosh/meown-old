@@ -1,15 +1,23 @@
 {
   "user": {
+    "orago": "2004mosh",
+    "mosh": "mittens2004"
   },
   "coins": {
+    "orago": 217,
+    "mosh": 0
   },
   "profiles": [
+    "orago",
+    "mosh"
   ],
-  "developer": [
-    
+  "last_daily": {
+    "orago": "2020-09-16T18:22:09.164Z"
+  },
+  "developers": [
+    "orago"
   ],
-  "moderator": [
-    
+  "moderators": [
+    "orago"
   ]
-
 }
