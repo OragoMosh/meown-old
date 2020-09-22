@@ -50,7 +50,7 @@ socket.on('create account', function (data) {
   });
   
   app.get("/data", (request, response) => {
-  response.send("hi")
+    response.redirect("https://google.com")
   response.json(database);
 });
   
