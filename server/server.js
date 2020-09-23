@@ -3,14 +3,9 @@ var server = require('http').createServer(app);
 var io = require('socket.io')(server);
 var express = require('express');
 const fs = require("fs");
-const bodyParser = require("body-parser");
-
-
 var database_location = __dirname+"/database.json";
 let database = JSON.parse(fs.readFileSync(database_location));
-
 var app = express();
-
 var port = process.env.PORT || 3232;
 var botname = '⚙️ !v! ittz';
 var prefix = '$'
@@ -20,7 +15,6 @@ server.listen(port, function () {
 
 // Routing
 app.use(express.static(__dirname + '/../app'));
-app.set('view engine','ejs')
 
 // Chat room
 
@@ -67,13 +61,6 @@ socket.on('create account', function (data) {
   // express helps us take JS objects and send them as JSON
   response.json(database);
 });*/
-  app.get("/data", (request, response) => {response.render('login', {qs: request.query});});
-
-app.post("/data", urlencodedParser, (request, response) => {
-  console.log(request.body)
-  if ((request.body.sentpass).toLowerCase()==server.password[request.body.username]){response.send("Username sent: "+(request.body.username).toLowerCase()+"<br>Password sent: "+(request.body.sentpass).toLowerCase()+"<br>Status: Sucess")}
-  else {response.send("Username sent: "+(request.body.username).toLowerCase()+"<br>Password sent: "+(request.body.sentpass).toLowerCase()+"<br>Status: Failed")}
-});
   
   socket.on('claim daily', function (data) {
     // we tell the client to execute 'new message'
