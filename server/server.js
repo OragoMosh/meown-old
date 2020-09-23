@@ -1,5 +1,4 @@
 // Setup basic express server
-
 var express = require('express');
 const fs = require("fs");
 var database_location = __dirname+"/database.json";
@@ -62,6 +61,7 @@ socket.on('create account', function (data) {
   // express helps us take JS objects and send them as JSON
   response.json(database);
 });*/
+  
   
   socket.on('claim daily', function (data) {
     // we tell the client to execute 'new message'
