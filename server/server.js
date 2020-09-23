@@ -1,11 +1,12 @@
 // Setup basic express server
-var server = require('http').createServer(app);
-var io = require('socket.io')(server);
+
 var express = require('express');
 const fs = require("fs");
 var database_location = __dirname+"/database.json";
 let database = JSON.parse(fs.readFileSync(database_location));
 var app = express();
+var server = require('http').createServer(app);
+var io = require('socket.io')(server);
 var port = process.env.PORT || 3232;
 var botname = '⚙️ !v! ittz';
 var prefix = '$'
