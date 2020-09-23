@@ -3,12 +3,12 @@ var server = require('http').createServer(app);
 var io = require('socket.io')(server);
 var express = require('express');
 const fs = require("fs");
-
+const bodyParser = require("body-parser");
 
 
 var database_location = __dirname+"/database.json";
 let database = JSON.parse(fs.readFileSync(database_location));
-
+var urlencodedParser = bodyParser.urlencoded({ extended: true });
 var app = express();
 
 var port = process.env.PORT || 3232;
@@ -20,7 +20,7 @@ server.listen(port, function () {
 
 // Routing
 app.use(express.static(__dirname + '/../app'));
-
+app.set('view engine','ejs')
 
 // Chat room
 
