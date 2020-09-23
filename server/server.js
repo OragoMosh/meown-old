@@ -38,7 +38,7 @@ io.on('connection', function (socket) {
   var curRoomName = 'Lobby';
 
   
-  socket.on('connector', function (data) {
+  socket.on('sync', function (data) {
    socket.emit('handshake',database);
   });
   

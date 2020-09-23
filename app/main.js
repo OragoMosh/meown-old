@@ -118,7 +118,7 @@ var time = new Date();
   
   
   var socket = io();
-  socket.emit('connector');
+  socket.emit('sync');
 socket.on('handshake', function (data) {
 database=data;
   });
@@ -365,7 +365,7 @@ database=data;
       if (r == true) {
         log("Your password is now \""+password+"\", @"+username+" Please write this somewhere so it doesn't get forgotten, currently we do not have the service to reset passwords!");
         socket.emit('create account', password);
-        data();
+        socket.emit('sync');
         //setTimeout(function(){ window.location.reload(); }, 15000);
       } else {
         log("You have canceled")
@@ -378,6 +378,7 @@ database=data;
         
         case 'daily':
       words.shift();
+        socket.emit('sync');
         time_value = new Date
         var get_data = parseInt(database.last_daily[username.toLowerCase()])+86400000
         
@@ -388,25 +389,24 @@ database=data;
         log(String(get_data));
         log(`You have claimed your daily ${coin_amount} coins!`);
         socket.emit('claim daily', time);
-        data();
         break;
         
         case 'coins':
+        socket.emit('sync');
       words.shift();
-        data();
         if (!database.profiles.includes(username.toLowerCase())){return log("Please create a user with '"+prefix+"register' !")}
         log("You have "+database.coins[username.toLowerCase()]+" coins.");
         
         break;
         
         case 'give':
+        socket.emit('sync');
       words.shift();
         if (!database.moderators.includes(username.toLowerCase())||!database.admins.includes(username.toLowerCase())){return log(staff_only)}
         if (!database.profiles.includes(username.toLowerCase())){return log("Please create a user with '"+prefix+"register' !")}
         var amount = words.join(' ');
       if (amount){
         socket.emit('add coin',amount);
-        data();
         log("You have "+database.coins[username.toLowerCase()]+" coins.");
     }
         else{
