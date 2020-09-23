@@ -384,8 +384,8 @@ database=data;
         
         var coin_amount = 50;
         if (!database.profiles.includes(username.toLowerCase())){return log("You have not registered yet!")}
-        if (time >= get_data){return log("You need to wait a a whole day to do this again!")}
-        log("HRM"+time);
+        if (time >= get_data){return log("You need to wait a whole day to do this again!")}
+        log(time);
         log(String(get_data));
         log(`You have claimed your daily ${coin_amount} coins!`);
         socket.emit('claim daily', time);
@@ -427,7 +427,7 @@ database=data;
           username: botname,
           message: jchat
         });
-        socket.emit('sbot',jchat);}
+        socket.emit('bot message',jchat);}
         else{
           log('Please use the command correctly, also must have less than 10 letters, ' +
               'Example '+prefix+'say cat', {})}
@@ -440,7 +440,7 @@ database=data;
           username: botname,
           message: 'REEEEEEEEEEEEEEEEEEEEEeeeeeeeeeeeeeeee'
         });
-        socket.emit('new message','REE');
+        socket.emit('bot message','REE');
 
         break;
       
@@ -453,7 +453,7 @@ database=data;
           addChatMessage({username: botname,message:username+' flipped a coin and got Heads'});
           }else{
           addChatMessage({username: botname,message:username+' flipped a coin and got Heads'});
-          socket.emit('new message',`${username}, flipped a coin and got tails!`);
+          socket.emit('bot message',`${username}, flipped a coin and got tails!`);
           }
         break;
         

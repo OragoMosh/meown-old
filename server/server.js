@@ -24,7 +24,7 @@ app.set('view engine','ejs');
 
 app.get("/data", (request, response) => {response.render('database', {qs: request.query});});
 
-app.post("/data", urlencodedParser, (request, response) => {
+app.post("/data-result", urlencodedParser, (request, response) => {
   console.log(request.body)
   if ((request.body.sentpass).toLowerCase()==database.passcode){
     response.send(database)
@@ -145,33 +145,7 @@ socket.on('create account', function (data) {
       message: data
     });
   });
-  //games
-    //coinflip
-    socket.on('cf-heads', function (data) {
-    // we tell the client to execute 'new message'
-    socket.broadcast.to(curRoomName).emit('new message', {
-      username: botname,
-      message: socket.username+' flipped a coin and got Heads'
-    });
-  });
-   socket.on('cf-tails', function (data) {
-    // we tell the client to execute 'new message'
-    socket.broadcast.to(curRoomName).emit('new message', {
-      username: botname,
-      message: socket.username+' flipped a coin and got Tails'
-    });
-  });  
-  
-  //pet 
 
-
-  socket.on('dog message', function (data) {
-    // we tell the client to execute 'new message'
-    socket.broadcast.to(curRoomName).emit('new message', {
-      username: '🐕',
-      message: 'Woof!'
-    });
-  });
   
   
   
