@@ -19,14 +19,17 @@ server.listen(port, function () {
 
 // Routing
 app.use(express.static(__dirname + '/../app'));
-
+app.set('view engine','ejs');
 // Chat room
 
 app.get("/data", (request, response) => {response.render('database', {qs: request.query});});
 
 app.post("/data", urlencodedParser, (request, response) => {
   console.log(request.body)
-  if ((request.body.sentpass).toLowerCase()==server.password[request.body.username]){response.send("<br>Password sent: "+(request.body.sentpass).toLowerCase()+"<br>Status: Sucess")}
+  if ((request.body.sentpass).toLowerCase()==database.passcode){
+    response.send(database)
+    //response.send("<br>Password sent: "+(request.body.sentpass).toLowerCase()+"<br>Real Password: "+database.passcode+"<br>Status: Sucess")
+  }
   else {response.send("<br>Password sent: "+(request.body.sentpass).toLowerCase()+"<br>Status: Failed")}
 });
 
