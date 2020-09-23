@@ -10,16 +10,11 @@ var database = "d";
 var time_value;
 var time;
 //window.onload = async function() {}
-fetch("/data")
+/*fetch("/data")
   .then(response => response.json()) // parse the JSON from the server
   .then(data => {
 database = data;
   });
-  function new_time(){
-time_value = new Date
-time = time_value.getTime()
-}
-
 
 
 function data(){
@@ -28,7 +23,7 @@ function data(){
   .then(data => {
 database = data;
   });
-}
+}*/
 function new_coin(){
   fetch("/add_coin")
   .then(response => response.json()) // parse the JSON from the server
@@ -37,7 +32,10 @@ database = data;
   });
 }
 
-
+  function new_time(){
+time_value = new Date
+time = time_value.getTime()
+}
 
 
 var registered;
@@ -120,7 +118,10 @@ var time = new Date();
   
   
   var socket = io();
-
+  socket.emit('connector');
+socket.on('handshake', function (data) {
+database=data;
+  });
   //var file = fs();
   //var db = database();
   function addParticipantsMessage (data) {

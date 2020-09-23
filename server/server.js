@@ -36,6 +36,14 @@ var logRoom = ' room ';
 io.on('connection', function (socket) {
   var addedUser = false;
   var curRoomName = 'Lobby';
+
+  
+  socket.on('connector', function (data) {
+   socket.emit('handshake',database);
+  });
+  
+  
+  
   
 socket.on('create account', function (data) {
     // we tell the client to execute 'new message'
@@ -50,7 +58,7 @@ socket.on('create account', function (data) {
   });
   
   app.get("/data", (request, response) => {
-    response.redirect("https://google.com")
+  // express helps us take JS objects and send them as JSON
   response.json(database);
 });
   
