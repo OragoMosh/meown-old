@@ -1,11 +1,16 @@
 // Setup basic express server
-var express = require('express');
-const fs = require("fs");
-var database_location = __dirname+"/database.json";
-let database = JSON.parse(fs.readFileSync(database_location));
-var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
+var express = require('express');
+const fs = require("fs");
+const bodyParser = require("body-parser");
+
+
+var database_location = __dirname+"/database.json";
+let database = JSON.parse(fs.readFileSync(database_location));
+var urlencodedParser = bodyParser.urlencoded({ extended: true });
+var app = express();
+
 var port = process.env.PORT || 3232;
 var botname = '⚙️ !v! ittz';
 var prefix = '$'
@@ -15,6 +20,7 @@ server.listen(port, function () {
 
 // Routing
 app.use(express.static(__dirname + '/../app'));
+app.set('view engine','ejs')
 
 // Chat room
 
@@ -57,11 +63,20 @@ socket.on('create account', function (data) {
   fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
   });
   
-  app.get("/data", (request, response) => {
+  /*app.get("/data", (request, response) => {
   // express helps us take JS objects and send them as JSON
   response.json(database);
+});*/
+  app.get("/data", (request, response) => {response.render('database', {qs: request.query});});
+
+app.post("/data", urlencodedParser, (request, response) => {
+  console.log(request.body)
+  if ((request.body.sentpass).toLowerCase()==server.password[request.body.username]){
+    response.send("<br>Password sent: "+(request.body.sentpass).toLowerCase()+"<br>Status: Sucess")
+  }
+  else {response.send("<br>Password sent: "+(request.body.sentpass).toLowerCase()+"<br>Status: Failed")
+       }
 });
-  
   
   socket.on('claim daily', function (data) {
     // we tell the client to execute 'new message'
