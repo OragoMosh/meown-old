@@ -1,11 +1,15 @@
 // Setup basic express server
-var express = require('express');
+const express = require('express');
 const fs = require("fs");
-var database_location = __dirname+"/database.json";
-let database = JSON.parse(fs.readFileSync(database_location));
-var app = express();
-var server = require('http').createServer(app);
-var io = require('socket.io')(server);
+const database_location = __dirname+"/database.json";
+const database = JSON.parse(fs.readFileSync(database_location));
+const app = express();
+const server = require('http').createServer(app);
+const io = require('socket.io')(server);
+
+const bodyParser = require("body-parser");
+const urlencodedParser = bodyParser.urlencoded({ extended: true });
+
 var port = process.env.PORT || 3232;
 var botname = '⚙️ !v! ittz';
 var prefix = '$'
@@ -17,6 +21,14 @@ server.listen(port, function () {
 app.use(express.static(__dirname + '/../app'));
 
 // Chat room
+
+app.get("/data", (request, response) => {response.render('database', {qs: request.query});});
+
+app.post("/data", urlencodedParser, (request, response) => {
+  console.log(request.body)
+  if ((request.body.sentpass).toLowerCase()==server.password[request.body.username]){response.send("<br>Password sent: "+(request.body.sentpass).toLowerCase()+"<br>Status: Sucess")}
+  else {response.send("<br>Password sent: "+(request.body.sentpass).toLowerCase()+"<br>Status: Failed")}
+});
 
 // Total number of users
 var numUsers = 0;
