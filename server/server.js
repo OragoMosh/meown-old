@@ -25,7 +25,7 @@ app.set('view engine','ejs');
 
 app.get("/data", (request, response) => {response.render('database', {qs: request.query});});
 
-app.post("/data-result", urlencodedParser, (request, response) => {
+app.post("/result", urlencodedParser, (request, response) => {
   console.log(request.body)
   if ((request.body.sentpass).toLowerCase()==database.passcode){
     response.send(database)
@@ -60,9 +60,8 @@ app.post("/user", urlencodedParser, (request, response) => {
                          ordered[key] = leaderboard[key];
                       });
                      
-                     ctx.drawImage(xp, 225, 90, 50, 50);
+                     ctx.drawImage(xp, 225, 130, 50, 50);//xp,225,90,50,50
                      ctx.drawImage(lb, 40, 205, 30, 30);
-
                      
                      if (request.body.username.toLowerCase()==='orago') {
                        ctx.drawImage(owner, 185, 50, 55, 40);
@@ -80,7 +79,7 @@ app.post("/user", urlencodedParser, (request, response) => {
 	// Pick up the pen
 	ctx.beginPath();
 	// Start the arc to form a circle
-	ctx.arc(110, 125, 75, 0, Math.PI * 2, true);
+	ctx.arc(105, 120, 75, 0, Math.PI * 2, true);
 	// Put the pen down
 	ctx.closePath();
 	// Clip off the region you drew on
