@@ -1,6 +1,7 @@
 // Setup basic express server
 const express = require('express');
 const fs = require("fs");
+const Canvas = require('canvas');
 const database_location = __dirname+"/database.json";
 const database = JSON.parse(fs.readFileSync(database_location));
 const app = express();
@@ -38,38 +39,63 @@ app.post("/data-result", urlencodedParser, (request, response) => {
 app.get("/user", (request, response) => {response.render('user', {qs: request.query});});
 
 app.post("/user", urlencodedParser, (request, response) => {
-  if (!database.profiles.includes(request.body.username)) {return response.send('🔏 **Whoops!** There is no such user with this name!<br><br><button onclick="location.replace(window.location.hostname+`/register`)">Register an account.</button>');}
-  response.send(`<!DOCTYPE HTML>
-<html><head><style>body {margin: 0px;padding: 0px;}</style></head>
-  <body>
-    <canvas id="myCanvas" width="700" height="250"></canvas>
-    <script>
-      var canvas = document.getElementById('myCanvas');
-      var ctx = canvas.getContext('2d');
-      var image = new Image();
-      var background = 'https://convertingcolors.com/plain-2C2F33.svg';
-      var avatar = 'https://th.bing.com/th/id/OIP.qz8zNyxJVXeZQ2NlOE8asQHaEO?w=296&h=180&c=7&o=5&pid=1.7';
-      var name = ${request.body.username};
-      image.src = background;
-    image.onload = function() {
-      ctx.drawImage(image, 0, 0, canvas.width, canvas.height);//Background  image don't change.
-      ctx.font = '40px sans-serif';
-      ctx.fillStyle = 'white';
-      ctx.fillText(name, 240, 125);
-      ctx.fillText(${database.coins[request.body.username]}, 270, 170);
-      ctx.strokeRect(0, 0, canvas.width, canvas.height);
+  if (!database.profiles.includes(request.body.username)) {
+    return response.send('🔏 **Whoops!** There is no such user with this name!'
+                        +'<br><br><button onclick="location.replace(window.location.hostname+`/register`)">Register an account.</button>');
+  }
+  
+  
+  const canvas = Canvas.createCanvas(700, 250);
+       const ctx = canvas.getContext('2d');
+       Canvas.loadImage(server.background[user_type.id]).then((background) => {
+         ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+           Canvas.loadImage(user_type.avatarURL({ format: "png", dynamic: true })).then((pfp) => {
+             Canvas.loadImage('https://cdn2.iconfinder.com/data/icons/actions-states-vol-1-colored/48/JD-13-512.png').then((xp) => {
+               Canvas.loadImage('https://www.stickpng.com/assets/images/585e4beacb11b227491c3399.png').then((lb) => {
+                  Canvas.loadImage('https://cdn.discordapp.com/attachments/660390332772646922/744094457317818388/discordowner.svg').then((owner) => {
+                   Canvas.loadImage('https://discordapp.com/assets/ccebe0b729ff7530c5e37dbbd9f9938c.svg').then((rich) => {
+                      let leaderboard = server.xp
+                      const ordered = {};
+                      Object.keys(leaderboard).sort().forEach(function(key) {
+                         ordered[key] = leaderboard[key];
+                      });
+                     
+                     ctx.drawImage(xp, 225, 90, 50, 50);
+                     ctx.drawImage(lb, 40, 205, 30, 30);
+
+                     
+                     if (request.body.username.toLowerCase()==='orago') {
+                       ctx.drawImage(owner, 185, 50, 55, 40);
+                     }
+                     ctx.font = '40px sans-serif';
+                     ctx.fillStyle = '#FFFFFF'//database.color[user_type.id];
+                     ctx.fillText(`${request.body.username.toLowerCase()}`, 240, 90);
+                     ctx.font = '25px sans-serif';
+                     //ctx.fillText(`${server.xp[request.body.username.toLowerCase()]}xp`, 270, 125);
+                     ctx.fillText(`${database.coins[request.body.username.toLowerCase()]} coins`, 270, 170);
+                     ctx.fillText(`Bio: ${database.description[request.body.username.toLowerCase()]}`, 77, 229);
+                      ctx.strokeStyle = '#74037b';
+	ctx.strokeRect(0, 0, canvas.width, canvas.height);
+
+	// Pick up the pen
 	ctx.beginPath();
+	// Start the arc to form a circle
 	ctx.arc(110, 125, 75, 0, Math.PI * 2, true);
+	// Put the pen down
 	ctx.closePath();
- 	image.src = avatar//Avatar image don't change. 
+	// Clip off the region you drew on
 	ctx.clip();
-    ctx.drawImage(image, 30, 45, 150, 150);
-      };
-    </script>
-  </body>
-</html>`
-    
-  );
+                     ctx.drawImage(pfp, 30, 45, 150, 150);
+                     response.send(canvas.toBuffer());
+                   })
+                 })
+               })
+             })
+       })
+       })
+  
+  
+  
 });
 
 
@@ -107,9 +133,13 @@ socket.on('create account', function (data) {
       username: botname,
       message: socket.username+" has just registered!"//data
     });
-  database.profiles.push(socket.username.toLowerCase())
-  database.user[socket.username.toLowerCase()]=data.toLowerCase()
+  database.profiles.push(socket.username.toLowerCase());
+  database.user[socket.username.toLowerCase()]=data.toLowerCase();
   database.coins[socket.username.toLowerCase()]=0;
+  database.background[socket.username.toLowerCase()] = "https://convertingcolors.com/plain-2C2F33.svg";
+  database.description[socket.username.toLowerCase()] = 'No Description Set';
+  database.color[socket.username.toLowerCase()] = "#ffffff";
+  database.badges[socket.username.toLowerCase()]=[];
   fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
   });
   

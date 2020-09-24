@@ -1,17 +1,5 @@
 {
   "passcode":"51password",
-  "user": {
-    "orago": "2004mosh",
-    "mosh": "mittens2004"
-  },
-  "coins": {
-    "orago": 217,
-    "mosh": 0
-  },
-  "profiles": [
-    "orago",
-    "mosh"
-  ],
   "last_daily": {
   },
   "developers": [
@@ -19,5 +7,27 @@
   ],
   "moderators": [
     "orago"
-  ]
+  ],
+  "user": {
+    "orago": "2004mosh",
+    "mosh": "mittens2004"
+  },
+  "profiles": [
+    "orago",
+    "mosh"
+  ],
+  "coins": {
+    "orago": 217,
+    "mosh": 0
+  },
+  "description": {
+    "orago": "No Description Set"
+  },
+  "badges": {
+
+  },
+  "color": {
+    
+  }
+  
 }
