@@ -30,8 +30,49 @@ app.post("/data-result", urlencodedParser, (request, response) => {
     response.send(database)
     //response.send("<br>Password sent: "+(request.body.sentpass).toLowerCase()+"<br>Real Password: "+database.passcode+"<br>Status: Sucess")
   }
+  
   else {response.send("<br>Password sent: "+(request.body.sentpass).toLowerCase()+"<br>Status: Failed")}
 });
+
+
+app.get("/user", (request, response) => {response.render('user', {qs: request.query});});
+
+app.post("/user", urlencodedParser, (request, response) => {
+  if (!database.profiles.includes(request.body.username)) {return response.send('🔏 **Whoops!** There is no such user with this name!<br><br><button onclick="location.replace(window.location.hostname+`/register`)">Register an account.</button>');}
+  response.send(`<!DOCTYPE HTML>
+<html><head><style>body {margin: 0px;padding: 0px;}</style></head>
+  <body>
+    <canvas id="myCanvas" width="700" height="250"></canvas>
+    <script>
+      var canvas = document.getElementById('myCanvas');
+      var ctx = canvas.getContext('2d');
+      var image = new Image();
+      var background = 'https://convertingcolors.com/plain-2C2F33.svg';
+      var avatar = 'https://th.bing.com/th/id/OIP.qz8zNyxJVXeZQ2NlOE8asQHaEO?w=296&h=180&c=7&o=5&pid=1.7';
+      var name = ${request.body.username};
+      image.src = background;
+    image.onload = function() {
+      ctx.drawImage(image, 0, 0, canvas.width, canvas.height);//Background  image don't change.
+      ctx.font = '40px sans-serif';
+      ctx.fillStyle = 'white';
+      ctx.fillText(name, 240, 125);
+      ctx.fillText(${database.coins[request.body.username]}, 270, 170);
+      ctx.strokeRect(0, 0, canvas.width, canvas.height);
+	ctx.beginPath();
+	ctx.arc(110, 125, 75, 0, Math.PI * 2, true);
+	ctx.closePath();
+ 	image.src = avatar//Avatar image don't change. 
+	ctx.clip();
+    ctx.drawImage(image, 30, 45, 150, 150);
+      };
+    </script>
+  </body>
+</html>`
+    
+  );
+});
+
+
 
 // Total number of users
 var numUsers = 0;
