@@ -44,17 +44,17 @@ app.post("/user", urlencodedParser, (request, response) => {
                         +'<br><br><button onclick="location.replace(window.location.hostname+`/register`)">Register an account.</button>');
   }
   
-  
+  var bg_image = 'https://convertingcolors.com/plain-2C2F33.svg';
   const canvas = Canvas.createCanvas(700, 250);
        const ctx = canvas.getContext('2d');
-       Canvas.loadImage(server.background[user_type.id]).then((background) => {
+       Canvas.loadImage(bg_image).then((background) => {
          ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
-           Canvas.loadImage(user_type.avatarURL({ format: "png", dynamic: true })).then((pfp) => {
+           Canvas.loadImage(`${database.avatar[request.body.username.toLowerCase()]}`).then((pfp) => {
              Canvas.loadImage('https://cdn2.iconfinder.com/data/icons/actions-states-vol-1-colored/48/JD-13-512.png').then((xp) => {
                Canvas.loadImage('https://www.stickpng.com/assets/images/585e4beacb11b227491c3399.png').then((lb) => {
                   Canvas.loadImage('https://cdn.discordapp.com/attachments/660390332772646922/744094457317818388/discordowner.svg').then((owner) => {
                    Canvas.loadImage('https://discordapp.com/assets/ccebe0b729ff7530c5e37dbbd9f9938c.svg').then((rich) => {
-                      let leaderboard = server.xp
+                      let leaderboard = database.coins
                       const ordered = {};
                       Object.keys(leaderboard).sort().forEach(function(key) {
                          ordered[key] = leaderboard[key];
@@ -86,7 +86,7 @@ app.post("/user", urlencodedParser, (request, response) => {
 	// Clip off the region you drew on
 	ctx.clip();
                      ctx.drawImage(pfp, 30, 45, 150, 150);
-                     response.send(canvas.toBuffer());
+                     response.send('<img src="' + canvas.toDataURL() + '" />');
                    })
                  })
                })
@@ -139,7 +139,8 @@ socket.on('create account', function (data) {
   database.background[socket.username.toLowerCase()] = "https://convertingcolors.com/plain-2C2F33.svg";
   database.description[socket.username.toLowerCase()] = 'No Description Set';
   database.color[socket.username.toLowerCase()] = "#ffffff";
-  database.badges[socket.username.toLowerCase()]=[];
+  database.avatar[socket.username.toLowerCase()] = "cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png";
+  database.badges[socket.username.toLowerCase()]=[];https:
   fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
   });
   
