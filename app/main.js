@@ -221,8 +221,12 @@ database=data;
         log('--------------------');
         log('-- Help List --');
         log('-_- Page - 1 Useful Commands -_-');
-        log(prefix+'help - Shows a list of helping commands'); log(prefix+'fun - shows a list of fun commands'); log(prefix+'ree - Basically just says ree with audio (turn ur volume up)');
-        log(prefix+'commands - Shows a list of useable commands'); log(prefix+'updates - shows a list of new updates'); log(prefix+'refresh - This command refreshes the room list if new ones arent loading');
+        
+        log(prefix+'help - Shows a list of helping commands');log(prefix+'updates - shows a list of new updates'); 
+        log(prefix+'commands - Shows a list of useable commands'); log(prefix+'refresh - This command refreshes the room list if new ones arent loading');
+        log(prefix+'info - Shows server version and creator info'); log(prefix+'time - Shows the current time'); 
+        log('/reload - This command will reload the server page');
+        
         log('-- use /help2 for more info --');
         log('--------------------');
         break;
@@ -231,8 +235,8 @@ database=data;
         log('--------------------');
         log('-- Help List --');
         log('-_- Page - 2 Useful Commands -_-');
-        log(prefix+'info - Shows server version and creator info'); log(prefix+'time - Shows the current time'); log('/reload - This command will reload the server page');
-        log(''); log(''); log('');
+         
+        
         log('-- use '+prefix+'help3 for more info --');
         log('--------------------');
         break;
@@ -241,20 +245,16 @@ database=data;
         log('--------------------');
         log('-- Help List --');
         log('-_- Page - 3 Fun Commands -_-');
-        log(prefix+'pet - Shows a list of pets that can be used'); log(prefix+'cf - Flips a coin which will either end up with a heads or tails');
-        log(prefix+'bored - Will make a bot say this user is bored'); log(''); log('');
+
+        log('EMPTY')
+        
+        
         log('-- use '+prefix+'help for more info --');
         log('--------------------');
         break;
         
-      case 'updates': // Command /help lists all commands
-        log('--------------------');
-        log('-- Updates List --');
-        log('-_- Useful Commands -_-');
-        log('- Fixed Coin Flipping, '+prefix+'cf'); log('- Fixed the ob command'); log('- Fixed pets not functioning');
-        log('- Added a '+prefix+'ree command for fun'); log('- Added a month and day for '+prefix+'time'); log('- Added a '+prefix+'update function');
-        log('-- use '+prefix+'help2 for more info --');
-        log('--------------------');
+      case 'logs': // Command /help lists all commands
+
         break;
         
       case 'commands': // Command /help lists all commands
@@ -262,19 +262,7 @@ database=data;
         log(message);
         break;
         
-      case 'fun': // Command /fun a list of fun commands
-        message = 'Fun Commands: '+prefix+'slap, '+prefix+'bored, '+prefix+'cf, '+prefix+'pets, '+prefix+'ree';
-        log(message);
-        break;
-        
-      case 'pets': // Command /fun a list of fun commands
-        message = 'Pets: '+prefix+'cat, '+prefix+'dog';
-        log(message);
-        break;
-        case 'username': // Command /fun a list of fun commands
-        message = username;
-        log(message);
-        break;
+
       case 'refresh':// Command /refresh = reload room list.
         socket.emit('room list');
         break;
@@ -283,22 +271,11 @@ database=data;
         passWord()
         break;
         
-      case 'my':// Command /refresh = reload room list.
-        words.shift();
-        var jchat = words.join(' ');
-        if (jchat == "username"){
-          alert(username);
-        }
-        break;
+
         case 'info':// Command /refresh = reload room list.
         alert(database)
         break;
-      case 'set-username':// Command /refresh = reload room list.
-        words.shift();
-        var jchat = words.join(' ');
-          
-          alert(username);
-        break; 
+
       case 'info':// Command /info = Server info
         message = 'This server is running V'+ver;
         log(message);
@@ -329,29 +306,6 @@ database=data;
           log('Please select a text that you would like to slap, ' +
               'Example /slap cat', {})}
         break;
-        
-      case 'bored': //im bored
-      addChatMessage({
-          username: botname,
-          message: 'hi'
-          });
-          socket.emit('new message',botname);
-        break;
-        
-      case 'inverted':// Slaps the text given
-      words.shift();
-      var jchat = words.join(' ');
-        var cat='kitty'
-      if (cat='kitty') {
-      addChatMessage({
-          username: jchat,
-          message: username
-        });
-        socket.emit('i-chat',jchat);}
-        else{
-          log('Please use the command correctly, also must have less than 10 letters, ' +
-              'Example '+prefix+'inverted joe', {})}
-        break;
 
         
         case 'register':
@@ -378,7 +332,7 @@ database=data;
         
         case 'daily':
       words.shift();
-        socket.emit('sync');
+        
         time_value = new Date
         var get_data = parseInt(database.last_daily[username.toLowerCase()])+86400000
         
@@ -389,7 +343,19 @@ database=data;
         log(String(get_data));
         log(`You have claimed your daily ${coin_amount} coins!`);
         socket.emit('claim daily', time);
+        socket.emit('sync');
         break;
+        
+        case 'search':
+      words.shift();
+        location.replace('/user');
+        break;
+        
+        case 'database':
+      words.shift();
+        location.replace('/data');
+        break;
+        
         
         case 'coins':
         socket.emit('sync');
@@ -402,8 +368,8 @@ database=data;
         case 'give':
         socket.emit('sync');
       words.shift();
-        if (!database.moderators.includes(username.toLowerCase())||!database.admins.includes(username.toLowerCase())){return log(staff_only)}
         if (!database.profiles.includes(username.toLowerCase())){return log("Please create a user with '"+prefix+"register' !")}
+        if (!database.moderators.includes(username.toLowerCase())||!database.admins.includes(username.toLowerCase())){return log(staff_only)}
         var amount = words.join(' ');
       if (amount){
         socket.emit('add coin',amount);

@@ -67,7 +67,7 @@ app.post("/user", urlencodedParser, (request, response) => {
                        ctx.drawImage(owner, 185, 50, 55, 40);
                      }
                      ctx.font = '40px sans-serif';
-                     ctx.fillStyle = '#FFFFFF'//database.color[user_type.id];
+                     ctx.fillStyle = '#FFFFFF'
                      ctx.fillText(`${request.body.username.toLowerCase()}`, 240, 90);
                      ctx.font = '25px sans-serif';
                      //ctx.fillText(`${server.xp[request.body.username.toLowerCase()]}xp`, 270, 125);
@@ -75,14 +75,9 @@ app.post("/user", urlencodedParser, (request, response) => {
                      ctx.fillText(`Bio: ${database.description[request.body.username.toLowerCase()]}`, 77, 229);
                       ctx.strokeStyle = '#74037b';
 	ctx.strokeRect(0, 0, canvas.width, canvas.height);
-
-	// Pick up the pen
 	ctx.beginPath();
-	// Start the arc to form a circle
 	ctx.arc(105, 120, 75, 0, Math.PI * 2, true);
-	// Put the pen down
 	ctx.closePath();
-	// Clip off the region you drew on
 	ctx.clip();
                      ctx.drawImage(pfp, 30, 45, 150, 150);
                      response.send('<img src="' + canvas.toDataURL() + '" />');
@@ -175,7 +170,7 @@ socket.on('create account', function (data) {
     // we tell the client to execute 'new message'
     console.log("testing")
     socket.broadcast.to(curRoomName).emit('new message', {username: botname,message: socket.username+" has just mined a coin!"/*data*/});
-  database.coins[socket.username.toLowerCase()]+=data;
+  database.coins[socket.username.toLowerCase()]=data;
   fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
   });
   
