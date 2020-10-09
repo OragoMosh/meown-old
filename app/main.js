@@ -409,7 +409,12 @@ database=data;
         socket.emit('bot message','REE');
 
         break;
-      
+      case 'img':// Slaps the text given
+          addChatImage({
+          username: botname,
+          message: 'REEEEEEEEEEEEEEEEEEEEEeeeeeeeeeeeeeeee'
+        });
+        break;
         
         case 'cf': //coinflip
           var prob1 = Math.floor(Math.random() * 2) +1;
@@ -483,7 +488,29 @@ database=data;
       addMessageElement($messageDiv, options);
     }
   }
+  
+function addChatImage (data, options) {
+    // Don't fade the message in if there is an 'X was typing'
+    var $typingMessages = getTypingMessages(data);
+    options = options || {};
+    if ($typingMessages.length !== 0) {
+      options.fade = false;
+      $typingMessages.remove();
+    }
 
+    var userName = data.username;
+    var colorOfUserName = getUsernameColor(userName);
+    if (data.typing !== true) {
+      userName += ': ';
+    }
+      var usernameDiv = $('<span class="username"/>').text(userName).css('color', colorOfUserName);
+      var messageBodyDiv = $('<img src="https://www.w3schools.com/html/pic_trulli.jpg" alt="Trulli" width="500" height="333">')
+
+      var typingClass = data.typing ? 'typing' : '';
+      var $messageDiv = $('<li class="message"/>').data('username', userName).addClass(typingClass).append(usernameDiv, messageBodyDiv);
+
+      addMessageElement($messageDiv, options);
+  }
   // Adds the visual chat typing message
   function addChatTyping (data) {
     data.typing = true;
