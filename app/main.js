@@ -9,21 +9,55 @@ var staff_only = "This option is for staff only."
 var database = "d";
 var time_value;
 var time;
-//window.onload = async function() {}
-/*fetch("/data")
-  .then(response => response.json()) // parse the JSON from the server
-  .then(data => {
-database = data;
-  });
 
 
-function data(){
-  fetch("/data")
-  .then(response => response.json()) // parse the JSON from the server
-  .then(data => {
-database = data;
-  });
-}*/
+
+function setCookie(cname,cvalue,exdays) {
+  var d = new Date();
+  d.setTime(d.getTime() + (exdays*24*60*60*1000));
+  var expires = "expires=" + d.toGMTString();
+  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
+function getCookie(cname) {
+  var name = cname + "=";
+  var decodedCookie = decodeURIComponent(document.cookie);
+  var ca = decodedCookie.split(';');
+  for(var i = 0; i < ca.length; i++) {
+    var c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}
+
+function existsCookie(type) {
+  var cookie_value=getCookie(type);
+  if (cookie_value != "") {
+    return true;//Exists
+  } else {
+     if (cookie_value != "" && cookie_value != null) {
+       return false;//Does not Exist
+       //setCookie(type, value, 30);
+     }
+  }
+}
+function valueCookie(type) {
+  var cookie_value=getCookie(type);
+return cookie_value;
+}
+
+
+
+
+
+
+
+
 function new_coin(){
   fetch("/add_coin")
   .then(response => response.json()) // parse the JSON from the server
@@ -37,7 +71,13 @@ time_value = new Date
 time = time_value.getTime()
 }
 
-
+function testing(){
+  if (cat == null){
+    var cat = 1
+  }
+  cat +=1
+return cat;
+}
 var registered;
 function passWord() {
 var testV = 1;
@@ -136,21 +176,32 @@ database=data;
     log(message);
   }
   
+
   //setTimeout(function(){ alert(database.user["orago"]); }, 500);
 
   // Sets the client's username
   function setUsername () {
     // If user name is input, get and then emit 'add user' event.
     // trim(): remove the whitespace from the beginning and end of a string.
+    
     username = cleanInput($usernameInput.val().trim());
+    
+
+    if(typeof database.profiles == "undefined"){
+      setTimeout(setUsername, 250);return console.log('tis')
+    }
     if (database.profiles.includes(username.toLowerCase())) {
-    var pass_input = prompt("Please input the password for the account @"+username, "");
+      if (!existsCookie("logged-in")){//Checks to see if there is a cookie for an account logged in
+        if (valueCookie("logged-in")!==username) {//Checks to see if the cookie matches the current account or not
+          var pass_input = prompt("Please input the password for the account @"+username, "");
   if (pass_input == null || pass_input == "") {
     {location.reload();return}
   } else {
-    /*text given*/   /*alert(pass_input);*/if (database.user[username.toLowerCase()]==pass_input.toLowerCase()){alert("Success!")}else{alert("Wrong password!");return location.reload();}
+if (database.user[username.toLowerCase()]==pass_input.toLowerCase()){alert("Success!"); setCookie("logged-in", username, 30);} else{alert("Wrong password!");return location.reload();}
   }
+        } 
     }
+  }
     
     // If the username is valid
     if (username) {
