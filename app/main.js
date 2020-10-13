@@ -191,7 +191,7 @@ database=data;
       setTimeout(setUsername, 250);return console.log('tis')
     }
     if (database.profiles.includes(username.toLowerCase())) {
-      if (!existsCookie("logged-in")){//Checks to see if there is a cookie for an account logged in
+      if (existsCookie("logged-in")){//Checks to see if there is a cookie for an account logged in
         if (valueCookie("logged-in")!==username) {//Checks to see if the cookie matches the current account or not
           var pass_input = prompt("Please input the password for the account @"+username, "");
   if (pass_input == null || pass_input == "") {
@@ -202,7 +202,6 @@ if (database.user[username.toLowerCase()]==pass_input.toLowerCase()){alert("Succ
         } 
     }
   }
-    
     // If the username is valid
     if (username) {
       $loginPage.fadeOut();
@@ -213,7 +212,6 @@ if (database.user[username.toLowerCase()]==pass_input.toLowerCase()){alert("Succ
 
       // Tell the server your username
       socket.emit('add user', username);
-      
     }
   }
 
