@@ -7,13 +7,20 @@ const database = JSON.parse(fs.readFileSync(database_location));
 const app = express();
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
-
 const bodyParser = require("body-parser");
 const urlencodedParser = bodyParser.urlencoded({ extended: true });
 
 var port = process.env.PORT || 3232;
+var hostname = "mittzchat-beta.glitch.me"; // replace with the web domain you are currently using Ex. google.com which will then be a variable to added to https:// HOSTNAME then whatever redirect it's supposed to be
+var currency = "coins";
 var botname = '⚙️ !v! ittz';
 var prefix = '$'
+
+
+
+
+
+
 server.listen(port, function () {
   console.log('Server listening at port %d', port);
 });
@@ -71,7 +78,7 @@ app.post("/user", urlencodedParser, (request, response) => {
                      ctx.fillText(`${request.body.username.toLowerCase()}`, 240, 90);
                      ctx.font = '25px sans-serif';
                      //ctx.fillText(`${server.xp[request.body.username.toLowerCase()]}xp`, 270, 125);
-                     ctx.fillText(`${database.coins[request.body.username.toLowerCase()]} coins`, 270, 170);
+                     ctx.fillText(`${database.coins[request.body.username.toLowerCase()]} ${currency}`, 270, 170);
                      ctx.fillText(`Bio: ${database.description[request.body.username.toLowerCase()]}`, 77, 229);
                       ctx.strokeStyle = '#74037b';
 	ctx.strokeRect(0, 0, canvas.width, canvas.height);
@@ -91,6 +98,31 @@ app.post("/user", urlencodedParser, (request, response) => {
   
   
 });
+
+app.get("/register", (request, response) => {response.render('register', {qs: request.query});});
+  
+app.post("/register-status", urlencodedParser, (request, response) => {
+  //console.log(request.body);
+  if (database.profiles.includes(request.body.sentname)) {return response.send(`🔐 **Whoops!** This username/profile already exists!<br><button onclick="location.replace(https://${hostname}/register)>back</button>`);}
+  if (request.body.sentname==null||request.body.sentname==undefined||!request.body.sentname){return response.send(`Invalid/Empty Username<br><button onclick=location.replace(https://${hostname}/register)>back</button>`);}
+  if (request.body.sentpass==null||request.body.sentpass==undefined||!request.body.sentpass){return response.send(`Invalid/Empty Password<br><button onclick=location.replace(https://${hostname}/register)>back</button>`);}
+  if (request.body.sentdesc==null||request.body.sentdesc==undefined||!request.body.sentdesc){return response.send(`Invalid/Empty Description<br><button onclick="location.replace(https://${hostname}/register)">back</button>`);}
+  if (!database.profiles.includes(request.body.sentname)) {response.send(`Attempting to set up your profile now!<button onclick="location.replace(https://${hostname}/user)">Find user</button>`);
+  database.profiles.push((request.body.sentname).toLowerCase());           
+  database.profiles.push((request.body.sentname).toLowerCase());
+  database.user[(request.body.username).toLowerCase()]=(request.body.sentpass).toLowerCase();
+  database.coins[(request.body.username).toLowerCase()]=0;
+  database.background[(request.body.username).toLowerCase()] = "https://convertingcolors.com/plain-2C2F33.svg";
+  database.description[(request.body.username).toLowerCase()] = (request.body.sentdesc).toLowerCase();
+  database.color[(request.body.username).toLowerCase()] = "#ffffff";
+  database.avatar[(request.body.username).toLowerCase()] = "cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png";
+  database.badges[(request.body.username).toLowerCase()]=[];                                                           
+  fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
+  console.log(`Account created, Username: ${(request.body.username).toLowerCase()}, Password: ${(request.body.sentpass).toLowerCase()} , Description: ${(request.body.sentdesc).toLowerCase()}`)
+      }
+  
+})
+
 
 
 
@@ -134,7 +166,7 @@ socket.on('create account', function (data) {
   database.description[socket.username.toLowerCase()] = 'No Description Set';
   database.color[socket.username.toLowerCase()] = "#ffffff";
   database.avatar[socket.username.toLowerCase()] = "cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png";
-  database.badges[socket.username.toLowerCase()]=[];https:
+  database.badges[socket.username.toLowerCase()]=[];
   fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
   });
   
