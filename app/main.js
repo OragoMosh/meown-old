@@ -168,11 +168,20 @@ database=data;
       setTimeout(setUsername, 500);return console.log('tis')
     }
     if (database.profiles.includes(username.toLowerCase())) {
+      if (!existsCookie("logged-in")){//Checks to see if there is a cookie for an account logged in
+        if (valueCookie("saved-username")!==username) {//Checks to see if the cookie matches the current account or not
           var pass_input = prompt("Please input the password for the account @"+username, "");
+        }
+      }
+        if(valueCookie("saved-username")==username&&valueCookie("saved-password")!==null){pass_input=valueCookie("saved-username")}
   if (pass_input == null || pass_input == "") {
     {location.reload();return}
   } else {
-if (database.user[username.toLowerCase()].password==pass_input.toLowerCase()){alert("Success!"); setCookie("logged-in", username, 30);} else{alert("Wrong password!");return location.reload();}
+if (database.user[username.toLowerCase()].password==pass_input.toLowerCase())
+{alert("Success!"); 
+ if(valueCookie("saved-username")==null||valueCookie("saved-username")!==username){setCookie("saved-username", username, 30);setCookie("saved-password", pass_input, 30);}}
+    else{alert("Wrong password!");return location.reload();}
+  
   }
   }
     // If the username is valid

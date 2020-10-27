@@ -1,20 +1,15 @@
 {
   "passcode": "51password",
+  
+  
+  
   "user": {
-    "catto": {
-      "username": "catto",
-      "coins": 0,
-      "background": "https://convertingcolors.com/plain-2C2F33.svg",
-      "description": "batto",
-      "color": "#ffffff",
-      "avatar": []
-    },
-    "oragotest": {
-      "password": "doot",
+    "guest": {
+      "password": "password",
       "coins": 0,
       "background": "https://convertingcolors.com/plain-2C2F33.svg",
       "description": "lol",
-      "color": "#ffffff",
+      "color": "#0000ff",
       "avatar": "cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png",
       "badges": [],
       "creation_date": "Time: 10/26/2020 15:54:16 PM"
@@ -24,17 +19,14 @@
       "coins": 0,
       "background": "https://convertingcolors.com/plain-2C2F33.svg",
       "description": "lol",
-      "color": "#ffffff",
+      "color": "#0000ff",
       "avatar": "cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png",
       "badges": [],
       "creation_date": "Time: 10/26/2020 16:18:17 PM"
     }
   },
   "profiles": [
-    "orago",
     "guest",
-    "catto",
-    "oragotest",
     "kung"
   ]
 }
