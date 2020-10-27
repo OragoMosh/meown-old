@@ -53,14 +53,16 @@ app.get("/user", (request, response) => {response.render('user', {qs: request.qu
 
 app.post("/user", urlencodedParser, (request, response) => {
   if (!database.profiles.includes(request.body.username)) {
-    return response.send('🔏 **Whoops!** There is no such user with this name! <br><br><button onclick="location.replace(window.location.hostname+`/register`)">Register an account.</button>');
+    return response.send('🔏 **Whoops!** There is no such user with this name!'
+                        +'<br><br><button onclick="location.replace(window.location.hostname+`/register`)">Register an account.</button>');
   }
+  
   var bg_image = 'https://convertingcolors.com/plain-2C2F33.svg';
   const canvas = Canvas.createCanvas(700, 250);
        const ctx = canvas.getContext('2d');
        Canvas.loadImage(bg_image).then((background) => {
          ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
-           Canvas.loadImage(`${database.user[request.body.username.toLowerCase()].avatar}`).then((pfp) => {
+           Canvas.loadImage(`${database.avatar[request.body.username.toLowerCase()]}`).then((pfp) => {
              Canvas.loadImage('https://cdn2.iconfinder.com/data/icons/actions-states-vol-1-colored/48/JD-13-512.png').then((xp) => {
                Canvas.loadImage('https://www.stickpng.com/assets/images/585e4beacb11b227491c3399.png').then((lb) => {
                   Canvas.loadImage('https://cdn.discordapp.com/attachments/660390332772646922/744094457317818388/discordowner.svg').then((owner) => {
@@ -100,7 +102,7 @@ app.post("/user-vaporwave", urlencodedParser, (request, response) => {
        const ctx = canvas.getContext('2d');
    Canvas.loadImage('https://img.freepik.com/free-vector/retro-vaporwave-background-cyberpunk-laser-grid-80s-style-abstract-futuristic-landscape_87408-125.jpg').then((background) => {
          ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
-           Canvas.loadImage(`${database.user[request.body.username.toLowerCase()].avatar}`).then((icon) => {
+           Canvas.loadImage(`${database.avatar[request.body.username.toLowerCase()]}`).then((icon) => {
 Canvas.loadImage('https://cdn.discordapp.com/attachments/741450918020513813/742241361968758804/boxie32bfull.png').then((boxie) => {
                      ctx.drawImage(boxie, 642, 192, 48, 48);
                      ctx.font = '40px sans-serif';
@@ -128,7 +130,7 @@ app.post("/user-text", urlencodedParser, (request, response) => {
                         +'<br><br><button onclick="location.replace(window.location.hostname+`/register`)">Register an account.</button>');
   }
 response.send(
-    `Username: ${request.body.username.toLowerCase()} <br> Description: ${database.user[request.body.username.toLowerCase()].description} <br> ${currency}: ${database.user[request.body.username.toLowerCase()].coins} `
+    `Username: ${request.body.username.toLowerCase()} <br> Description: ${database.description[request.body.username.toLowerCase()]} <br> ${currency}: ${database.coins[request.body.username.toLowerCase()]} `
   );
 });
 
@@ -141,14 +143,17 @@ app.post("/register-status", urlencodedParser, (request, response) => {
   if (request.body.sentpass==null||request.body.sentpass==undefined||!request.body.sentpass){return response.send(`Invalid/Empty Password<br><button onclick=location.replace(https://${hostname}/register)>back</button>`);}
   if (request.body.sentdesc==null||request.body.sentdesc==undefined||!request.body.sentdesc){return response.send(`Invalid/Empty Description<br><button onclick="location.replace(https://${hostname}/register)">back</button>`);}
   if (!database.profiles.includes(request.body.sentname)) {response.send(`Attempting to set up your profile now!<button onclick="location.replace(https://${hostname}/user)">Find user</button>`);
+  database.profiles.push((request.body.sentname).toLowerCase());           
   database.profiles.push((request.body.sentname).toLowerCase());
-  database.user[(request.body.sentname).toLowerCase()]=
-    {password:(request.body.sentpass).toLowerCase(), coins:0, background:"https://convertingcolors.com/plain-2C2F33.svg", description:(request.body.sentdesc).toLowerCase(),
-     color:"#ffffff", avatar:"cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png", badges:[],creation_date:`${(time.getMonth()+1)}/${(time.getDate())}/${(time.getFullYear())} ${time.getHours()-4}:${time.getMinutes()}:${time.getSeconds()} ${am_pm}`
-    }
-                                                
+  database.user[(request.body.username).toLowerCase()]=(request.body.sentpass).toLowerCase();
+  database.coins[(request.body.username).toLowerCase()]=0;
+  database.background[(request.body.username).toLowerCase()] = "https://convertingcolors.com/plain-2C2F33.svg";
+  database.description[(request.body.username).toLowerCase()] = (request.body.sentdesc).toLowerCase();
+  database.color[(request.body.username).toLowerCase()] = "#ffffff";
+  database.avatar[(request.body.username).toLowerCase()] = "cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png";
+  database.badges[(request.body.username).toLowerCase()]=[];                                                           
   fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
-  console.log(`Account created, Username: ${(request.body.sentname).toLowerCase()}, Password: ${(request.body.sentpass).toLowerCase()} , Description: ${(request.body.sentdesc).toLowerCase()}`)
+  console.log(`Account created, Username: ${(request.body.username).toLowerCase()}, Password: ${(request.body.sentpass).toLowerCase()} , Description: ${(request.body.sentdesc).toLowerCase()}`)
       }
   
 })
@@ -190,11 +195,13 @@ socket.on('create account', function (data) {
       message: socket.username+" has just registered!"//data
     });
   database.profiles.push(socket.username.toLowerCase());
-  database.profiles.push(socket.username.toLowerCase());
-  database.user[socket.username.toLowerCase()]=
-    {password:socket.username.toLowerCase(), coins:0, background:"https://convertingcolors.com/plain-2C2F33.svg", description:socket.username.toLowerCase(),
-     color:"#ffffff", avatar:"cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png", badges:[],creation_date:`${(time.getMonth()+1)}/${(time.getDate())}/${(time.getFullYear())} ${time.getHours()-4}:${time.getMinutes()}:${time.getSeconds()} ${am_pm}`
-    }
+  database.user[socket.username.toLowerCase()]=data.toLowerCase();
+  database.coins[socket.username.toLowerCase()]=0;
+  database.background[socket.username.toLowerCase()] = "https://convertingcolors.com/plain-2C2F33.svg";
+  database.description[socket.username.toLowerCase()] = 'No Description Set';
+  database.color[socket.username.toLowerCase()] = "#ffffff";
+  database.avatar[socket.username.toLowerCase()] = "cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png";
+  database.badges[socket.username.toLowerCase()]=[];
   fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
   });
   
@@ -211,8 +218,8 @@ socket.on('create account', function (data) {
       message: socket.username+` has just collected a daily reward by using ${prefix}daily!`//data
     });
     console.log("ooh shiny,"+socket.username+"claimed their daily bonus!"+data)
-  database.user[socket.username.toLowerCase()].last_daily=data;
-  database.user[socket.username.toLowerCase()].coins+=50;
+  database.last_daily[socket.username.toLowerCase()]=data;
+  database.coins[socket.username.toLowerCase()]+=50;
   fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
   });
   
@@ -223,7 +230,7 @@ socket.on('create account', function (data) {
       message: socket.username+` has just collected a daily reward by using ${prefix}daily!`//data
     });
     console.log("Coin mined")
-  database.user[socket.username.toLowerCase()].coins+=data;
+  database.coins[socket.username.toLowerCase()]+=data;
   fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
   });
   

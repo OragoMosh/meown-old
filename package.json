@@ -1,5 +1,5 @@
 {
-  "name": "JoinAndChat",
+  "name": "MittzChat",
   "version": "1.6.1",
   "description": "Join mulitiple rooms and chat based on socket.io",
   "author": "GW19",

@@ -1,38 +1,40 @@
 {
   "passcode": "51password",
-  "last_daily": {
-    "orago": "2020-09-27T18:41:30.050Z"
-  },
-  "developers": [
-    "orago"
-  ],
-  "moderators": [
-    "orago"
-  ],
   "user": {
-    "orago": "2004cat",
-    "guest": "password"
+    "catto": {
+      "username": "catto",
+      "coins": 0,
+      "background": "https://convertingcolors.com/plain-2C2F33.svg",
+      "description": "batto",
+      "color": "#ffffff",
+      "avatar": []
+    },
+    "oragotest": {
+      "password": "doot",
+      "coins": 0,
+      "background": "https://convertingcolors.com/plain-2C2F33.svg",
+      "description": "lol",
+      "color": "#ffffff",
+      "avatar": "cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png",
+      "badges": [],
+      "creation_date": "Time: 10/26/2020 15:54:16 PM"
+    },
+    "kung": {
+      "password": "cat",
+      "coins": 0,
+      "background": "https://convertingcolors.com/plain-2C2F33.svg",
+      "description": "lol",
+      "color": "#ffffff",
+      "avatar": "cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png",
+      "badges": [],
+      "creation_date": "Time: 10/26/2020 16:18:17 PM"
+    }
   },
   "profiles": [
     "orago",
-    "guest"
-  ],
-  "coins": {
-    "orago": 267,
-    "guest": 0
-  },
-  "avatar": {
-    "orago": "https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png",
-    "guest": "https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png"
-  },
-  "description": {
-    "orago": "No Description Set",
-    "guest": "No Description Set"
-  },
-  "background": {
-    "orago": "https://convertingcolors.com/plain-2C2F33.svg",
-    "guest": "https://convertingcolors.com/plain-2C2F33.svg"
-  },
-  "badges": {},
-  "color": {}
+    "guest",
+    "catto",
+    "oragotest",
+    "kung"
+  ]
 }

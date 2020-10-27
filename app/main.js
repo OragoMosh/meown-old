@@ -78,26 +78,6 @@ function testing(){
   cat +=1
 return cat;
 }
-var registered;
-function passWord() {
-var testV = 1;
-var pass1 = prompt('Please Enter Your Password',' ');//Password Request Text
-while (testV < 3) {
-if (!pass1)
-history.go(-1);
-if (pass1.toLowerCase() == "BetaCatto") {
-alert('You Got it Right!');//Password Accepted Text
-window.open('/');
-break;
-}
-testV+=1;
-var pass1 =
-prompt('Access Denied - Password Incorrect, Please Try Again.','Password'); //Password Denied Text
-}
-if (pass1.toLowerCase()!="password" & testV ==3)
-history.go(-1);
-return " ";
-}
 
 $(function() {
   var FADE_TIME = 150; // ms
@@ -176,9 +156,6 @@ database=data;
     log(message);
   }
   
-
-  //setTimeout(function(){ alert(database.user["orago"]); }, 500);
-
   // Sets the client's username
   function setUsername () {
     // If user name is input, get and then emit 'add user' event.
@@ -188,19 +165,15 @@ database=data;
     
 
     if(typeof database.profiles == "undefined"){
-      setTimeout(setUsername, 250);return console.log('tis')
+      setTimeout(setUsername, 500);return console.log('tis')
     }
     if (database.profiles.includes(username.toLowerCase())) {
-      if (existsCookie("logged-in")){//Checks to see if there is a cookie for an account logged in
-        if (valueCookie("logged-in")!==username) {//Checks to see if the cookie matches the current account or not
           var pass_input = prompt("Please input the password for the account @"+username, "");
   if (pass_input == null || pass_input == "") {
     {location.reload();return}
   } else {
-if (database.user[username.toLowerCase()]==pass_input.toLowerCase()){alert("Success!"); setCookie("logged-in", username, 30);} else{alert("Wrong password!");return location.reload();}
+if (database.user[username.toLowerCase()].password==pass_input.toLowerCase()){alert("Success!"); setCookie("logged-in", username, 30);} else{alert("Wrong password!");return location.reload();}
   }
-        } 
-    }
   }
     // If the username is valid
     if (username) {
@@ -214,6 +187,7 @@ if (database.user[username.toLowerCase()]==pass_input.toLowerCase()){alert("Succ
       socket.emit('add user', username);
     }
   }
+
 
   // Sends a chat message.
   function sendMessage () {
@@ -315,15 +289,7 @@ if (database.user[username.toLowerCase()]==pass_input.toLowerCase()){alert("Succ
       case 'refresh':// Command /refresh = reload room list.
         socket.emit('room list');
         break;
-        
-      case 'beta':// Command /refresh = reload room list.
-        passWord()
-        break;
-        
 
-        case 'info':// Command /refresh = reload room list.
-        alert(database)
-        break;
 
       case 'info':// Command /info = Server info
         message = 'This server is running V'+ver;
@@ -340,21 +306,7 @@ if (database.user[username.toLowerCase()]==pass_input.toLowerCase()){alert("Succ
         message = 'Reloading will now commence...'
         log(message);
         break;    
-        
-  //fun commands
-      case 'slap':// Slaps the text given
-      words.shift();
-      var jchat = words.join(' ');
-      if (roomNameRule.test(jchat)) {
-      addChatMessage({
-          username: username,
-          message: 'has slapped ' + jchat
-        });
-        socket.emit('new message', message);}
-        else{
-          log('Please select a text that you would like to slap, ' +
-              'Example /slap cat', {})}
-        break;
+
 
         
         case 'register':
@@ -383,15 +335,18 @@ if (database.user[username.toLowerCase()]==pass_input.toLowerCase()){alert("Succ
       words.shift();
         
         time_value = new Date
-        var get_data = parseInt(database.last_daily[username.toLowerCase()])+86400000
-        
-        var coin_amount = 50;
         if (!database.profiles.includes(username.toLowerCase())){return log("You have not registered yet!")}
-        if (time >= get_data){return log("You need to wait a whole day to do this again!")}
-        log(time);
-        log(String(get_data));
-        log(`You have claimed your daily ${coin_amount} coins!`);
+        if (time >= parseInt(database.user[username.toLowerCase()].last_daily+86400000)){return log("You need to wait a whole day to do this again!")}
+        log(`You have claimed your daily ${50} coins!`);
         socket.emit('claim daily', time);
+        socket.emit('sync');
+        break;
+        
+        case 'mine':
+        words.shift();
+        if (!database.profiles.includes(username.toLowerCase())){return log("You have not registered yet!")}
+        log(`You have mined ${0.01} coins and now have ${database.user[username.toLowerCase()].coins+0.01}!`);
+        socket.emit('claim mine', 0.01);
         socket.emit('sync');
         break;
         
@@ -410,7 +365,7 @@ if (database.user[username.toLowerCase()]==pass_input.toLowerCase()){alert("Succ
         socket.emit('sync');
       words.shift();
         if (!database.profiles.includes(username.toLowerCase())){return log("Please create a user with '"+prefix+"register' !")}
-        log("You have "+database.coins[username.toLowerCase()]+" coins.");
+        log("You have "+database.user[username.toLowerCase()].coins+" coins.");
         
         break;
         
@@ -704,14 +659,10 @@ function addChatImage (data, options) {
     addParticipantsMessage(data);
   });
 
-  socket.on('get account', function (data) {
-    log("The stuff");log(JSON.stringify(data));
-  });
   
   // Whenever the server emits 'new message', update the chat body
   socket.on('new message', function (data) {
     addChatMessage(data);
-
   });
 
   // Whenever the server emits 'user joined', log it in the chat body
