@@ -1,11 +1,11 @@
 /* Author: Orago <Orago#0051>*/
 // Based on Socket.io
-var botname = '⚙️ !v! ittz' //The username of the bot
-var cmdlist = prefix+'join, '+prefix+'help, '+prefix+'refresh, '+prefix+'reload, '+prefix+'info, '+prefix+'time '+prefix+'fun, '//simple list of the commands that are easier to reach
-var ver = '1.04'//The version of the command used
-var prefix = '$' //The symbol used to call a command
+var botname = '⚙️ !v! ittz'; //The username of the bot
+var cmdlist = prefix+'join, '+prefix+'help, '+prefix+'refresh, '+prefix+'reload, '+prefix+'info, '+prefix+'time '+prefix+'fun, ';//simple list of the commands that are easier to reach
+var ver = '1.04';//The version of the command used
+var prefix = '$'; //The symbol used to call a command
 var pname = "Mittz Chat";
-var staff_only = "This option is for staff only."
+var staff_only = "This option is for staff only.";
 var database = "d";
 var time_value;
 var time;
@@ -46,25 +46,13 @@ function existsCookie(type) {
      }
   }
 }
+
 function valueCookie(type) {
   var cookie_value=getCookie(type);
 return cookie_value;
 }
 
 
-
-
-
-
-
-
-function new_coin(){
-  fetch("/add_coin")
-  .then(response => response.json()) // parse the JSON from the server
-  .then(data => {
-database = data;
-  });
-}
 
   function new_time(){
 time_value = new Date
@@ -138,12 +126,12 @@ var time = new Date();
   
   
   var socket = io();
+  
   socket.emit('sync');
 socket.on('handshake', function (data) {
 database=data;
   });
-  //var file = fs();
-  //var db = database();
+
   function addParticipantsMessage (data) {
     var message;
     if (!data.userJoinOrLeftRoom) {
@@ -159,7 +147,6 @@ database=data;
   // Sets the client's username
   function setUsername () {
     // If user name is input, get and then emit 'add user' event.
-    // trim(): remove the whitespace from the beginning and end of a string.
     
     username = cleanInput($usernameInput.val().trim());
     
@@ -169,7 +156,7 @@ database=data;
     }
     if (database.profiles.includes(username.toLowerCase())) {
       if (!existsCookie("logged-in")){//Checks to see if there is a cookie for an account logged in
-        if (valueCookie("saved-username")!==username) {//Checks to see if the cookie matches the current account or not
+        if (valueCookie("saved-username")!==username) {//Checks to see if the cookie matches the current account or not.
           var pass_input = prompt("Please input the password for the account @"+username, "");
         }
       }
@@ -177,8 +164,8 @@ database=data;
   if (pass_input == null || pass_input == "") {
     {location.reload();return}
   } else {
-if (database.user[username.toLowerCase()].password==pass_input.toLowerCase())
-{alert("Success!"); 
+if (valueCookie("saved-username")==username&&database.user[username.toLowerCase()].password==valueCookie("saved-password")){}
+else if (database.user[username.toLowerCase()].password==pass_input.toLowerCase()){alert("Success!"); 
  if(valueCookie("saved-username")==null||valueCookie("saved-username")!==username){setCookie("saved-username", username, 30);setCookie("saved-password", pass_input, 30);}}
     else{alert("Wrong password!");return location.reload();}
   

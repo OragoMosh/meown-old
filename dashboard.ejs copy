@@ -1,17 +1,60 @@
 
+<body>
+    <h1>Hello</h1>
+    <form name="contact-form" method="POST" action="/dashboard">
+    <table>
+        <tr>
+        <td>Username</td>
+        <td><input type="text" name="sentname" ></td>
+        </tr>
+        <tr>
+        <td>Password</td>
+        <td><input type="text" name="sentpass" ></td>
+        </tr>
+        <tr>
+        <td>Description (optional)</td>
+        <td><input type="text" name="sentdesc" ></td>
+        </tr>
+        <tr>
+        <td colspan="2"><input type="submit" value="submit" ></td>
+        </tr>
+    </table>
+    </form>   
+</body>
+
+<body>
+    <h1>New Post</h1>
+    <form name="contact-form" method="POST" action="/new-post">
+    <table>
+        <tr>
+        <td>Username</td>
+        <td><input type="text" name="sentname" required></td>
+        </tr>
+        <tr>
+        <td>Password</td>
+        <td><input type="text" name="sentpass" required></td>
+        </tr>
+        <tr>
+        <td>Create New Post</td>
+        <td><input type="text" name="sentpost" required></td>
+        </tr>
+        <tr>
+        <td colspan="2"><input type="submit" value="submit" ></td>
+        </tr>
+    </table>
+    </form>   
+</body>
+
 
 <!DOCTYPE html>
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
 </head>
 <body>
-
-
 <div class="container">
-  <form method="POST" action="/register-status">
+  <form method="POST" action="/new-post">
     <div class="row">
       <h2 style="text-align:center">Mittz-Chat Login</h2>
       <div class="col">
@@ -19,13 +62,13 @@
         </div>
         <input type="text" name="sentname" placeholder="Username" required>
         <input type="password" name="sentpass" placeholder="Password" required>
-        <input type="password" name="sentdesc" placeholder="Password" required>
-        <input type="submit" value="Sign Up">
+        <input type="password" name="sentpost" placeholder="Post Data (not required)">
+        <input type="submit" value="Submit">
       </div>
     </div>
   </form>
+  
 </div>
-
 <div class="bottom-container">
   <div class="row">
     <div class="col">
@@ -36,9 +79,10 @@
     </div>
   </div>
 </div>
-
 </body>
 </html>
+
+
 <style>
 body {font-family: Arial, Helvetica, sans-serif;}
 * {box-sizing: border-box;}
