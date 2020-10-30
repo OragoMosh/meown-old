@@ -15,9 +15,9 @@
         </div>
         <input type="text" name="sentname" placeholder="Username" required>
         <input type="password" name="sentpass" placeholder="Password" required>
-        <input type="password" name="sentnewpass" placeholder="New password (optional)">
-        <input type="password" name="sentnewdesc" placeholder="Change description (optional)">
-        <input type="password" name="sentnewdesc" placeholder="Change avatar (optional)">
+        <input type="text" name="sentnewpass" placeholder="New password (optional)">
+        <input type="text" name="sentnewdesc" placeholder="Change description (optional)">
+        <input type="text" name="sentnewdesc" placeholder="Change avatar (optional)">
         <input type="submit" value="Submit">
       </div>
     </div>
@@ -31,7 +31,20 @@
         </div>
         <input type="text" name="sentname" placeholder="Username" required>
         <input type="password" name="sentpass" placeholder="Password" required>
-        <input type="password" name="sentpost" placeholder="Post info">
+        <input type="test" name="sentpost" placeholder="Post info" required>
+        <input type="submit" value="Submit">
+      </div>
+    </div>
+  </form>
+  <form method="POST" action="/delete-post">
+    <div class="row">
+      <h2 style="text-align:center">Delete Post</h2>
+      <div class="col">
+        <div class="hide-md-lg">
+        </div>
+        <input type="text" name="sentname" placeholder="Username" required>
+        <input type="password" name="sentpass" placeholder="Password" required>
+        <input type="number" name="sentnum" placeholder="Post number" min="0" max="1000" required>
         <input type="submit" value="Submit">
       </div>
     </div>

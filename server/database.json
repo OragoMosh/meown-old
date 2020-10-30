@@ -28,7 +28,6 @@
       "color": "#ffffff",
       "avatar": "https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fcat_loading.webp",
       "badges": [
-        "cool"
       ],
       "description": "lol",
       "creation_date": "10/28/2020 2:18:38 AM"
@@ -40,6 +39,14 @@
       "hello",
       "new post!"
     ]
+  },
+  "badges":{
+    "creator":["orago"],
+    "developer":["orago"],
+    "moderator":["orago"],
+    "early_member":["orago"],
+    "long_user":[],
+    "testing":[]
   },
   "profiles": [
     "guest",
