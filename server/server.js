@@ -61,8 +61,9 @@ app.post("/new-post", urlencodedParser, (request, response) => {
   }
 if (database.user[request.body.sentname.toLowerCase()].password===request.body.sentpass.toLowerCase()){
   if(!database.posts[request.body.sentname.toLowerCase()].includes((request.body.sentpost).toLowerCase())){
-
   database.posts[request.body.sentname.toLowerCase()].push((request.body.sentpost).toLowerCase());
+    database.user[(request.body.sentname).toLowerCase()].coins+=1;
+    
   fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
   return response.send(`Your post has been created!<button onclick="location.replace('https://'+window.location.hostname+'/dashboard')">View Post</button>`);
   } else {
@@ -70,7 +71,6 @@ if (database.user[request.body.sentname.toLowerCase()].password===request.body.s
   }
 }else if (database.user[request.body.sentname.toLowerCase()].password!==request.body.sentpass.toLowerCase()){
   return response.send(`🔏 **Whoops!** Incorrect Password!<br><br><button onclick="location.replace('https://'+window.location.hostname+'/dashboard')">Please try again.</button>`);
-
 }
 });
 
@@ -79,13 +79,12 @@ app.post("/delete-post", urlencodedParser, (request, response) => {
     return response.send('🔏 **Whoops!** There is no such user with this name!<br><br><button onclick="location.replace(`https://`+window.location.hostname+`/register`)">Register an account.</button>');
   }
 if (database.user[request.body.sentname.toLowerCase()].password===request.body.sentpass.toLowerCase()){
-
   delete database.posts[request.body.sentname.toLowerCase()][request.body.sentnum];
+  database.user[(request.body.sentname).toLowerCase()]-=1;
   fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
   return response.send(`Ready for the next post?<br><br><button onclick="location.replace('https://'+window.location.hostname+'/dashboard')">New Post</button>`);
 }else if (database.user[request.body.sentname.toLowerCase()].password!==request.body.sentpass.toLowerCase()){
   return response.send(`🔏 **Whoops!** Incorrect Password!<br><br><button onclick="location.replace('https://'+window.location.hostname+'/dashboard')">Please try again.</button>`);
-
 }
 });
 
@@ -113,7 +112,7 @@ app.post("/register-status", urlencodedParser, (request, response) => {
   if (!database.profiles.includes(request.body.sentname)) {response.send(`Attempting to set up your profile now!<button onclick="location.replace(https://${hostname}/user)">Find user</button>`);
   database.profiles.push((request.body.sentname).toLowerCase());
   database.user[(request.body.sentname).toLowerCase()]=
-    {password:(request.body.sentpass).toLowerCase(), coins:0, background:"https://convertingcolors.com/plain-2C2F33.svg", description:(request.body.sentdesc).toLowerCase(), 
+    {password:(request.body.sentpass).toLowerCase(), coins:50, background:"https://convertingcolors.com/plain-2C2F33.svg", description:(request.body.sentdesc).toLowerCase(), 
      color:"#ffffff", avatar:"https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png", badges:[], /*status:"Default Status Text",*/
      creation_date:`${(time.getMonth()+1)}/${(time.getDate())}/${(time.getFullYear())} ${time.getHours()-4}:${time.getMinutes()}:${time.getSeconds()} ${am_pm}`
     }
@@ -640,7 +639,7 @@ function openNav() {
 
 
 
-app.get("/userlink", (request, response) => {
+app.get("/u", (request, response) => {
   var params = request.protocol + "://" + request.headers.host + request.originalUrl;
   var username = params.slice(params.search("username=")+9,Infinity);
   if (!username) {

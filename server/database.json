@@ -42,11 +42,11 @@
   },
   "badges":{
     "creator":["orago"],
-    "developer":["orago"],
+    "developer":["orago","king"],
     "moderator":["orago"],
     "early_member":["orago"],
     "long_user":[],
-    "testing":[]
+    "testing":["guest"]
   },
   "profiles": [
     "guest",
