@@ -80,7 +80,7 @@ app.post("/delete-post", urlencodedParser, (request, response) => {
   }
 if (database.user[request.body.sentname.toLowerCase()].password===request.body.sentpass.toLowerCase()){
   delete database.posts[request.body.sentname.toLowerCase()][request.body.sentnum];
-  database.user[(request.body.sentname).toLowerCase()]-=1;
+  database.user[(request.body.sentname).toLowerCase()].coins-=1;
   fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
   return response.send(`Ready for the next post?<br><br><button onclick="location.replace('https://'+window.location.hostname+'/dashboard')">New Post</button>`);
 }else if (database.user[request.body.sentname.toLowerCase()].password!==request.body.sentpass.toLowerCase()){
