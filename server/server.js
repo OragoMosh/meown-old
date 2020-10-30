@@ -47,7 +47,7 @@ app.post("/result", urlencodedParser, (request, response) => {
 });
 
 
-app.get("/udser", (request, response) => {response.render('user', {qs: request.query});});
+app.get("/user", (request, response) => {response.render('user', {qs: request.query});});
 
 
 app.get("/dashboard", (request, response) => {response.render('dashboard', {qs: request.query});});
@@ -652,12 +652,6 @@ app.get("/u", (request, response) => {
   }else
   var post_number, posts_list = "";
   var badge_number, badge_list = "";
-  /*for (amount in database.posts) {list +=  "<br>"+database.posts[request.body.username.toLowerCase()][1] ;}
-*/
-/* Old badges if(typeof database.user[request.body.username.toLowerCase()].badges !== "undefined"){
-  for (badge_number in database.user[request.body.username.toLowerCase()].badges) {
-    badge_list += database.user[request.body.username.toLowerCase()].badges[badge_number]
-  }}*/
     if(database.badges.creator.includes(username)){badge_list += "Creator";}
     if(database.badges.developer.includes(username)){if(database.badges.creator.includes(username)){badge_list += ", "};badge_list += "Developer";}
     if(database.badges.moderator.includes(username)){if(database.badges.developer.includes(username)){badge_list += ", "};badge_list += "Moderator";}
@@ -833,10 +827,6 @@ response.send(
 <!-- End Page Container -->
 </div>
 <br>
-
-<footer class="w3-container w3-theme-d5">
-  <p>Designed by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
-</footer>
  
 <script>
 // Accordion

@@ -1,7 +1,6 @@
 /* Author: Orago <Orago#0051>*/
 // Based on Socket.io
 var botname = '⚙️ !v! ittz'; //The username of the bot
-var cmdlist = prefix+'join, '+prefix+'help, '+prefix+'refresh, '+prefix+'reload, '+prefix+'info, '+prefix+'time '+prefix+'fun, ';//simple list of the commands that are easier to reach
 var ver = '1.04';//The version of the command used
 var prefix = '$'; //The symbol used to call a command
 var pname = "Mittz Chat";
@@ -9,7 +8,6 @@ var staff_only = "This option is for staff only.";
 var database = "d";
 var time_value;
 var time;
-
 
 
 function setCookie(cname,cvalue,exdays) {
@@ -41,8 +39,7 @@ function existsCookie(type) {
     return true;//Exists
   } else {
      if (cookie_value != "" && cookie_value != null) {
-       return false;//Does not Exist
-       //setCookie(type, value, 30);
+       return false;/*Does not Exist*/
      }
   }
 }
@@ -51,8 +48,6 @@ function valueCookie(type) {
   var cookie_value=getCookie(type);
 return cookie_value;
 }
-
-
 
   function new_time(){
 time_value = new Date
@@ -81,7 +76,7 @@ $(function() {
     '#F3A530', '#56B949', '#844D9E', '#4e1c81'
   ];
 var time = new Date();
-          var month = new Array();
+var month = new Array();
   month[0] = "January";
   month[1] = "February";
   month[2] = "March";
@@ -244,7 +239,7 @@ else if (database.user[username.toLowerCase()].password==pass_input.toLowerCase(
         log(prefix+'help - Shows a list of helping commands');log(prefix+'updates - shows a list of new updates'); 
         log(prefix+'commands - Shows a list of useable commands'); log(prefix+'refresh - This command refreshes the room list if new ones arent loading');
         log(prefix+'info - Shows server version and creator info'); log(prefix+'time - Shows the current time'); 
-        log('/reload - This command will reload the server page');
+        log(prefix+'reload - This command will reload the server page');
         
         log('-- use /help2 for more info --');
         log('--------------------');
@@ -439,7 +434,6 @@ else if (database.user[username.toLowerCase()].password==pass_input.toLowerCase(
   function log (message, options) {
     options = options || {};
     var $logDiv;
-
     if (typeof options.userConnEvent !== 'undefined') {
       var userName = options.username;
       var colorOfUserName = getUsernameColor(userName);
