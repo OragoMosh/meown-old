@@ -1,13 +1,55 @@
 {
+  "passcode": "51password",
   "user": {
-    "orago": "2004cat"
+    "guest": {
+      "password": "password",
+      "coins": 0,
+      "preferred":"Guest account",
+      "banner": "https://convertingcolors.com/plain-2C2F33.svg",
+      "description": "lol",
+      "color": "#0000ff",
+      "avatar": "https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png",
+      "creation_date": "10/26/2020 15:54:16 PM"
+    },
+    "king": {
+      "password": "cat",
+      "coins": 0,
+      "preferred":"k!ng",
+      "banner": "https://convertingcolors.com/plain-2C2F33.svg",
+      "description": "lol",
+      "color": "#0000ff",
+      "avatar": "https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fwaffles.png",
+      "creation_date": "10/26/2020 16:18:17 PM"
+    },
+    "orago": {
+      "password": "2004mittz",
+      "coins": 51000000,
+      "preferred":"Orago",
+      "banner": "https://www.w3schools.com/cssref/paper.gif",
+      "color": "#000000",
+      "avatar": "https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fcat_loading.webp",
+      "description": "lol",
+      "creation_date": "10/28/2020 2:18:38 AM"
+    }
   },
-  "coins": {
-    "orago": 0
+  "posts": {
+    "orago": [
+      "hi",
+      "hello",
+      "new post!"
+    ]
+  },
+  "badges":{
+    "creator":["orago"],
+    "developer":["orago","king"],
+    "moderator":["orago"],
+    "early_member":["orago"],
+    "long_user":[],
+    "testing":["guest"]
   },
   "profiles": [
+    "guest",
+    "king",
     "orago"
-  ],
-  "developer": [],
-  "moderator": []
+  ]
 }
