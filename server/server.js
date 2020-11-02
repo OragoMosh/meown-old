@@ -118,7 +118,7 @@ app.post("/register-status", urlencodedParser, (request, response) => {
   if (request.body.sentname==null||request.body.sentname==undefined||!request.body.sentname){return response.send(`Invalid/Empty Username<br><button onclick=location.replace(https://${hostname}/register)>back</button>`);}
   if (request.body.sentpass==null||request.body.sentpass==undefined||!request.body.sentpass){return response.send(`Invalid/Empty Password<br><button onclick=location.replace(https://${hostname}/register)>back</button>`);}
   if (request.body.sentdesc==null||request.body.sentdesc==undefined||!request.body.sentdesc){return response.send(`Invalid/Empty Description<br><button onclick="location.replace(https://${hostname}/register)">back</button>`);}
-  if (!database.profiles.includes(request.body.sentname)) {response.send(`Attempting to set up your profile now!<button onclick="location.replace(https://${hostname}/user)">Find user</button>`);
+  if (!database.profiles.includes(request.body.sentname)) {response.send(`Attempting to set up your profile now!<button onclick="location.replace(window.location.hostname+/user)">Find user</button>`);
   database.profiles.push((request.body.sentname).toLowerCase());
   database.user[(request.body.sentname).toLowerCase()]=
     {password:request.body.sentpass.toLowerCase(), coins:50, preferred:request.body.sentname,
