@@ -1,0 +1,75 @@
+<!--Info Fill -->
+
+<!--  Author: Orago <Orago#0051> -->
+<!doctype html>
+<html lang="En">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Mittz Chat</title>
+  <link href="style.css" rel="stylesheet" >
+
+  <script src="https://use.typekit.net/ama5eep.js"></script>
+  <script>try{Typekit.load({ async: true });}catch(e){}</script>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <link rel="stylesheet"
+        href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/base/jquery-ui.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/main.js"></script>
+  
+</head>
+
+<body>
+  <ul class="pages" id="all-page">
+
+    <li class="chat page" id="chat-page">
+      <div class="chatArea">
+        <ul class="messages"></ul>
+      </div>
+
+      <button class="btn btn-tips" title="Help">?</button>
+
+      <div id="effect-tips" class="ui-tips">
+        <h3 class="tips-title">Help</h3>
+        <div class="tips">
+          <h3>System Commands</h3>
+          <h4>$help or $commands</h4>
+          This command will show a list of other commands that can be used<br><br>
+          <br>
+          Creator: Orago 
+          <br>
+          &nbsp;
+          &lt; <a href="https://mittens.glitch.me">Home Page</a> &gt;<br>
+          <!--Github：<a href='https://github.com/gw19/join-and-chat'
+                    target='_blank'>join-and-chat</a>-->
+        </div>
+      </div>
+
+      <input class="inputMessage" placeholder="Say something..."/>
+    </li>
+
+    <li class="login page" id="login-page">
+      <div class="form">
+        <h1 class="title">Mittz Chat</h1>
+        <h3 class="subtitle">Please enter your nickname.</h3>
+        
+        <label>
+          <input class="usernameInput" type="text" id="username_input" minlength="1" maxlength="14"
+                 title="Nickname is limited to 1 to 14 characters" autofocus/>
+        </label>
+      </div>
+    </li>
+
+    <li class="room page" id="room-page">
+      <h1 class="room-title">Room list</h1>
+      <p class="room-hint">Click the room block to join the room.</p>
+      <ul class="room-list"></ul>
+    </li>
+
+  </ul>
+
+</body>
+</html>

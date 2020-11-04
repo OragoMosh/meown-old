@@ -1,34 +1,23 @@
 {
-  "@discordjs/opus": "^0.3.2",
-  "name": "Mittz-Bot",
-  "version": "0.0.9",
-  "description": "A very useful discord bot with many capabilities",
+  "name": "MittzChat",
+  "version": "1.6.9",
+  "description": "Join mulitiple rooms and chat based on socket.io",
+  "author": "Orago",
+  "private": true,
+  "license": "CC",
   "main": "server.js",
-  "scripts": {
-    "start": "node server.js & node kamiko.js"
-  },
   "dependencies": {
     "express": "^4.17.1",
-    "discord.js": "^12.4.0",
+    "socket.io": "^2.3.0",
+    "express-layout": "^0.1.0",
+    "ejs": "^3.1.5",
     "canvas": "^2.6.1",
-    "fs": "^0.0.2",
-    "tinyurl": "^1.1.7",
-    "moment": "^2.28.0",
-    "moment-duration-format": "^2.3.2",
-    "getyoutubesubscriber": "^0.1.4",
-    "ytdl-core": "^3.2.2",
-    "node-fetch": "^2.6.0"
+    "discord.js": "^12.4.0"
+  },
+  "scripts": {
+    "start": "node server/server.js & node server/chat_bot.js"
   },
   "engines": {
     "node": "12.x"
-  },
-  "repository": {
-    "url": "https://github.com/orago/mittz-bot"
-  },
-  "license": "CC",
-  "keywords": [
-    "mittz",
-    "bot",
-    "discord"
-  ]
+  }
 }

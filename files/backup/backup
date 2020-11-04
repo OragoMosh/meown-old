@@ -1,0 +1,43 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <style>
+      body {
+        margin: 0px;
+        padding: 0px;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="myCanvas" width="700" height="250"></canvas>
+    <script>
+      var canvas = document.getElementById('myCanvas');
+      var ctx = canvas.getContext('2d');
+      var image = new Image();
+      var background = 'https://convertingcolors.com/plain-2C2F33.svg';
+      var avatar = 'https://th.bing.com/th/id/OIP.qz8zNyxJVXeZQ2NlOE8asQHaEO?w=296&h=180&c=7&o=5&pid=1.7';
+      var text1 = 'hi';
+      
+      
+      image.src = background;
+      
+    image.onload = function() {
+      ctx.drawImage(image, 0, 0, canvas.width, canvas.height);//Background  image don't change.
+      ctx.font = '40px sans-serif';
+      ctx.fillStyle = 'white';
+      ctx.fillText(text1, 240, 125);
+      ctx.strokeRect(0, 0, canvas.width, canvas.height);
+
+	ctx.beginPath();
+    
+	ctx.arc(110, 125, 75, 0, Math.PI * 2, true);
+    
+	ctx.closePath();
+ 	image.src = avatar//Avatar image don't change. 
+	ctx.clip();
+    ctx.drawImage(image, 30, 45, 150, 150);
+      };
+
+    </script>
+  </body>
+</html>      

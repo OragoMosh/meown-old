@@ -1,5 +1,5 @@
 {
-    "prefix": "!v!",
+    "prefix": "m$",
     "home_prefix": "m$",
     "kamiko_prefix": "k!",
     "default_prefix": "!v!",
@@ -12,5 +12,6 @@
     "admins": ["ADMIN ID's", "Supports multiple"],
     "defaultvolume": "Default Playback Volume",
     "homepage": "https://mittenscat.herokuapp.com",
-    "support": "https://discord.gg/zzthRpu"
+    "support": "https://discord.gg/zzthRpu",
+    "url":"mittzchat-beta.glitch.me"
 } 
