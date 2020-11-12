@@ -26,9 +26,9 @@ var defaultprefix = config.default_prefix;
 var eprefix = prefix+" ";
 let beprefix = " "+eprefix;
 var commandlist = [`Page 1:\n**${beprefix}help** - Show's more info.\n**${beprefix}vapor** - Create's a vaporwave background with someone's profile.\n**${beprefix}prefix** - Show's the server's prefix.\n**${beprefix}clear <amount>** - Clear's a specific amount of messages Ex. `+eprefix+'`clear 50`'+`.\n**${beprefix}cat** - Sends a random cat image.\n**${beprefix}kawaii**\n**${beprefix}me**\n**${beprefix}filter <on, off>** - Enable's / Disable's swearing Ex. \`${eprefix} filter on\`\n`];
-var logchannel;/*Custom channel variables for commands with the database*/
-var greetingschannel;/*Custom channel variables for commands with the database*/
-var mute_time=10000;/*Time for a member to be muted.*/
+function fish_chance(){
+  return (Math.floor((Math.random() * 10) + 1) *.05 * Math.floor((Math.random() * 5) + 0)).toFixed(2);
+}
 
 /* /\ End /\ */
 
@@ -37,7 +37,10 @@ function ms_seconds(x){ return x / 1000;}
 function ms_minutes(x){ return x / 1000;}
 
 /* /\ End /\ */
-
+function save_database(){
+  fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
+}
+setInterval(save_database, 600000);
 /* \/ Important \/ */
 app.use(express.static('public'));
 app.listen(3002);
@@ -66,22 +69,95 @@ client.on("message", async (message) => {
    }
 
   function connect_message(){
-    return message.reply(`You don't have an account connected yet, please use the command ${eprefix}connect <username> <password>\n to connect your account, if you do not have an account please register one at
-https://${hostname}/register`).then(msg => {msg.delete({ timeout: 15000 })})
+    return message.reply(`You don't have an account connected yet,\n please use the command ${eprefix}connect <username> <password>\n to connect your account, if you do not have an account please register one at
+https://${hostname}/register`).then(msg => {msg.delete({ timeout: 6000 })});
   }
 
+      const args = message.content.slice(eprefix.length).trim().split(' ');
+const command = args.shift().toLowerCase();
+    if (command){
   
-  
-  if (message.content==(eprefix+"balance")) {
+  if (command==="balance") {
     if (!database.discord[message.author.id]){return connect_message()};
     const exampleEmbed = {
-	color: 0x0099ff,
-	title: 'Coin Balance',
-	fields: [{name:message.author.username+'\'s balance.',value: database.user[database.discord[message.author.id]].coins}],
+    color: 0x0099ff,
+    title: 'Coin Balance',
+    fields: [{name:message.author.username+'\'s balance.',value: database.user[database.discord[message.author.id]].coins}],
 };
   message.channel.send({ embed: exampleEmbed })
+}
+
+ if (message.content==(eprefix + "profile")||message.content==("mc! profile")) {
+   if (!database.discord[message.author.id]){return connect_message()};
+   
+   const embed = {
+    title: `${database.user[database.discord[message.author.id]].preferred}'s profile`,
+     description: `Description: ${database.user[database.discord[message.author.id]].description}`,
+     thumbnail: {
+		url: database.user[database.discord[message.author.id]].avatar,
+	},
+    fields: [
+      {name:message.author.username+'\'s balance.',value: database.user[database.discord[message.author.id]].coins},
+      {name:'__Real-Name__',value: database.discord[message.author.id]},
+      {name:'__Coins__',value: database.user[database.discord[message.author.id]].coins},
+      {name:'__Account created on__',value: database.user[database.discord[message.author.id]].creation_date}
+            ],
+    color: database.user[database.discord[message.author.id]].color,
+     timestamp: new Date(),
+	footer: {
+		text: `${client.user.username} | By: Orago`,
+		icon_url: 'https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png?v=1594354728664',
+	},
+};
+   message.author.send({embed: embed});
+   message.reply('``A list of commands has been sent to your direct messages.``').then(msg => {msg.delete({ timeout: 4000 })});
   }
-  
+      if (command === 'mine') {
+        if (!database.discord[message.author.id]){return connect_message()};
+        database.user[database.discord[message.author.id]].coins+=.05
+        message.channel.send(`You have mined a coin and now have ${database.user[database.discord[message.author.id]].coins} Coins.`).then(msg => {msg.delete({ timeout: 2000 })})
+      }
+      if (command === 'fish') {
+        if (!database.discord[message.author.id]){return connect_message();};
+        var fish = Number(fish_chance)
+        console.log(`${fish_chance}\n${fish}\n${fish_weight}`)
+        if (Number(fish)<0.01){return message.channel.send(`Your fish got away!`);}
+        else{var fish_weight = Number(fish)*10;
+          message.channel.send(`Your caught a ${fish_weight}lb fish and sold it for ${fish}coins`);
+          database.user[database.discord[message.author.id]].coins+=fish;
+             
+        return }
+        message.channel.send(`You have mined a coin and now have ${database.user[database.discord[message.author.id]].coins} Coins.`).then(msg => {msg.delete({ timeout: 2000 })})
+      }
+
+       if (message.content==(eprefix + "posts")||message.content==("mc! posts")) {
+         var post_number, post_list = "";
+   if(typeof database.posts[database.discord[message.author.id]] !== "undefined"){
+    
+  for (post_number in database.posts[database.discord[message.author.id]]) {
+    post_list +=  `#${post_number}: ${database.posts[database.discord[message.author.id]][post_number]}` ;
+    if([database.posts[database.discord[message.author.id]].length-1] > 0){post_list += `\n`};
+  }}
+   if (!database.discord[message.author.id]){return connect_message()};
+   
+   const embed = {
+     thumbnail: {
+		url: database.user[database.discord[message.author.id]].avatar,
+	},
+    fields: [
+      {name:message.author.username+'\'s Posts.',value: post_list}
+            ],
+    color: database.user[database.discord[message.author.id]].color,
+     timestamp: new Date(),
+	footer: {
+		text: `${client.user.username} | By: Orago`,
+		icon_url: 'https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png?v=1594354728664',
+	},
+};
+   message.author.send({embed: embed});
+   message.reply('``A list of commands has been sent to your direct messages.``').then(msg => {msg.delete({ timeout: 4000 })});;
+  }
+      
   if (message.content==(eprefix + "help")||message.content==("mc! help")) {
     const embed = new Discord.MessageEmbed()
         .setThumbnail(client.user.avatarURL({ format: "png", dynamic: true }))
@@ -97,27 +173,25 @@ https://${hostname}/register`).then(msg => {msg.delete({ timeout: 15000 })})
         .addField('__Memory Usage__', `${Math.round(process.memoryUsage().heapUsed / 1024 / 1024)}MB`, true)
         .addField('__Prefix__', prefix, true)
         .setFooter(`${client.user.username} | By: Orago`)
-      message.channel.send(embed);
+      message.channel.send(embed).then(msg => {msg.delete({ timeout: 8000 })});
   }
   
  if (message.content==(eprefix + "commands")||message.content==("mc! commands")||message.content==(eprefix+" commandlist")||message.content==("!v! commandlist")) {
     const embed = new Discord.MessageEmbed()
-        .setThumbnail(client.user.avatarURL)
+        .setThumbnail(client.user.avatarURL({ format: "png", dynamic: true }))
         .setTitle('__'+client.user.username+' Commands__')
         .setDescription('Hello! <:gold:733213975705026620>')
         .addField('__Command List 1__', commandlist, true)
         .setColor(config.color)
         .setFooter(`${client.user.username} | By: Orago`)
-      message.author.send(embed);
-   message.reply('``A list of commands has been sent to your direct messages.``');
+      message.author.send(embed).then(msg => {msg.delete({ timeout: 10000 })});
+   message.reply('``A list of commands has been sent to your direct messages.``').then(msg => {msg.delete({ timeout: 4000 })});;
   }
   
 
     /* \/ DM COMMANDS \/ */
   if (message.channel.type === "dm") {
-    const args = message.content.slice(eprefix.length).trim().split(' ');
-const command = args.shift().toLowerCase();
-    if (command){
+
     if (command === 'connect') {
     if (!args.length) {return message.channel.send(`You didn't provide any arguments, ${message.author}! Command Useage: \nEx. ${eprefix}connect username123 password321`);}
 	else if (args[0]) {
@@ -138,16 +212,13 @@ const command = args.shift().toLowerCase();
   } 
 	}
     }
-      if (command === 'mine') {
-        if (!database.discord[message.author.id]){return connect_message()};
-        database.user[database.discord[message.author.id]].coins+=.05
-        message.channel.send(`You have mined a coin and now have ${database.user[database.discord[message.author.id]].coins} Coins.`).then(msg => {msg.delete({ timeout: 4000 })})
-      }
+      
+      if (message.content.startsWith("mittz")) {message.channel.send("Ready when you are!").then(msg => {msg.delete({ timeout: 15000 })}).catch(console.error);}
       //else message.channel.send('This is not a valid Command').then(msg => {msg.delete({ timeout: 4000 })}); 
     }
     
     
-    if (message.content.startsWith("mittz")) {message.channel.send("Ready when you are!").then(msg => {msg.delete({ timeout: 15000 })}).catch(console.error);}
+    
   }
   /* /\ End of "DM COMMANDS" /\ */
   

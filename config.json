@@ -6,7 +6,7 @@
     "api": "YOUTUBE API KEY",
     "creator_id": "193127888646701056",
     "creator_name": "Orago",
-    "color": "#cb3837",
+    "color": "0x0099ff",
     "mainbot_ver": "V1.1",
     "kamiko_ver": "V1.01",
     "admins": ["ADMIN ID's", "Supports multiple"],

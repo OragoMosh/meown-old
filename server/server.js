@@ -2,6 +2,7 @@
 const express = require('express');
 const fs = require("fs");
 const Canvas = require('canvas');
+var cookieParser = require('cookie-parser');
 const database_location = __dirname+"/database.json";
 const database = JSON.parse(fs.readFileSync(database_location));
 const app = express();
@@ -15,7 +16,34 @@ var port = process.env.PORT || 3232;
 var hostname = config.url; // replace with the web domain you are currently using Ex. google.com which will then be a variable to added to https:// HOSTNAME then whatever redirect it's supposed to be
 var currency = "Coins";
 var botname = '⚙️ !v! ittz';
-var prefix = '$'
+var prefix = '$';
+
+var no_account_message = `🔏 **Whoops!** There is no such user with this name!<br><br>
+<button onclick="location.replace('/register')">Register an account.</button>`;
+function msg(type,part,url,version){
+  var text;
+  if (!part){part='ERROR'}
+    if (!url){url='u'}
+  if (!type){type='include'}
+  if (!version){version='button'}
+  if (type==='include'){text=`Please make sure to include your ${part}`;} else
+  if (type==='no_account'){text=`There is no user with this name.`}else
+  if (type==='exists'){text=`A user with this name already exists!`}else
+  if (type==='not_logged'){text=`You are not logged in!!`}else
+  if (type==='logged_in'){text=`You are already logged in!`}else
+  if (type==='logout'){text=`You have logged out!`}else
+  if (type==='post_created'){text=`Your Post has been created!`}else
+  if (type==='post_exists'){text=`This post already exists!`}else
+  if (type==='post_deleted'){text=`Your post has been deleted!`}else
+  if (type==='edited'){text=`Your account has been edited!`}else
+  if (type==='incorrect'){text=`Incorrect Password given.`}else
+    {text=`Invalid/Empty Input '${part}'`}
+  //return `Invalid/Empty Input '${part}'<br><button onclick=location.replace('https://'+window.location.hostname+'/${url}')>Back</button>`;
+  
+  if (version==='button'){return `${text}<br><button onclick=location.replace('https://'+window.location.hostname+'/${url}')>Back</button>`}else
+  if (version==='redirect'){return `<meta http-equiv="Refresh" content="0; url='/${url}?notification=${part}'"/>`}else
+  return `<meta http-equiv="Refresh" content="0; url='/${url}?notification=${part}'"/>`
+  }
 
 var time = new Date();
 do_am_pm();
@@ -33,10 +61,12 @@ console.log(`Time: ${(time.getMonth()+1)}/${(time.getDate())}/${(time.getFullYea
 
 function save_database(){
   fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
+  console.log(`Saving Database on bot server!`)
 }
 setInterval(save_database, 240000);
 
 // Routing
+app.use(cookieParser());
 app.use(express.static(__dirname + '/../app'));
 app.set('view engine','ejs');
 // Chat room
@@ -46,71 +76,128 @@ app.get("/data", (request, response) => {response.render('database', {qs: reques
 app.post("/result", urlencodedParser, (request, response) => {
   console.log(request.body)
   if ((request.body.sentpass).toLowerCase()==database.passcode){
-    response.send(database)
+    response.send(JSON.stringify(database, null, 2))
   }
   else {response.send("<br>Password sent: "+(request.body.sentpass).toLowerCase()+"<br>Status: Failed")}
 });
 
 
 app.get("/user", (request, response) => {response.render('user', {qs: request.query});});
-
-
 app.get("/dashboard", (request, response) => {response.render('dashboard', {qs: request.query});});
 
 
 app.post("/dashboard-edit-account", urlencodedParser, (request, response) => {
   if (!database.profiles.includes(request.body.sentname.toLowerCase())) {
-    return response.send('🔏 **Whoops!** There is no such user with this name!<br><br><button onclick="location.replace(`https://`+window.location.hostname+`/register`)">Register an account.</button>');
+    return response.send(msg('no_account','Username','dashboard'));
   }
   var text_add='';
-if (database.user[request.body.sentname.toLowerCase()].password===request.body.sentpass.toLowerCase()){
+if (database.user[request.body.sentname.toLowerCase()].password===request.body.sentpass){
   if(request.body.sentnewpass){database.user[(request.body.sentname)].password=request.body.sentnewpass;text_add+=`New Password: ${request.body.sentnewpass}`}
   if(request.body.sentnewdesc){database.user[(request.body.sentname)].description=request.body.sentnewdesc;}
   if(request.body.sentnewavatar){database.user[(request.body.sentname)].avatar=request.body.sentnewavatar;}
   //console.log(`${request.body.sentnewdesc.toLowerCase()}:${request.body.sentnewpass.toLowerCase()}:${request.body.sentnewavatar.toLowerCase()}`)
   fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
-  return response.send(`Your Account has been edited!<button onclick="location.replace('https://'+window.location.hostname+'/u?username=${(request.body.sentname).toLowerCase()}')">View Profile</button><br>${text_add}`);
+  return response.send(msg('edited','Username','u'));
   
-}else if (database.user[request.body.sentname.toLowerCase()].password!==request.body.sentpass.toLowerCase()){
-  return response.send(`🔏 **Whoops!** Incorrect Password!<br><br><button onclick="location.replace('https://'+window.location.hostname+'/dashboard')">Please try again.</button>`);
+}else if (database.user[request.body.sentname.toLowerCase()].password!==request.body.sentpass){
+  return response.send(msg('incorrect','Username','dashboard'));
 }
 });
 
-app.post("/new-post", urlencodedParser, (request, response) => {
-  if (!database.profiles.includes(request.body.sentname.toLowerCase())) {
-    return response.send('🔏 **Whoops!** There is no such user with this name!<br><br><button onclick="location.replace(`https://`+window.location.hostname+`/register`)">Register an account.</button>');
+app.get("/new-post", urlencodedParser, (request, response) => {
+  if(!request.query.sentname){return response.send(msg('include','Username','u'));}
+  if(!request.query.sentpass){return response.send(msg('include','Password','u'));}
+  if(!request.query.sentpost){return response.send(msg('include','Password','u'));}
+  if (!database.profiles.includes(request.query.sentname.toLowerCase())) {
+    return response.send(msg('no_account','Username and Password','u'));
   }
-if (database.user[request.body.sentname.toLowerCase()].password===request.body.sentpass.toLowerCase()){
-  if(!database.posts[request.body.sentname.toLowerCase()].includes((request.body.sentpost).toLowerCase())){
-  database.posts[request.body.sentname.toLowerCase()].push((request.body.sentpost).toLowerCase());
-    database.user[(request.body.sentname).toLowerCase()].coins+=1;
+if (database.user[request.query.sentname.toLowerCase()].password===request.query.sentpass){
+if(database.posts[request.query.sentname.toLowerCase()]){
+  if(database.posts[request.query.sentname.toLowerCase()].includes((request.query.sentpost).toLowerCase())){return response.send('**Please do not repost!**<button onclick="location.replace(`https://`+window.location.hostname+`/dasboard`)">Back to dashboard</button>');}
+  }
+  if (!database.posts[request.query.sentname.toLowerCase()]){database.posts[request.query.sentname.toLowerCase()]=[]}
+  database.posts[request.query.sentname.toLowerCase()].push((request.query.sentpost).toLowerCase());
+    database.user[(request.query.sentname).toLowerCase()].coins+=1;
   fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
-  return response.send(`Your post has been created!<button onclick="location.replace('https://'+window.location.hostname+'/u?username=${request.body.sentname.toLowerCase()}#${database.posts[request.body.sentname.toLowerCase()].length-1}')">View Post</button>`);
+  return response.send(msg('post_created','Username',`u?username=${request.query.sentname.toLowerCase()}#${database.posts[request.query.sentname.toLowerCase()].length-1}`,'redirect'))
   } else {
     return response.send('**Please do not repost!**<button onclick="location.replace(`https://`+window.location.hostname+`/dasboard`)">Back to dashboard</button>');
   }
-}else if (database.user[request.body.sentname.toLowerCase()].password!==request.body.sentpass.toLowerCase()){
+
+});
+
+app.get("/follow", urlencodedParser, (request, response) => {
+  if(request.cookies['saved-username']==undefined||!request.cookies['saved-username']){return response.send(msg('include','Username','u'));}
+  if(!request.cookies['saved-password']){return response.send(msg('include','Password','u'));}
+  if(!request.query.sentfollow){return response.send(msg('include','Password','u'));}
+  if (!database.profiles.includes(request.cookies['saved-username'].toLowerCase())) {
+    return response.send(msg('no_account','Password','u'));
+  }
+  if (!database.profiles.includes(request.query.sentfollow.toLowerCase())) {
+    return response.send(msg('no_account','Password','u'));
+  }
+if (database.user[request.cookies['saved-username'].toLowerCase()].password===request.query.sentpass||database.user[request.cookies['saved-username'].toLowerCase()].password===request.cookies['saved-password']){
+  if(!database.user[request.cookies['saved-username'].toLowerCase()].following.includes(request.query.sentfollow.toLowerCase())){
+  database.user[request.cookies['saved-username']].following.push(request.query.sentfollow.toLowerCase());
+  database.user[request.query.sentfollow.toLowerCase()].followers.push(request.cookies['saved-username']);
+  //database.user[(request.query.sentname).toLowerCase()].coins+=0.1;
+  fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
+  return response.send(`<meta http-equiv="Refresh" content="0; url='/u?username=${request.cookies['saved-username']}&notification=User+Followed!'"/>`);
+  } else {
+    database.user[request.cookies['saved-username']].following=database.user[request.cookies['saved-username']].following.filter(item => item !== request.query.sentfollow.toLowerCase());
+    database.user[request.query.sentfollow.toLowerCase()].followers=database.user[request.query.sentfollow.toLowerCase()].followers.filter(item => item !==request.cookies['saved-username']);
+    fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
+    return response.send(`<meta http-equiv="Refresh" content="0; url='/u?username=${request.cookies['saved-username']}&notification=User+Unfollowed!'"/>`);
+  }
+}else if (database.user[request.cookies['saved-username'].toLowerCase()].password!==request.query.sentpass||database.user[request.cookies['saved-username'].toLowerCase()].password!==request.cookies['saved-password']){
   return response.send(`🔏 **Whoops!** Incorrect Password!<br><br><button onclick="location.replace('https://'+window.location.hostname+'/dashboard')">Please try again.</button>`);
 }
 });
 
 app.post("/delete-post", urlencodedParser, (request, response) => {
-  if (!database.profiles.includes(request.body.sentname.toLowerCase())) {return response.send('🔏 **Whoops!** There is no such user with this name!<br><br><button onclick="location.replace(`https://`+window.location.hostname+`/register`)">Register an account.</button>');}
-if (database.user[request.body.sentname.toLowerCase()].password===request.body.sentpass.toLowerCase()){
+  if (!database.profiles.includes(request.body.sentname.toLowerCase())) {return response.send(no_account_message+`<button onclick="location.replace('/dashboard')">Try again with a different user</button>`);}
+if (database.user[request.body.sentname.toLowerCase()].password===request.body.sentpass){
   delete database.posts[request.body.sentname.toLowerCase()][request.body.sentnum];
   database.user[(request.body.sentname).toLowerCase()].coins-=1;
   fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
   return response.send(`Ready for the next post?<br><br><button onclick="location.replace('https://'+window.location.hostname+'/dashboard')">New Post</button>`);
-}else if (database.user[request.body.sentname.toLowerCase()].password!==request.body.sentpass.toLowerCase()){
-  return response.send(`🔏 **Whoops!** Incorrect Password!<br><br><button onclick="location.replace('https://'+window.location.hostname+'/dashboard')">Please try again.</button>`);
+}else if (database.user[request.body.sentname.toLowerCase()].password!==request.body.sentpass){
+  return response.send(msg('incorrect','Password','dashboard'));
 }
 });
 
+app.post("/login", urlencodedParser, (request, response) => {
+  if (!request.body.sentname||!request.body.sentpass){return response.send(msg('include','Username and Password','u'))}
+  if (!database.profiles.includes(request.body.sentname.toLowerCase())) {return response.send(msg('no_account','','u'));}
+if (database.user[request.body.sentname.toLowerCase()].password===request.body.sentpass){
+if(request.cookies['saved-username']&&request.cookies['saved-password']){
+return response.send(msg('logged_in','','u'));
+}else{
+  
+  response.cookie('saved-username', request.body.sentname.toLowerCase(), { maxAge: 900000});
+  response.cookie('saved-password', request.body.sentpass, { maxAge: 900000});
+  return response.send(msg('logged_in','','u','redirect'));
+  }
+  
+}else if (database.user[request.body.sentname.toLowerCase()].password!==request.body.sentpass){
+  return response.send(msg('incorrect','Password','u'));
+}
+});
+
+app.post("/logout", urlencodedParser, (request, response) => {
+if(!request.cookies['saved-username']&&!request.cookies['saved-password']){
+return response.send(msg('logged_not','','u','redirect'));
+}else{
+  response.cookie('saved-username', request.cookies['saved-username'],{maxAge: 0});
+  response.cookie('saved-password', request.cookies['saved-password'],{maxAge: 0});
+  return response.send(msg('logout','','u','redirect'));
+  } 
+
+});
 
 app.post("/user-text", urlencodedParser, (request, response) => {
   if (!database.profiles.includes(request.body.username.toLowerCase())) {
-    return response.send('🔏 **Whoops!** There is no such user with this name!'
-                        +'<br><br><button onclick="location.replace(window.location.hostname+`/register`)">Register an account.</button>');
+    return response.send(msg('no_account','','user'));
   }
 response.send(`Username: ${request.body.username.toLowerCase()} <br> Description: ${database.user[request.body.username.toLowerCase()].description} <br> ${currency}: ${database.user[request.body.sentname.toLowerCase()].coins} <br> Creation Date: ${database.user[request.body.username.toLowerCase()].creation_date}`);
 });
@@ -119,19 +206,24 @@ app.get("/register", (request, response) => {response.render('register', {qs: re
   
 app.post("/register-status", urlencodedParser, (request, response) => {
   //console.log(request.body);
-  if (database.profiles.includes(request.body.sentname)) {return response.send(`🔐 **Whoops!** This username/profile already exists!<br><button onclick="location.replace(https://${hostname}/register)>back</button>`);}
-  if (request.body.sentname==null||request.body.sentname==undefined||!request.body.sentname){return response.send(`Invalid/Empty Username<br><button onclick=location.replace(https://${hostname}/register)>back</button>`);}
-  if (request.body.sentpass==null||request.body.sentpass==undefined||!request.body.sentpass){return response.send(`Invalid/Empty Password<br><button onclick=location.replace(https://${hostname}/register)>back</button>`);}
-  if (request.body.sentdesc==null||request.body.sentdesc==undefined||!request.body.sentdesc){return response.send(`Invalid/Empty Description<br><button onclick="location.replace(https://${hostname}/register)">back</button>`);}
-  if (!database.profiles.includes(request.body.sentname)) {response.send(`Attempting to set up your profile now!<button onclick="location.replace(window.location.hostname+/user)">Find user</button>`);
+  if (database.profiles.includes(request.body.sentname)) {return response.send(msg('exists','d','u'));}
+  if (request.body.sentname==null||request.body.sentname==undefined||!request.body.sentname){return response.send(msg('invalid','Username','register'));}
+  if (request.body.sentpass==null||request.body.sentpass==undefined||!request.body.sentpass){return response.send(msg('invalid','Password','register'));}
+  if (request.body.sentdesc==null||request.body.sentdesc==undefined||!request.body.sentdesc){return response.send(msg('invalid','Description','register'));}
+  if (request.body.sentpass!==request.body.sentpassconfirm){return response.send(msg('match','password & confirm password','register'));}
+  if (!database.profiles.includes(request.body.sentname)) {
+  response.cookie('saved-username', request.body.sentname.toLowerCase(), { maxAge: 900000});
+  response.cookie('saved-password', request.body.sentpass, { maxAge: 900000});
   database.profiles.push((request.body.sentname).toLowerCase());
   database.user[(request.body.sentname).toLowerCase()]=
-    {password:request.body.sentpass.toLowerCase(), coins:50, preferred:request.body.sentname,
+    {password:request.body.sentpass, coins:50, preferred:request.body.sentname,
      background:"https://convertingcolors.com/plain-2C2F33.svg", description:(request.body.sentdesc).toLowerCase(), 
      color:"#000000", avatar:"https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png",
+     following:[],followers:[],
      creation_date:`${(time.getMonth()+1)}/${(time.getDate())}/${(time.getFullYear())} ${time.getHours()-4}:${time.getMinutes()}:${time.getSeconds()} ${am_pm}`
     }
   fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
+    response.send(`<meta http-equiv="Refresh" content="0; url='/u?username=${request.body.sentname.toLowerCase()}&notification=Account+Created!'"/>`);
   console.log(`Account created, Username: ${(request.body.sentname).toLowerCase()}, Password: ${(request.body.sentpass).toLowerCase()} , Description: ${(request.body.sentdesc).toLowerCase()}`)
       }
   
@@ -418,13 +510,93 @@ function isRoomExist (roomName, roomList) {
   
 
 app.get("/u", (request, response) => {
-  var params = request.protocol + "://" + request.headers.host + request.originalUrl;
-  var username = params.slice(params.search("username=")+9,Infinity).toLowerCase();
-  if (!database.profiles.includes(username)||!username) {
-    return response.send('🔏 **Whoops!** There is no such user with this name!'
-                        +'<br><br><button onclick="location.replace(window.location.hostname+`/register`)">Register an account.</button>');
-  }else
-  var post_number, post_list = "";var badge_number, badge_list = "";var friend_number, friend_list = "";
+  //var params = request.protocol + "://" + request.headers.host + request.originalUrl;
+  //var username = params.slice(params.search("username=")+9,Infinity).toLowerCase();
+  var username = request.query.username;
+  if (!username){if (request.cookies['saved-username']){username=request.cookies['saved-username']}else username='null'}
+  if (!database.profiles.includes(username)||!username) {return response.send(no_account_message+`<button onclick="location.replace('/user')">Find a different user.</button>`);}
+  var post_number, post_list = "";
+  var badge_number, badge_list = "";
+  var follow_number, follow_list = "";
+  var status = "";var post_bar = "";var profile_menu = "";var side_bar="";
+  var self_avatar="https://cdn.glitch.com/288a0b72-7e13-4dd2-bc7a-3cc2f4db2aab%2Fuser-slash.svg";
+  var self_link="/register";
+
+  var nav = `<form method="get" action="/u" style="display:inline-block;"><input type="text" name="username" class="w3-border w3-padding" style="width:20vw;" placeholder="Find User"></input>
+              <button type="submit" class="w3-button w3-theme"><i class="fa fa-search"></i> Search</button></form>`;
+  var scripts = "";
+  
+  //if (request.query.notification){scripts+=`alert('${request.query.notification}');`}
+  
+  if(request.cookies['saved-username']!==undefined){
+    self_avatar=database.user[request.cookies['saved-username']].avatar;
+    self_link=`/u?username=${request.cookies['saved-username']}`;
+    status=`Logged in as: ${request.cookies['saved-username'].toUpperCase()}`;
+    profile_menu=` <div class="w3-dropdown-content w3-card-4 w3-bar-block" style="width:300px;right:0;top:51px;">
+      <form method="POST" action="/logout">
+<button type="submit" class="w3-bar-item w3-button">Logout</button>
+</form>
+      <a href="#" class="w3-bar-item w3-button">Item-2</a>
+      <a href="#" class="w3-bar-item w3-button">Item-3</a>
+    </div> `
+  }else{
+    status='not logged in';
+    profile_menu = ` <div class="w3-dropdown-content w3-card-4 w3-bar-block" style="width:300px;right:0;top:51px;">
+      <a href="../register" class="w3-bar-item w3-button">Register</a>
+      <a href="#" class="w3-bar-item w3-button">Item-3</a>
+    </div> `
+    side_bar += `
+<div class="w3-card w3-round w3-white w3-padding-16 w3-center">
+        <p>LOGIN</p>
+<form method="POST" action="/login">
+<input type="text" name="sentname" class="w3-border w3-padding" style="width:200px;" placeholder="Username">
+<input type="text" name="sentpass" class="w3-border w3-padding" style="width:200px;" placeholder="Password">
+              <button type="submit" class="w3-button w3-theme"><!--<i class="fa fa-search"></i>--> Login</button></form>
+  </div><br>`
+    side_bar += `
+<div class="w3-card w3-round w3-white w3-padding-16 w3-center">
+        <p>REGISTER</p>
+<form method="POST" action="/register-status">
+<input type="text" name="sentname" class="w3-border w3-padding" style="width:200px;" placeholder="Username" required>
+<input type="text" name="sentdesc" class="w3-border w3-padding" style="width:200px;" placeholder="Description"required>
+<input type="password" name="sentpass" class="w3-border w3-padding" style="width:200px;" placeholder="Password" required>
+<input type="password" name="sentpassconfirm" class="w3-border w3-padding" style="width:200px;" placeholder="Password (Confirm)" required>
+<button type="submit" class="w3-button w3-theme"><!--<i class="fa fa-search"></i>--> Sign Up</button>
+</form>
+  </div><br>
+`
+  };
+  
+  
+  if(request.cookies['saved-username']!==undefined&&request.cookies['saved-username']!==username&&username!=='guest'){
+  if (database.user[request.cookies['saved-username']].following.includes(username)){nav += `<a href="/follow?sentfollow=${username}" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white" title="Follow"><i class="fa fa-heartbeat"></i></a>`}else{
+  nav += `<a href="/follow?sentfollow=${username}" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white" title="Follow"><i class="fa fa-heart"></i></a>`}
+  }
+  
+
+  
+  
+  
+  if(request.cookies['saved-username']!==undefined&&request.cookies['saved-username']==username){
+    if (database.user[username].password===request.cookies['saved-password']){
+    post_bar = `<form method="get" action="/new-post">
+<div class="w3-row-padding w3-hide-small">
+        <div class="w3-col m12">
+          <div class="w3-card w3-round w3-white">
+            <div class="w3-container w3-padding">
+              <h6 class="w3-opacity">New Post</h6>
+              <input type="hidden" name="sentname" value="${request.cookies['saved-username']}">
+              <input type="hidden" name="sentpass" value="${request.cookies['saved-password']}">
+              <input type="text" name="sentpost" class="w3-border w3-padding" placeholder="Post Input"></input>
+              <button type="submit" class="w3-button w3-theme"><i class="fa fa-pencil"></i> Send</button>
+            </div>
+          </div>
+        </div>
+      </div>
+</form>
+`}
+  }
+  
     if(database.badges.creator.includes(username)){badge_list += "Creator";}
     if(database.badges.developer.includes(username)){if(database.badges.creator.includes(username)){badge_list += ", "};badge_list += "Developer";}
     if(database.badges.moderator.includes(username)){if(database.badges.developer.includes(username)){badge_list += ", "};badge_list += "Moderator";}
@@ -435,25 +607,80 @@ app.get("/u", (request, response) => {
     if(typeof database.posts[username] !== "undefined"){
     
   for (post_number in database.posts[username]) {
-    post_list +=  `
-<div class="w3-container w3-card w3-white w3-round w3-margin" id="post-${[post_number]}"><br>
+    post_list +=  `<div class="w3-container w3-card w3-white w3-round w3-margin" id="post-${[post_number]}"><br>
         <img src="${`${database.user[username].avatar}`}" alt="User_Avatar" class="w3-circle" style="width:60px">
         <span class="w3-right w3-opacity">#${post_number}</span>
-        <h4>${username}</h4><br>
+        <h4>${database.user[username].preferred}</h4><br>
         <hr class="w3-clear">
         <p>${database.posts[username][post_number]}</p>
-      </div>  
-
-` ;
+      </div>` ;
   }}
-  if(typeof database.user[username].friends !== "undefined"){
-    if([database.user[username].friends.length-1] > 0){}
-  for (friend_number in database.user[username].friends) {
-    friend_list +=  `${database.user[username].friends[friend_number]}`
-    if([database.user[username].friends.length-1] > 0){friend_list += `, `};
+  
+  var follow_amount = database.user[username].followers.length;
+  if(typeof database.user[username].following !== "undefined"){
+    if(database.user[username].following.length-1 < 0){follow_list="No One"}
+  for (follow_number in database.user[username].following) {
+    follow_list +=  `<a href='https://${hostname}/u?username=${database.user[username].following[follow_number]}'>${database.user[username].following[follow_number]}</a>`
+    if (database.user[username].following.length-1 > follow_number){
+    if(database.user[username].following.length-1 > 0){follow_list += `, `};
+    }
   }}
+  
 response.send(
     `<!DOCTYPE html>
+<script>
+${scripts}
+/*var nameval = '';
+if('${request.cookies['saved-username']}'!=='undefined'){nameval='Username: ${request.cookies['saved-username']}'}else{nameval='not logged in'};
+alert(nameval);
+*/
+let params = (new URL(document.location)).searchParams;
+
+var popup_status = false;
+window.addEventListener("load", function () {/*Start - If website Loaded*/
+if (document.getElementById("popup")===null){/*Start - If variable popup equals null*/
+document.getElementById("assets").innerHTML+= '<div id="popup">\</div>';/*Add popup notification box*/
+}
+if (params.get('notification')==null){notification('Page Loaded!')}else{notification(params.get('notification'));}
+  document.getElementById("popup").style.backgroundColor = "#333"
+});
+
+function notification(text,time) {
+  if (time==null){
+    time = 2000
+  }
+if (popup_status !== true){
+	popup_status = true;
+	var popup = document.getElementById("popup");
+	popup.className = "show";
+	popup.innerHTML = text
+	setTimeout(function(){ popup.className = popup.className.replace("show", "");popup_status=false;}, time);
+  } 
+}
+</script>
+<style>
+#popup {
+  visibility: hidden;
+  min-width: 250px;
+  margin-left: -125px;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 2px;
+  padding: 16px;
+  position: fixed;
+  z-index: 1;
+  left: 50%;
+  bottom: 30px;
+  font-size: 17px;
+}
+
+#popup.show {
+  visibility: visible;
+  -webkit-animation: fadein_popup 0.5s;
+  animation: fadein_popup 0.5s;
+}</style>
+
 <html>
 <title>Mittz Chat</title>
 <meta charset="UTF-8">
@@ -470,31 +697,37 @@ response.send(
  <div class="w3-bar w3-theme-d2 w3-left-align w3-large">
   <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-theme-d2" href="javascript:void(0);" onclick="openNav()"><i class="fa fa-bars"></i></a>
   <a href="#" class="w3-bar-item w3-button w3-padding-large w3-theme-d4"><i class="fa fa-home w3-margin-right"></i>Mittz Chat</a>
+
   <!--
   <a href="#" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white" title="News"><i class="fa fa-globe"></i></a>
   <a href="#" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white" title="Account Settings"><i class="fa fa-user"></i></a>
   <a href="#" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white" title="Messages"><i class="fa fa-envelope"></i></a>
   -->
+<a class="w3-hide-small">${nav}</a>
   <div class="w3-dropdown-hover w3-hide-small">
+
     <button class="w3-button w3-padding-large" title="Notifications"><i class="fa fa-bell"></i><span class="w3-badge w3-right w3-small w3-green">3</span></button>     
-    <div class="w3-dropdown-content w3-card-4 w3-bar-block" style="width:300px">
+    <div class="w3-dropdown-content w3-card-4 w3-bar-block" style="width:300px;">
       <a href="#" class="w3-bar-item w3-button">Item-1</a>
       <a href="#" class="w3-bar-item w3-button">Item-2</a>
       <a href="#" class="w3-bar-item w3-button">Item-3</a>
     </div>
   </div>
-  <a href="#" class="w3-bar-item w3-button w3-hide-small w3-right w3-padding-large w3-hover-white" title="My Account">
-    <img src="/w3images/avatar2.png" class="w3-circle" style="height:23px;width:23px" alt="Avatar">
-  </a>
+  <div onclick=location.replace('https://'+window.location.hostname+'${self_link}') class="w3-bar-item w3-button w3-hide-small w3-right w3-padding-large w3-hover-white w3-dropdown-hover" title="My Account">
+${profile_menu}
+    <img src="${self_avatar}" class="w3-circle" style="height:23px;width:23px" alt="Avatar">
+
+  </div>
  </div>
 </div>
 
 <!-- Navbar on small screens -->
 <div id="navDemo" class="w3-bar-block w3-theme-d2 w3-hide w3-hide-large w3-hide-medium w3-large">
-  <a href="#" class="w3-bar-item w3-button w3-padding-large">Chat-Room</a>
-  <a href="#" class="w3-bar-item w3-button w3-padding-large">Link 2</a>
-  <a href="#" class="w3-bar-item w3-button w3-padding-large">Link 3</a>
-  <a href="#" class="w3-bar-item w3-button w3-padding-large">My Profile</a>
+  <a href="javascript:void(0);" class="w3-bar-item w3-button w3-padding-large">Hidden</a>
+  <a>${nav}</a>
+  <a href="../" class="w3-bar-item w3-button w3-padding-large">Chat Room</a>
+  <a href="../dashboard" class="w3-bar-item w3-button w3-padding-large">Dashboard</a>
+  <a href="${self_link}" class="w3-bar-item w3-button w3-padding-large">${status}</a>
 </div>
 
 <!-- Page Container -->
@@ -525,9 +758,10 @@ response.send(
           <div id="Demo1" class="w3-hide w3-container">
             <p>Some text..</p>
           </div>
-          <button onclick="accordion('Demo2')" class="w3-button w3-block w3-theme-l1 w3-left-align"><i class="fa fa-calendar-check-o fa-fw w3-margin-right"></i> My Events</button>
+          <button onclick="accordion('Demo2')" class="w3-button w3-block w3-theme-l1 w3-left-align"><i class="fa fa-calendar-check-o fa-fw w3-margin-right"></i> Follows</button>
           <div id="Demo2" class="w3-hide w3-container">
-            <p>Some other text..${friend_list}</p>
+            <p>Followers: ${follow_amount}</p>
+            <p>Following: ${follow_list}</p>
           </div>
 
         </div>      
@@ -558,7 +792,8 @@ response.send(
     
     <!-- Middle Column -->
     <div class="w3-col m7">
-    
+    ${post_bar}
+    <!--
       <div class="w3-row-padding">
         <div class="w3-col m12">
           <div class="w3-card w3-round w3-white">
@@ -569,7 +804,7 @@ response.send(
             </div>
           </div>
         </div>
-      </div>
+      </div>-->
 
         <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
         <img src="https://images.vexels.com/media/users/3/163191/isolated/lists/3404f798db8118b2a5bd33cab9c1455c-leather-stitch-badge.png" alt="Badge Card" class="w3-left w3-circle w3-margin-right" style="width:60px">
@@ -592,11 +827,12 @@ response.send(
     
     <!-- Right Column -->
     <div class="w3-col m2">
+${side_bar}
 
-      <br>
-      
+
       <div class="w3-card w3-round w3-white w3-padding-16 w3-center">
         <p>ADS</p></div>
+
       <br>
       <div class="w3-card w3-round w3-white w3-padding-32 w3-center">
         <p><i class="fa fa-bug w3-xxlarge"></i><br>Report bugs</p>
@@ -609,7 +845,7 @@ response.send(
 </div>
 <br>
 
- <!--jkukjjjjjjjj<footer class="w3-container w3-theme-d5">
+ <!--<footer class="w3-container w3-theme-d5">
   <p>Designed by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
 </footer>-->
 
@@ -638,6 +874,7 @@ function openNav() {
 </script>
 </body>
 </html>
+<div id="assets"></div><!--Loads the extra files that aren't written in the document.-->
 `
   );
 });

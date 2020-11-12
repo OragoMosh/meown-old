@@ -15,6 +15,7 @@ function setCookie(cname,cvalue,exdays) {
   d.setTime(d.getTime() + (exdays*24*60*60*1000));
   var expires = "expires=" + d.toGMTString();
   document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+  
 }
 
 function getCookie(cname) {
@@ -105,6 +106,7 @@ var month = new Array();
   var $inputMessage = $('.inputMessage'); // Input message input box
 
   var $loginPage = $('.login.page'); // login page
+  var $navPage = $('.nav.page'); // login page
   var $chatPage = $('.chat.page'); // Chat room page
   var $roomPage = $('.room.page'); // Room list page
   var $roomList = $('.room-list'); // Room list <ul>
@@ -150,11 +152,11 @@ database=data;
       setTimeout(setUsername, 500);return console.log('tis')
     }
     if (database.profiles.includes(username.toLowerCase())) {
-      if (!existsCookie("logged-in")){//Checks to see if there is a cookie for an account logged in
+//Checks to see if there is a cookie for an account logged in
         if (valueCookie("saved-username")!==username) {//Checks to see if the cookie matches the current account or not.
           var pass_input = prompt("Please input the password for the account @"+username, "");
         }
-      }
+      
         if(valueCookie("saved-username")==username&&valueCookie("saved-password")!==null){pass_input=valueCookie("saved-username")}
   if (pass_input == null || pass_input == "") {
     {location.reload();return}
@@ -169,6 +171,7 @@ else if (database.user[username.toLowerCase()].password==pass_input.toLowerCase(
     // If the username is valid
     if (username) {
       $loginPage.fadeOut();
+      $navPage.fadeOut();
       $chatPage.show();
       $roomPage.fadeIn();
       $loginPage.off('click');
@@ -271,11 +274,6 @@ else if (database.user[username.toLowerCase()].password==pass_input.toLowerCase(
 
         break;
         
-      case 'commands': // Command /help lists all commands
-        message = 'Commands: '+cmdlist+prefix+'help';
-        log(message);
-        break;
-        
 
       case 'refresh':// Command /refresh = reload room list.
         socket.emit('room list');
@@ -301,54 +299,17 @@ else if (database.user[username.toLowerCase()].password==pass_input.toLowerCase(
 
         
         case 'register':
-      words.shift();
-        //log(database.profiles.includes(username.toLowerCase()))
-        if (database.profiles.includes(username.toLowerCase())){return log("You are already logged in!")}
-      var password = words.join(' ');
-      if (password){
-        var txt;
-      var r = confirm("Are you sure you want the password \""+password+"\"");
-      if (r == true) {
-        log("Your password is now \""+password+"\", @"+username+" Please write this somewhere so it doesn't get forgotten, currently we do not have the service to reset passwords!");
-        socket.emit('create account', password);
-        socket.emit('sync');
-        //setTimeout(function(){ window.location.reload(); }, 15000);
-      } else {
-        log("You have canceled")
-      }
-    }
-        else{
-          log('Please use the command correctly, also must have less than 10 letters, ' +
-              'Example '+prefix+'register Password12345')}
+        location.replace('./register');
         break;
         
-        case 'daily':
-      words.shift();
+
         
-        time_value = new Date
-        if (!database.profiles.includes(username.toLowerCase())){return log("You have not registered yet!")}
-        if (time >= parseInt(database.user[username.toLowerCase()].last_daily+86400000)){return log("You need to wait a whole day to do this again!")}
-        log(`You have claimed your daily ${50} coins!`);
-        socket.emit('claim daily', time);
-        socket.emit('sync');
-        break;
-        
-        case 'mine':
-        words.shift();
-        if (!database.profiles.includes(username.toLowerCase())){return log("You have not registered yet!")}
-        log(`You have mined ${0.01} coins and now have ${database.user[username.toLowerCase()].coins+0.01}!`);
-        socket.emit('claim mine', 0.01);
-        socket.emit('sync');
-        break;
-        
-        case 'search':
-      words.shift();
-        location.replace('/user');
+        case 'search'|'user':
+        location.replace('./user');
         break;
         
         case 'database':
-      words.shift();
-        location.replace('/data');
+        location.replace('./data');
         break;
         
         
@@ -359,22 +320,7 @@ else if (database.user[username.toLowerCase()].password==pass_input.toLowerCase(
         log("You have "+database.user[username.toLowerCase()].coins+" coins.");
         
         break;
-        
-        case 'give':
-        socket.emit('sync');
-      words.shift();
-        if (!database.profiles.includes(username.toLowerCase())){return log("Please create a user with '"+prefix+"register' !")}
-        if (!database.moderators.includes(username.toLowerCase())||!database.admins.includes(username.toLowerCase())){return log(staff_only)}
-        var amount = words.join(' ');
-      if (amount){
-        socket.emit('add coin',amount);
-        log("You have "+database.coins[username.toLowerCase()]+" coins.");
-    }
-        else{
-          log('Please use the command correctly, also must have less than 10 letters, ' +
-              'Example '+prefix+'give 12345')}
 
-        break;
         
         
         

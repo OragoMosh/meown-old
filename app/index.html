@@ -54,7 +54,7 @@
     <li class="login page" id="login-page">
       <div class="form">
         <h1 class="title">Mittz Chat</h1>
-        <h3 class="subtitle">Please enter your nickname.</h3>
+        <h3 class="subtitle">Please enter your username.</h3>
         
         <label>
           <input class="usernameInput" type="text" id="username_input" minlength="1" maxlength="14"
@@ -68,8 +68,28 @@
       <p class="room-hint">Click the room block to join the room.</p>
       <ul class="room-list"></ul>
     </li>
-
   </ul>
 
+  <navigation class="nav page" id="nav-page">
+<link rel="stylesheet" href="https://mittenscat.herokuapp.com/assets/css/navigation.css" />
+  <input id="hamburger" class="hamburger" type="checkbox"/>
+  <label class="hamburger" for="hamburger">
+    <i></i>
+    <text>
+      <close>close</close>
+      <open>menu</open>
+    </text>
+  </label>
+  <section class="drawer-list" style="background-color:rgba(25, 25, 25, 0.9);">
+        <ul>
+          <li><a href="./">Home</a></li>
+          <li><a href="./user/">Find User</a></li>
+          <li><a href="./register">Register</a></li>
+          <li><a href="./dashboard">Dashboard</a></li>
+      </ul>
+      </section>
+</navigation>
+  
+  
 </body>
 </html>
