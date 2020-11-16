@@ -242,7 +242,7 @@ var logLeft = 'Left ';
 
 // Location: Lab (main website, can be joined or left),
 //           Room (can be created, joined, Left)
-var logLab = 'Meown';
+var logLab = 'Mittz Chat';
 var logRoom = ' room ';
 
 io.on('connection', function (socket) {
@@ -252,7 +252,52 @@ io.on('connection', function (socket) {
    socket.emit('handshake',database);
   });
   
+  
+  
+  
+socket.on('create account', function (data) {
+    // we tell the client to execute 'new message'
+    socket.broadcast.to(curRoomName).emit('new message', {
+      username: botname,
+      message: socket.username+" has just registered!"//data
+    });
+  database.profiles.push(socket.username.toLowerCase());
+  database.profiles.push(socket.username.toLowerCase());
+  database.user[socket.username.toLowerCase()]=
+    {password:socket.username.toLowerCase(), coins:0, background:"https://convertingcolors.com/plain-2C2F33.svg", description:socket.username.toLowerCase(),
+     color:"#ffffff", avatar:"cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png", badges:[],creation_date:`${(time.getMonth()+1)}/${(time.getDate())}/${(time.getFullYear())} ${time.getHours()-4}:${time.getMinutes()}:${time.getSeconds()} ${am_pm}`
+    }
+  fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
+  });
+  
+  /*app.get("/data", (request, response) => {
+  // express helps us take JS objects and send them as JSON
+  response.json(database);
+});*/
+  
 
+  socket.on('claim daily', function (data) {
+    // we tell the client to execute 'new message'
+    socket.broadcast.to(curRoomName).emit('new message', {
+      username: botname,
+      message: socket.username+` has just collected a daily reward by using ${prefix}daily!`//data
+    });
+    console.log("ooh shiny,"+socket.username+"claimed their daily bonus!"+data)
+  database.user[socket.username.toLowerCase()].last_daily=data;
+  database.user[socket.username.toLowerCase()].coins+=50;
+  fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
+  });
+  
+  socket.on('claim mine', function (data) {
+    // we tell the client to execute 'new message'
+    socket.broadcast.to(curRoomName).emit('new message', {
+      username: botname,
+      message: socket.username+` has just collected a daily reward by using ${prefix}daily!`//data
+    });
+    console.log("Coin mined")
+  database.user[socket.username.toLowerCase()].coins+=data;
+  fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
+  });
   
   socket.on('bot message', function (data) {
     // we tell the client to execute 'new message'
@@ -260,6 +305,15 @@ io.on('connection', function (socket) {
       username: botname,
       message: data//data
     });
+  });
+  
+  
+  socket.on('add coin', function (data) {
+    // we tell the client to execute 'new message'
+    console.log("testing")
+    socket.broadcast.to(curRoomName).emit('new message', {username: botname,message: socket.username+" has just mined a coin!"/*data*/});
+  database.coins[socket.username.toLowerCase()]=data;
+  fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
   });
   
   socket.on('get account', function (data) {
@@ -280,6 +334,22 @@ io.on('connection', function (socket) {
     // we tell the client to execute 'new message'
     socket.broadcast.to(curRoomName).emit('new message', {
       username: socket.username,
+      message: data
+    });
+  });
+  //commands
+    socket.on('i-chat', function (data) {
+    // we tell the client to execute 'new message'
+    socket.broadcast.to(curRoomName).emit('new message', {
+      username: data,
+      message: socket.username
+    });
+  });
+  
+      socket.on('sbot', function (data) {
+    // we tell the client to execute 'new message'
+    socket.broadcast.to(curRoomName).emit('new message', {
+      username: botname,
       message: data
     });
   });
@@ -462,38 +532,46 @@ app.get("/u", (request, response) => {
       <form method="POST" action="/logout">
 <button type="submit" class="w3-bar-item w3-button">Logout</button>
 </form>
+      <a href="#" class="w3-bar-item w3-button">Item-2</a>
+      <a href="#" class="w3-bar-item w3-button">Item-3</a>
     </div> `
   }else{
     status='not logged in';
     profile_menu = ` <div class="w3-dropdown-content w3-card-4 w3-bar-block" style="width:300px;right:0;top:51px;">
       <a href="../register" class="w3-bar-item w3-button">Register</a>
+      <a href="#" class="w3-bar-item w3-button">Item-3</a>
     </div> `
     side_bar += `
-<div class="w3-card w3-round w3-white w3-padding-16 w3-center" id="login">
+<div class="w3-card w3-round w3-white w3-padding-16 w3-center">
         <p>LOGIN</p>
 <form method="POST" action="/login">
-<input type="text" name="sentname" class="w3-border w3-padding" style="width:200px;" placeholder="Username" required>
-<input type="text" name="sentpass" class="w3-border w3-padding" style="width:200px;" placeholder="Password" required>
-              <button type="submit" class="w3-button w3-theme"> Login</button></form>
+<input type="text" name="sentname" class="w3-border w3-padding" style="width:200px;" placeholder="Username">
+<input type="text" name="sentpass" class="w3-border w3-padding" style="width:200px;" placeholder="Password">
+              <button type="submit" class="w3-button w3-theme"><!--<i class="fa fa-search"></i>--> Login</button></form>
   </div><br>`
     side_bar += `
-<div class="w3-card w3-round w3-white w3-padding-16 w3-center" id="register">
+<div class="w3-card w3-round w3-white w3-padding-16 w3-center">
         <p>REGISTER</p>
 <form method="POST" action="/register-status">
 <input type="text" name="sentname" class="w3-border w3-padding" style="width:200px;" placeholder="Username" required>
 <input type="text" name="sentdesc" class="w3-border w3-padding" style="width:200px;" placeholder="Description"required>
 <input type="password" name="sentpass" class="w3-border w3-padding" style="width:200px;" placeholder="Password" required>
 <input type="password" name="sentpassconfirm" class="w3-border w3-padding" style="width:200px;" placeholder="Password (Confirm)" required>
-<button type="submit" class="w3-button w3-theme"> Sign Up</button>
+<button type="submit" class="w3-button w3-theme"><!--<i class="fa fa-search"></i>--> Sign Up</button>
 </form>
   </div><br>
 `
   };
   
+  
   if(request.cookies['saved-username']!==undefined&&request.cookies['saved-username']!==username&&username!=='guest'){
   if (database.user[request.cookies['saved-username']].following.includes(username)){nav += `<a href="/follow?sentfollow=${username}" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white" title="Follow"><i class="fa fa-heartbeat"></i></a>`}else{
   nav += `<a href="/follow?sentfollow=${username}" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white" title="Follow"><i class="fa fa-heart"></i></a>`}
   }
+  
+
+  
+  
   
   if(request.cookies['saved-username']!==undefined&&request.cookies['saved-username']==username){
     if (database.user[username].password===request.cookies['saved-password']){
@@ -602,15 +680,7 @@ if (popup_status !== true){
 }</style>
 
 <html>
-<title>Meown Chat</title>
-<meta property="og:title" content="Meown | ${username}" />
-<meta property="og:type" content="website" />
-<meta property="og:url" content="https://meown.tk" />
-<meta property="og:image" content="https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png?v=1594354728664" />
-<meta property="og:description" content="The newest, worst social media." />
-<meta name="theme-color" content="#cb3837">
-<meta name="twitter:card" content="summary_large_image">
-<link rel="icon" type="image/png" href="https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie32bfull.png">
+<title>Mittz Chat</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -644,6 +714,7 @@ if (popup_status !== true){
   <div onclick=location.replace('https://'+window.location.hostname+'${self_link}') class="w3-bar-item w3-button w3-hide-small w3-right w3-padding-large w3-hover-white w3-dropdown-hover" title="My Account">
 ${profile_menu}
     <img src="${self_avatar}" class="w3-circle" style="height:23px;width:23px" alt="Avatar">
+
   </div>
  </div>
 </div>
@@ -690,6 +761,7 @@ ${profile_menu}
             <p>Followers: ${follow_amount}</p>
             <p>Following: ${follow_list} </p>
           </div>
+
         </div>      
       </div>
       <br>
@@ -720,6 +792,18 @@ ${profile_menu}
     <!-- Middle Column -->
     <div class="w3-col m7">
     ${post_bar}
+    <!--
+      <div class="w3-row-padding">
+        <div class="w3-col m12">
+          <div class="w3-card w3-round w3-white">
+            <div class="w3-container w3-padding">
+              <h6 class="w3-opacity">Top text</h6>
+              <p contenteditable="true" class="w3-border w3-padding">Useless input bar</p>
+              <button type="button" class="w3-button w3-theme"><i class="fa fa-pencil"></i>  Button</button> 
+            </div>
+          </div>
+        </div>
+      </div>-->
 
         <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
         <img src="https://images.vexels.com/media/users/3/163191/isolated/lists/3404f798db8118b2a5bd33cab9c1455c-leather-stitch-badge.png" alt="Badge Card" class="w3-left w3-circle w3-margin-right" style="width:60px">
@@ -728,14 +812,26 @@ ${profile_menu}
       </div> 
 
     ${post_list}
+<!--
+      <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
+        <img src="" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:60px">
+        <span class="w3-right w3-opacity">Timestamp (to be coded)</span>
+        <h4>Username (add soon)</h4><br>
+        <hr class="w3-clear">
+        <p></p>
+      </div>-->
+
     <!-- End Middle Column -->
     </div>
     
     <!-- Right Column -->
     <div class="w3-col m2">
 ${side_bar}
+
+
       <div class="w3-card w3-round w3-white w3-padding-16 w3-center">
-      <p>ADS</p></div>
+        <p>ADS</p></div>
+
       <br>
       <div class="w3-card w3-round w3-white w3-padding-32 w3-center">
         <p><i class="fa fa-bug w3-xxlarge"></i><br>Report bugs</p>
@@ -780,120 +876,4 @@ function openNav() {
 <div id="assets"></div><!--Loads the extra files that aren't written in the document.-->
 `
   );
-});
-
-app.get("/", function(request, response) {
-    var status = "";var post_bar = "";var profile_menu = "";var side_bar="";
-  var self_avatar="https://cdn.glitch.com/288a0b72-7e13-4dd2-bc7a-3cc2f4db2aab%2Fuser-slash.svg";
-  var self_link="/register";
-
-  var nav = `<form method="get" action="/u" style="display:inline-block;"><input type="text" name="username" class="w3-border w3-padding" style="width:20vw;" placeholder="Find User"></input>
-              <button type="submit" class="w3-button w3-theme"><i class="fa fa-search"></i> Search</button></form>`;
-  var scripts = "";
-  
-  //if (request.query.notification){scripts+=`alert('${request.query.notification}');`}
-  
-  if(request.cookies['saved-username']!==undefined){
-    self_avatar=database.user[request.cookies['saved-username']].avatar;
-    self_link=`/u?username=${request.cookies['saved-username']}`;
-    status=`Logged in as: ${request.cookies['saved-username'].toUpperCase()}`;
-    profile_menu=` <div class="w3-dropdown-content w3-card-4 w3-bar-block" style="width:300px;right:0;top:51px;">
-      <form method="POST" action="/logout">
-<button type="submit" class="w3-bar-item w3-button">Logout</button>
-</form>
-    </div> `
-  }else{
-    status='not logged in';
-    profile_menu = ` <div class="w3-dropdown-content w3-card-4 w3-bar-block" style="width:300px;right:0;top:51px;">
-      <a href="../u#login" class="w3-bar-item w3-button">Login</a>
-      <a href="../u#register" class="w3-bar-item w3-button">Register</a>
-    </div> `
-  };
-  response.send(`
-<!--Info Fill -->
-<!--  Author: Orago <Orago#0051> -->
-<!doctype html>
-<html lang="En">
-<head>
-  <meta charset="UTF-8">
-  <title>Meown Chat</title>
-  <meta property="og:title" content="Meown | Main" />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://meown.tk" />
-  <meta property="og:image" content="https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png?v=1594354728664" />
-  <meta property="og:description" content="The newest, worst social media." />
-  <meta name="theme-color" content="#cb3837">
-  <meta name="twitter:card" content="summary_large_image">
-  <link rel="icon" type="image/png" href="https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie32bfull.png">
-  <link href="style.css" rel="stylesheet" >
-  <script src="https://use.typekit.net/ama5eep.js"></script>
-  <script>try{Typekit.load({ async: true });}catch(e){}</script>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/base/jquery-ui.css">
-  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-  <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-blue-grey.css">
-  <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Open+Sans'>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="/main.js"></script>
-</head>
-<body>
-  <ul class="pages" id="all-page">
-    <li class="chat page" id="chat-page">
-      <div class="chatArea">
-        <ul class="messages"></ul>
-      </div>
-      <button class="btn btn-tips" title="Help">?</button>
-      <div id="effect-tips" class="ui-tips">
-        <h3 class="tips-title">Help</h3>
-        <div class="tips">
-          <h3>System Commands</h3>
-          <h4>$help or $commands</h4>
-          This command will show a list of other commands that can be used<br><br><br>Creator: Orago 
-          <br>&nbsp;&lt;<a href="https://mittens.glitch.me">Home Page</a> &gt;<br>
-        </div>
-      </div>
-      <input class="inputMessage" placeholder="Say something..."/>
-    </li>
-    <li class="login page" id="login-page">
-
-<!-- Navbar -->
-<div class="w3-top">
- <div class="w3-bar w3-theme-d2 w3-left-align w3-large">
-  <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-theme-d2" href="javascript:void(0);" onclick="openNav()"><i class="fa fa-bars"></i></a>
-  <a class="w3-bar-item w3-button w3-padding-large w3-theme-d4"><i class="fa fa-home w3-margin-right"></i>Mittz Chat</a>
-  <div onclick=location.replace('https://'+window.location.hostname+'${self_link}') class="w3-bar-item w3-button w3-hide-small w3-right w3-padding-large w3-hover-white w3-dropdown-hover" title="My Account">
-${profile_menu}
-    <img src="${self_avatar}" class="w3-circle" style="height:23px;width:23px" alt="Avatar">
-  </div>
- </div>
-</div>
-<!-- Navbar on small screens -->
-<div id="navDemo" class="w3-bar-block w3-theme-d2 w3-hide w3-hide-large w3-hide-medium w3-large">
-  <a href="javascript:void(0);" class="w3-bar-item w3-button w3-padding-large">Hidden</a>
-  <a>${nav}</a>
-  <a href="../dashboard" class="w3-bar-item w3-button w3-padding-large">Dashboard</a>
-  <a href="${self_link}" class="w3-bar-item w3-button w3-padding-large">${status}</a>
-</div>
-
-      <div class="form">
-        <h1 class="title">Mittz Chat</h1>
-        <h3 class="subtitle">Please enter your username.</h3>
-        <label>
-          <input class="usernameInput" type="text" id="username_input" minlength="1" maxlength="14" title="Nickname is limited to 1 to 14 characters" autofocus/>
-        </label>
-      </div>
-    </li>
-    <li class="room page" id="room-page">
-      <h1 class="room-title">Room list</h1>
-      <p class="room-hint">Click the room block to join the room.</p>
-      <ul class="room-list"></ul>
-    </li>
-  </ul>
-</body>
-</html>
-`);
-  
 });
