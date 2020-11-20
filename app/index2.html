@@ -1,6 +1,14 @@
 <!--Info Fill -->
 <!--  Author: Orago <Orago#0051> -->
 <!doctype html>
+ <script src="./index.js" defer></script>
+  <link rel="manifest" href="/manifest.json">
+  <script>// Register service worker to control making site work offline
+if('serviceWorker' in navigator) {
+  navigator.serviceWorker
+           .register('./sw.js')
+           .then(function() { console.log('Service Worker Registered'); });
+}</script>
   <navigation class="nav page" id="nav-page">
 <link rel="stylesheet" href="https://mittenscat.glitch.me/assets/css/navigation.css" />
   <input id="hamburger" class="hamburger" type="checkbox"/>
@@ -17,9 +25,11 @@
           <li><a href="./user/">Find User</a></li>
           <li><a href="./register">Register</a></li>
           <li><a href="./dashboard">Dashboard</a></li>
+          <li><a class="add-button">Doot</a></li>
       </ul>
       </section>
 </navigation>
+
 <html lang="En">
 <head>
   <meta charset="UTF-8">

@@ -78,6 +78,7 @@ const command = args.shift().toLowerCase();
     if (command){
   
   if (command==="balance") {
+    if (!database.user[database.discord[message.author.id]].coins){return message.channel.send('ERROR, Cannot find coins!')}
     if (!database.discord[message.author.id]){return connect_message()};
     const exampleEmbed = {
     color: 0x0099ff,

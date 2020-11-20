@@ -35,7 +35,7 @@
     },
     "orago": {
       "password": "$2a$10$PkOfVFZJ/WD96Dx8xCJIieOPe.jntmJ06zaOY5N.vTZP59GorJxnS",
-      "coins": 11,
+      "coins": 10,
       "preferred": "Orago",
       "background": "https://cdn.discordapp.com/attachments/663553295180103702/775510089003958322/200.gif",
       "banner": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
@@ -49,12 +49,9 @@
       ],
       "followers": [
         "guest",
-        "kind",
-        "king",
-        "null",
-        "empty"
+        "kind"
       ],
-      "xp": 1
+      "xp": 0
     },
     "null": {
       "password": "$2a$10$AW/zWW12xkDi.CanAS4n0uw7ZiFI69PYxSjIFhQCOgoGsS5J87XG.",
@@ -85,7 +82,7 @@
       "xp": 0
     },
     "kind": {
-      "password": "$2a$10$ZaVvm/1BHgOgBsXsh3zJd.vNvz5yVkPY14dK.r/Zxqt2EjUHMxqQK",
+      "password": "$2a$10$Nj1Vr/VJj0AM.gObmKz0QuB2CIBHl0sb9m.a50TzNiPFLcd7GAk/6",
       "coins": 53,
       "preferred": "kind",
       "background": "https://convertingcolors.com/plain-2C2F33.svg",
@@ -116,6 +113,26 @@
       "xp": 0
     }
   },
+  "posts": {
+    "orago": [
+      "hi",
+      "hello",
+      "new post!",
+      "yay creating and deleting posts has just been added",
+      "also added id #'s to each post",
+      "Made a discord bot that co-exists with the chat/blogging program and now you can earn coins by connecting your discord acccount and playing mini-games with the bot.",
+      "<a href=\"/u?aouab\">@aouab</a> helped a ton with hashing passwords, making the website super secure!"
+    ],
+    "kind": [
+      "hello!",
+      "hmm",
+      "kinda working?"
+    ],
+    "empty": [
+      "d"
+    ]
+  },
+  "logs": {},
   "discord": {},
   "badges": {
     "creator": [
@@ -148,8 +165,6 @@
     "null",
     "empty",
     "kind",
-    "aouab",
-    "d",
-    "test"
+    "aouab"
   ]
 }
