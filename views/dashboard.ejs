@@ -7,12 +7,13 @@
 <body>
 <div class="container">
   
-  <form method="POST" action="/dashboard-edit-account">
+  <form method="POST" action="/edit">
     <div class="row">
       <h2 style="text-align:center">Change account info</h2>
       <div class="col">
         <div class="hide-md-lg">
         </div>
+        <input type="hidden" name="method" value="details">
         <input type="text" name="sentname" placeholder="Username" required>
         <input type="password" name="sentpass" placeholder="Password (current password)" required>
         <input type="text" name="sentnewpass" placeholder="New password (optional)">
@@ -37,12 +38,13 @@
     </div>
   </form>
   
-  <form method="POST" action="/delete-post">
+  <form method="POST" action="/edit">
     <div class="row">
       <h2 style="text-align:center">Delete Post</h2>
       <div class="col">
         <div class="hide-md-lg">
         </div>
+        <input type="hidden" name="method" value="delete-post">
         <input type="text" name="sentname" placeholder="Username" required>
         <input type="password" name="sentpass" placeholder="Password" required>
         <input type="number" name="sentnum" placeholder="Post number" min="0" max="1000" required>

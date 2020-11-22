@@ -13,7 +13,6 @@
       "creation_date": "10/26/2020 15:54:16 PM",
       "following": [],
       "followers": [],
-      "badges": [],
       "xp": 0
     },
     "king": {
@@ -32,7 +31,6 @@
         "catto",
         "orago"
       ],
-      "badges": [],
       "xp": 0
     },
     "orago": {
@@ -54,14 +52,9 @@
         "kind",
         "king",
         "null",
-        "empty",
-        "deleteme"
+        "empty"
       ],
-      "badges": [
-        "creator",
-        "developer",
-        "moderator"
-      ],
+      "badges":["creator","developer","moderator"],
       "xp": 1
     },
     "null": {
@@ -76,7 +69,6 @@
       "following": [],
       "followers": [],
       "creation_date": "11/11/2020 14:33:30 PM",
-      "badges": [],
       "xp": 0
     },
     "empty": {
@@ -91,7 +83,6 @@
       "following": [],
       "followers": [],
       "creation_date": "11/11/2020 14:33:30 PM",
-      "badges": [],
       "xp": 0
     },
     "kind": {
@@ -107,7 +98,6 @@
       ],
       "followers": [],
       "creation_date": "11/12/2020 0:26:34 AM",
-      "badges": [],
       "xp": 1
     },
     "aouab": {
@@ -124,7 +114,6 @@
         "orago"
       ],
       "creation_date": "11/16/2020 11:24:16 AM",
-      "badges": [],
       "xp": 0
     },
     "testuser": {
@@ -139,36 +128,44 @@
       "avatar": "https://raw.githubusercontent.com/Ashwinvalento/cartoon-avatar/master/lib/images/male/24.png",
       "following": [],
       "followers": [],
-      "badges": [],
       "creation_date": "11/20/2020 15:6:37 PM"
-    },
-    "deleteme": {
-      "password": "$2a$10$aRdPSh/3TPZJdA0yt8Vowe6lBc4idYChM9wh7Be2Y7kevOkuXIfFC",
-      "coins": 49,
-      "xp": -1,
-      "preferred": "deleteme",
-      "background": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
-      "banner": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
-      "description": "Feels good man?",
-      "color": "#000000",
-      "avatar": "https://raw.githubusercontent.com/Ashwinvalento/cartoon-avatar/master/lib/images/female/59.png",
-      "following": [
-        "orago"
-      ],
-      "followers": [],
-      "badges": [],
-      "creation_date": "11/22/2020 -2:47:6 AM"
     }
   },
   "discord": {},
+  "badges": {
+    "creator": [
+      "orago"
+    ],
+    "developer": [
+      "orago",
+      "king"
+    ],
+    "moderator": [
+      "orago",
+      "aouab"
+    ],
+    "helper": [
+      "aouab"
+    ],
+    "early_member": [
+      "orago"
+    ],
+    "long_user": [],
+    "testing": [
+      "guest"
+    ]
+  },
   "profiles": [
     "guest",
     "king",
     "orago",
+    "brandy",
     "null",
     "empty",
     "kind",
     "aouab",
-    "deleteme"
+    "d",
+    "test",
+    "testuser"
   ]
 }

@@ -5,13 +5,16 @@ const Discord = require("discord.js");const client = new Discord.Client();
 const fs = require("fs");
 const app = express();
 const Canvas = require('canvas');
+const bcrypt= require("bcryptjs");
 const config = require('../config.json');
 /* /\ End /\ */
 
 /* \/ Sync from database \/ */
 /*This can be changed but make sure all the variables are still correct*/
 const database_location = __dirname+"/database.json";
+const mini_location = __dirname+"/mini.json"
 const database = JSON.parse(fs.readFileSync(database_location));
+const mini = JSON.parse(fs.readFileSync(mini_location));
 /* |\/ - These should be left alone.|*/
 let botver = config.mainbot_ver;
 let creator_id = config.creator_id;
@@ -76,42 +79,43 @@ https://${hostname}/register`).then(msg => {msg.delete({ timeout: 6000 })});
       const args = message.content.slice(eprefix.length).trim().split(' ');
 const command = args.shift().toLowerCase();
     if (command){
-  
+      var username;
+  if (message.channel.type === "text") {if (!message.guild.me.hasPermission("EMBED_LINKS")){message.channel.send("Please enable Embed Links for me.").then(msg => {msg.delete({ timeout: 5000 })});}}
   if (command==="balance") {
-    if (!database.user[database.discord[message.author.id]].coins){return message.channel.send('ERROR, Cannot find coins!')}
+    if (!database.user[database.discord[message.author.id]]){return message.channel.send('ERROR, Cannot find user!')}
     if (!database.discord[message.author.id]){return connect_message()};
     const exampleEmbed = {
     color: 0x0099ff,
     title: 'Coin Balance',
     fields: [{name:message.author.username+'\'s balance.',value: database.user[database.discord[message.author.id]].coins}],
 };
-  message.channel.send({ embed: exampleEmbed })
+  message.channel.send({ embed: exampleEmbed }).then(msg => {msg.delete({ timeout: 5000 })})
 }
 
- if (message.content==(eprefix + "profile")||message.content==("mc! profile")) {
-   if (!database.discord[message.author.id]){return connect_message()};
-   
+ if (command==="profile") {
+   if (args[0]){username=args[0]}else{username=database.discord[message.author.id]}
+   if (!database.profiles.includes(username)){message.channel.send("There is no user with this name").then(msg => {msg.delete({ timeout: 5000 })})};
    const embed = {
-    title: `${database.user[database.discord[message.author.id]].preferred}'s profile`,
-     description: `Description: ${database.user[database.discord[message.author.id]].description}`,
+    title: `${database.user[username].preferred}'s profile`,
+     description: `Description: ${database.user[username].description}`,
      thumbnail: {
-		url: database.user[database.discord[message.author.id]].avatar,
+		url: database.user[username].avatar,
 	},
     fields: [
-      {name:message.author.username+'\'s balance.',value: database.user[database.discord[message.author.id]].coins},
-      {name:'__Real-Name__',value: database.discord[message.author.id]},
-      {name:'__Coins__',value: database.user[database.discord[message.author.id]].coins},
-      {name:'__Account created on__',value: database.user[database.discord[message.author.id]].creation_date}
+      {name:message.author.username+'\'s balance.',value: database.user[username].coins},
+      {name:'__Real-Name__',value: username},
+      {name:'__Coins__',value: database.user[username].coins},
+      {name:'__Experience__',value: database.user[username].xp},
+      {name:'__Account created on__',value: database.user[username].creation_date}
             ],
-    color: database.user[database.discord[message.author.id]].color,
+    color: database.user[username].color,
      timestamp: new Date(),
 	footer: {
 		text: `${client.user.username} | By: Orago`,
 		icon_url: 'https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png?v=1594354728664',
 	},
 };
-   message.author.send({embed: embed});
-   message.reply('``A list of commands has been sent to your direct messages.``').then(msg => {msg.delete({ timeout: 4000 })});
+   message.channel.send({embed: embed})//.then(msg => {msg.delete({ timeout: 5000 })});
   }
       if (command === 'mine') {
         if (!database.discord[message.author.id]){return connect_message()};
@@ -131,50 +135,57 @@ const command = args.shift().toLowerCase();
         message.channel.send(`You have mined a coin and now have ${database.user[database.discord[message.author.id]].coins} Coins.`).then(msg => {msg.delete({ timeout: 2000 })})
       }
 
-       if (message.content==(eprefix + "posts")||message.content==("mc! posts")) {
+       if (command === 'posts') {
+         if (!args[0]){
+           if (!database.profiles.includes(database.discord[message.author.id])){return message.channel.send(`Please connect an account or include an input field Ex. \`${eprefix}posts <username>\``)}
+           else{args[0]=database.discord[message.author.id]}
+         }
+         if (args[0]){username=args[0]}else{username=database.discord[message.author.id]}
+   if (!database.profiles.includes(username)){return message.channel.send("There is no user with this name").then(msg => {msg.delete({ timeout: 5000 })})};
          var post_number, post_list = "";
-   if(typeof database.posts[database.discord[message.author.id]] !== "undefined"){
-    
-  for (post_number in database.posts[database.discord[message.author.id]]) {
-    post_list +=  `#${post_number}: ${database.posts[database.discord[message.author.id]][post_number]}` ;
-    if([database.posts[database.discord[message.author.id]].length-1] > 0){post_list += `\n`};
+   if(typeof mini.posts[username] !== "undefined"){
+  for (post_number in mini.posts[username]) {
+    post_list +=  `#${post_number}: ${mini.posts[username][post_number]}` ;
+    if([mini.posts[username].length-1] > 0){post_list += `\n`};
   }}
-   if (!database.discord[message.author.id]){return connect_message()};
-   
    const embed = {
-     thumbnail: {
-		url: database.user[database.discord[message.author.id]].avatar,
+     author: {
+		name: username+'\'s Posts.',
+		icon_url: database.user[username].avatar,
+		url: `https://meown.tk/u/?username=${username}`,
 	},
+     /*thumbnail: {
+		url: database.user[username].avatar,
+	},*/
     fields: [
-      {name:message.author.username+'\'s Posts.',value: post_list}
+      {name:'__|__',value: post_list}
             ],
-    color: database.user[database.discord[message.author.id]].color,
+    color: database.user[username].color,
      timestamp: new Date(),
 	footer: {
 		text: `${client.user.username} | By: Orago`,
 		icon_url: 'https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png?v=1594354728664',
 	},
 };
-   message.author.send({embed: embed});
-   message.reply('``A list of commands has been sent to your direct messages.``').then(msg => {msg.delete({ timeout: 4000 })});;
+   message.channel.send({embed: embed})//.then(msg => {msg.delete({ timeout: 4000 })});
   }
       
   if (message.content==(eprefix + "help")||message.content==("mc! help")) {
     const embed = new Discord.MessageEmbed()
         .setThumbnail(client.user.avatarURL({ format: "png", dynamic: true }))
         .setTitle('__'+client.user.username+' Information__')
-        .setDescription('Hello! <:gold:733213975705026620> I\'m '+client.user.username+'.\nI can do lots of things like play audio from a few radio channels, help moderate a server, provide fun commands, run a small economy, and have a decent amount of other utility features. \nUse `'+eprefix+'commandlist` to see what other things i can do.')
+        .setDescription('Hello! <:gold:733213975705026620> I\'m '+client.user.username+'.\nI can provide fun commands, run a small economy, have a decent amount of other utility features. \nUse `'+eprefix+'connect <username> <password>` in my direct messages to connect to your account.')
         .setColor(config.color)
         .addField('__Developer__', '<@193127888646701056>', true)
         .addField('__Library__', 'Discord.js', true)
         .addField('__Server Count__', client.guilds.cache.size, true)
         .addField('__User Count__', client.users.cache.size, true)
         .addField('__Channel Count__', client.channels.cache.size, true)
-        .addField(`__Creator's Homepage__`, 'https://mittens.glitch.me', true)
+        .addField(`__Create an Account at__`, 'https://meown.tk/u#register', true)
         .addField('__Memory Usage__', `${Math.round(process.memoryUsage().heapUsed / 1024 / 1024)}MB`, true)
         .addField('__Prefix__', prefix, true)
         .setFooter(`${client.user.username} | By: Orago`)
-      message.channel.send(embed).then(msg => {msg.delete({ timeout: 8000 })});
+      message.channel.send(embed).then(msg => {msg.delete({ timeout: 10000 })});
   }
   
  if (message.content==(eprefix + "commands")||message.content==("mc! commands")||message.content==(eprefix+" commandlist")||message.content==("!v! commandlist")) {
@@ -205,8 +216,7 @@ const command = args.shift().toLowerCase();
     
     if (database.profiles.includes(args[0].toLowerCase())) {
     message.channel.send('Real Account, now verifying password..').then(msg => {msg.delete({ timeout: 4000 })});
-        if (database.user[args[0].toLowerCase()].password===args[1]){
-          
+          if (bcrypt.compareSync(args[1],database.user[args[0].toLowerCase()].password)){
           database.discord[message.author.id]=args[0];
           message.channel.send(`Connection Successful!\n Account connected: '${database.discord[message.author.id]}'`).then(msg => {msg.delete({ timeout: 8000 })});
         } else {message.channel.send('Incorrect Password!').then(msg => {msg.delete({ timeout: 4000 })});}

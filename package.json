@@ -12,7 +12,7 @@
     "express-layout": "^0.1.0",
     "ejs": "^3.1.5",
     "canvas": "^2.6.1",
-    "discord.js": "^12.4.0",
+    "discord.js": "^12.3.1",
     "cookie-parser": "^1.4.5",
     "bcryptjs": "latest",
     "cartoon-avatar": "latest"
