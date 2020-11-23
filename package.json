@@ -15,7 +15,8 @@
     "discord.js": "^12.3.1",
     "cookie-parser": "^1.4.5",
     "bcryptjs": "latest",
-    "cartoon-avatar": "latest"
+    "cartoon-avatar": "latest",
+    "nodemailer":"latest"
   },
   "scripts": {
     "start": "node server/server.js & node server/chat_bot.js"

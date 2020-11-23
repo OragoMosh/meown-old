@@ -18,3 +18,44 @@ Female: <input type="radio" name="gender" onclick="onlyOne(this)" value="female"
 
 </body>
 </html>
+
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>JavaScript Arrays</h2>
+
+<p>The push method appends a new element to an array.</p>
+
+<button onclick="myFunction()">Try it</button>
+<button onclick="add(1)">Newp</button>
+<p id="demo"></p>
+
+<script>
+var fruits = {
+"posts":{
+"user":[
+{"title":"Hi",
+"body":"hi"
+}
+]//User:
+}//Posts:
+};//Var
+
+function add(x) {
+  if (fruits.posts.user[0]){alert("?");x+=1;add(x);};
+  if (!fruits.posts.user[x]){alert("hm");fruits.posts["user"]+={title:hi,body:hi}}
+  document.getElementById("demo").innerHTML = fruits;
+}
+function myFunction() {
+  fruits.push("Lemon");
+  document.getElementById("demo").innerHTML = fruits;
+}
+show();
+function show(){
+document.getElementById("demo").innerHTML = JSON.stringify(fruits);
+}
+</script>
+
+</body>
+</html>

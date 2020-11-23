@@ -16,15 +16,34 @@
       "badges": [],
       "xp": 0
     },
+    "king": {
+      "password": "$2a$10$yqW4g.1zsG5eCeT75v5PMOfkAyvSEYjhB5udA0IY1n5SflbB2zsWe",
+      "coins": 0,
+      "preferred": "k!ng",
+      "background": "https://convertingcolors.com/plain-2C2F33.svg",
+      "banner": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
+      "description": "lol",
+      "color": "#000000",
+      "avatar": "https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fwaffles.png",
+      "creation_date": "10/26/2020 16:18:17 PM",
+      "following": [],
+      "followers": [
+        "guest",
+        "catto",
+        "orago"
+      ],
+      "badges": [],
+      "xp": 0
+    },
     "orago": {
       "password": "$2a$10$PkOfVFZJ/WD96Dx8xCJIieOPe.jntmJ06zaOY5N.vTZP59GorJxnS",
       "coins": 11,
       "preferred": "Orago",
       "background": "https://cdn.discordapp.com/attachments/663553295180103702/775510089003958322/200.gif",
-      "banner": "https://media.nertivia.tk/6642526214797922304/6722617348978642944/bnr.gif",
+      "banner": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
       "color": "#000000",
       "avatar": "https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fwaffles.png",
-      "description": "Hello My name is Orago, I am a game & web developer also Creator of Meown!",
+      "description": "lol",
       "creation_date": "10/28/2020 2:18:38 AM",
       "following": [
         "king",
@@ -107,10 +126,41 @@
       "creation_date": "11/16/2020 11:24:16 AM",
       "badges": [],
       "xp": 0
+    },
+    "testuser": {
+      "password": "$2a$10$UQxZcDCzqJKWwo68huWKt.GFqqd2hQKcu/JhbYaKihAfFxCyr16Ya",
+      "coins": 50,
+      "xp": 0,
+      "preferred": "testuser",
+      "background": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
+      "banner": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
+      "description": "hello!",
+      "color": "#000000",
+      "avatar": "https://raw.githubusercontent.com/Ashwinvalento/cartoon-avatar/master/lib/images/male/24.png",
+      "following": [],
+      "followers": [],
+      "badges": [],
+      "creation_date": "11/20/2020 15:6:37 PM"
+    },
+    "deleteme": {
+      "password": "$2a$10$aRdPSh/3TPZJdA0yt8Vowe6lBc4idYChM9wh7Be2Y7kevOkuXIfFC",
+      "coins": 49,
+      "xp": -1,
+      "preferred": "deleteme",
+      "background": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
+      "banner": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
+      "description": "Feels good man?",
+      "color": "#000000",
+      "avatar": "https://raw.githubusercontent.com/Ashwinvalento/cartoon-avatar/master/lib/images/female/59.png",
+      "following": [
+        "orago"
+      ],
+      "followers": [],
+      "badges": [],
+      "creation_date": "11/22/2020 -2:47:6 AM"
     }
   },
   "discord": {},
-  "emails": {},
   "profiles": [
     "guest",
     "king",
@@ -119,7 +169,6 @@
     "empty",
     "kind",
     "aouab",
-    "deleteme",
-    "mittens"
+    "deleteme"
   ]
 }
