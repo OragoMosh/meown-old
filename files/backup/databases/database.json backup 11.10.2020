@@ -1,0 +1,89 @@
+{
+  "passcode": "51password",
+  "user": {
+    "guest": {
+      "password": "password",
+      "coins": 0,
+      "preferred": "Guest account",
+      "banner": "https://convertingcolors.com/plain-2C2F33.svg",
+      "description": "lol",
+      "color": "#0000ff",
+      "avatar": "https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png",
+      "creation_date": "10/26/2020 15:54:16 PM",
+      "following": [],
+      "followers": []
+    },
+    "king": {
+      "password": "cat",
+      "coins": 0,
+      "preferred": "k!ng",
+      "banner": "https://convertingcolors.com/plain-2C2F33.svg",
+      "description": "lol",
+      "color": "#0000ff",
+      "avatar": "https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fwaffles.png",
+      "creation_date": "10/26/2020 16:18:17 PM",
+      "following": [],
+      "followers": [
+        "guest",
+        "catto",
+        "orago"
+      ]
+    },
+    "orago": {
+      "password": "2004mittz",
+      "coins": 9,
+      "preferred": "Orago",
+      "banner": "https://cdn.discordapp.com/attachments/663553295180103702/775510089003958322/200.gif",
+      "color": "#000000",
+      "avatar": "https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fwaffles.png",
+      "description": "lol",
+      "creation_date": "10/28/2020 2:18:38 AM",
+      "following": [
+        "guest",
+        "king"
+      ],
+      "followers": [
+        "king",
+        "guest"
+      ]
+    }
+  },
+  "posts": {
+    "orago": [
+      "hi",
+      "hello",
+      "new post!",
+      "yay creating and deleting posts has just been added",
+      "also added id #'s to each post",
+      "Made a discord bot that co-exists with the chat/blogging program and now you can earn coins by connecting your discord acccount and playing mini-games with the bot.",
+      "just a test",
+      "hola"
+    ]
+  },
+  "discord": {},
+  "badges": {
+    "creator": [
+      "orago"
+    ],
+    "developer": [
+      "orago",
+      "king"
+    ],
+    "moderator": [
+      "orago"
+    ],
+    "early_member": [
+      "orago"
+    ],
+    "long_user": [],
+    "testing": [
+      "guest"
+    ]
+  },
+  "profiles": [
+    "guest",
+    "king",
+    "orago",
+    "brandy"
+  ]
+}

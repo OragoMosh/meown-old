@@ -1,0 +1,146 @@
+{
+  "passcode": "51password",
+  "user": {
+    "guest": {
+      "password": "$2a$10$w.OQABq6zrfUGl9t4gWK2O0ItUyhTMPV1CDGFxG05zYrF3FjuYZYK",
+      "email": "",
+      "coins": 0,
+      "preferred": "Guest account",
+      "background": "https://convertingcolors.com/plain-2C2F33.svg",
+      "banner": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
+      "description": "lol",
+      "color": "#000000",
+      "avatar": "https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png",
+      "creation_date": "10/26/2020 15:54:16 PM",
+      "following": [],
+      "followers": [],
+      "communities": [],
+      "badges": [],
+      "xp": 0
+    },
+    "orago": {
+      "password": "$2a$10$PkOfVFZJ/WD96Dx8xCJIieOPe.jntmJ06zaOY5N.vTZP59GorJxnS",
+      "email": "",
+      "coins": 53,
+      "preferred": "Orago",
+      "background": "https://cdn.glitch.com/288a0b72-7e13-4dd2-bc7a-3cc2f4db2aab%2FMittens%20Banner.jpg",
+      "banner": "https://cdn.glitch.com/288a0b72-7e13-4dd2-bc7a-3cc2f4db2aab%2Fvapormountain.jpg?v=1606422724403",
+      "color": "#000000",
+      "avatar": "https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fwaffles.png",
+      "description": "Hello My name is Orago, I am a game & web developer also Creator of Meown!",
+      "creation_date": "10/28/2020 2:18:38 AM",
+      "following": [],
+      "followers": [
+        "kind",
+        "null",
+        "empty"
+      ],
+      "communities": [
+        "meown"
+      ],
+      "badges": [
+        "creator",
+        "developer",
+        "moderator"
+      ],
+      "xp": 6
+    },
+    "null": {
+      "password": "$2a$10$AW/zWW12xkDi.CanAS4n0uw7ZiFI69PYxSjIFhQCOgoGsS5J87XG.",
+      "email": "",
+      "coins": 50.2,
+      "preferred": "null",
+      "background": "https://convertingcolors.com/plain-2C2F33.svg",
+      "banner": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
+      "description": "empty",
+      "color": "#000000",
+      "avatar": "https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png",
+      "following": [],
+      "followers": [],
+      "communities": [],
+      "creation_date": "11/11/2020 14:33:30 PM",
+      "badges": [],
+      "xp": 1
+    },
+    "empty": {
+      "password": "$2a$10$AW/zWW12xkDi.CanAS4n0uw7ZiFI69PYxSjIFhQCOgoGsS5J87XG.",
+      "email": "",
+      "coins": 51,
+      "preferred": "empty",
+      "background": "",
+      "banner": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
+      "description": "cool!",
+      "color": "#000000",
+      "avatar": "",
+      "following": [],
+      "followers": [],
+      "creation_date": "11/11/2020 14:33:30 PM",
+      "badges": [],
+      "communities": [],
+      "xp": 0
+    },
+    "kind": {
+      "password": "$2a$10$ZaVvm/1BHgOgBsXsh3zJd.vNvz5yVkPY14dK.r/Zxqt2EjUHMxqQK",
+      "email": "",
+      "coins": 54,
+      "preferred": "kind",
+      "background": "https://convertingcolors.com/plain-2C2F33.svg",
+      "description": "just a person looking to spread kindness",
+      "color": "#000000",
+      "avatar": "https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png",
+      "following": [
+        "orago"
+      ],
+      "followers": [],
+      "communities": [],
+      "creation_date": "11/12/2020 0:26:34 AM",
+      "badges": [],
+      "xp": 1
+    },
+    "aouab": {
+      "password": "$2a$10$cifJDzSgUGkgRgYLWGYRw.I/.ydKY120zYvXdhWooYvRKCgMuPE5.",
+      "email": "",
+      "coins": 50,
+      "preferred": "Aouab",
+      "background": "https://convertingcolors.com/plain-2C2F33.svg",
+      "banner": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
+      "description": "idk",
+      "color": "#000000",
+      "avatar": "https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png",
+      "following": [],
+      "followers": [],
+      "communities": [],
+      "creation_date": "11/16/2020 11:24:16 AM",
+      "badges": [],
+      "xp": 0
+    }
+  },
+  "community": {
+    "meown": {
+      "owner": "orago",
+      "preferred": "Meown Official",
+      "background": "https://cdn.glitch.com/0322d62f-81b5-4f06-9b33-557687636cec%2Fsmokehousechillin.gif",
+      "banner": "https://cdn.glitch.com/0322d62f-81b5-4f06-9b33-557687636cec%2F9e5ddb3fd1ba8dd983bb9569b35f8103.jpg",
+      "description": "Welcome to the Meown Official Subforum",
+      "avatar": "https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png",
+      "members": [
+        "orago"
+      ],
+      "creation_date": "11/16/2020 11:24:16 AM"
+    },
+    "lol": {
+      "owner": "orago",
+      "preferred": "lol",
+      "background": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
+      "banner": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
+      "description": "hewwo",
+      "color": "#000000",
+      "avatar": "https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png",
+      "members": [],
+      "badges": [],
+      "creation_date": 1606684411751
+    }
+  },
+  "discord": {},
+  "emails": []
+}

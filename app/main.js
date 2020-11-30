@@ -1,29 +1,66 @@
 /* Author: Orago <Orago#0051>*/
 // Based on Socket.io
-var botname = '⚙️ !v! ittz' //The username of the bot
-var cmdlist = '/join, /help, /refresh, /reload, /info, /time /fun, '//simple list of the commands that are easier to reach
-var ver = '1.04'//The version of the command used
-var prefix = '$' //The symbol used to call a command
-var pname = "Mittz Chat"
+var botname = '⚙️ !v! ittz'; //The username of the bot
+var ver = '1.04';//The version of the command used
+var prefix = '$'; //The symbol used to call a command
+var pname = "Mittz Chat";
+var staff_only = "This option is for staff only.";
+var database = "d";
+var time_value;
+var time;
 
-function passWord() {
-var testV = 1;
-var pass1 = prompt('Please Enter Your Password',' ');//Password Request Text
-while (testV < 3) {
-if (!pass1)
-history.go(-1);
-if (pass1.toLowerCase() == "BetaCatto") {
-alert('You Got it Right!');//Password Accepted Text
-window.open('/');
-break;
+
+function setCookie(cname,cvalue,exdays) {
+  var d = new Date();
+  d.setTime(d.getTime() + (exdays*24*60*60*1000));
+  var expires = "expires=" + d.toGMTString();
+  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+  
 }
-testV+=1;
-var pass1 =
-prompt('Access Denied - Password Incorrect, Please Try Again.','Password'); //Password Denied Text
+
+function getCookie(cname) {
+  var name = cname + "=";
+  var decodedCookie = decodeURIComponent(document.cookie);
+  var ca = decodedCookie.split(';');
+  for(var i = 0; i < ca.length; i++) {
+    var c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
 }
-if (pass1.toLowerCase()!="password" & testV ==3)
-history.go(-1);
-return " ";
+
+function existsCookie(type) {
+  var cookie_value=getCookie(type);
+  if (cookie_value != "") {
+    return true;//Exists
+  } else {
+     if (cookie_value != "" && cookie_value != null) {
+       return false;/*Does not Exist*/
+     }
+  }
+}
+
+function valueCookie(type) {
+  var cookie_value=getCookie(type);
+return cookie_value;
+}
+
+  function new_time(){
+time_value = new Date
+time = time_value.getTime()
+}
+
+function testing(){
+  if (cat == null){
+    var cat = 1
+  }
+  cat +=1
+return cat;
 }
 
 $(function() {
@@ -40,7 +77,7 @@ $(function() {
     '#F3A530', '#56B949', '#844D9E', '#4e1c81'
   ];
 var time = new Date();
-          var month = new Array();
+var month = new Array();
   month[0] = "January";
   month[1] = "February";
   month[2] = "March";
@@ -69,6 +106,7 @@ var time = new Date();
   var $inputMessage = $('.inputMessage'); // Input message input box
 
   var $loginPage = $('.login.page'); // login page
+  var $navPage = $('.nav.page'); // login page
   var $chatPage = $('.chat.page'); // Chat room page
   var $roomPage = $('.room.page'); // Room list page
   var $roomList = $('.room-list'); // Room list <ul>
@@ -82,9 +120,15 @@ var time = new Date();
   var $currentInput = $usernameInput.focus();
   var $roomDiv;
   var roomNameRule = /^(?!\s*$)[a-zA-Z0-9_\u4e00-\u9fa5 \f\n\r\t\v]{1,14}$/;
-
+  
+  
   var socket = io();
   
+  socket.emit('sync');
+socket.on('handshake', function (data) {
+database=data;
+  });
+
   function addParticipantsMessage (data) {
     var message;
     if (!data.userJoinOrLeftRoom) {
@@ -96,16 +140,38 @@ var time = new Date();
     }
     log(message);
   }
-
+  
   // Sets the client's username
   function setUsername () {
     // If user name is input, get and then emit 'add user' event.
-    // trim(): remove the whitespace from the beginning and end of a string.
+    
     username = cleanInput($usernameInput.val().trim());
+    
 
+    if(typeof database.profiles == "undefined"){
+      setTimeout(setUsername, 500);return console.log('tis')
+    }
+    if (database.profiles.includes(username.toLowerCase())) {
+//Checks to see if there is a cookie for an account logged in
+        if (valueCookie("saved-username")!==username) {//Checks to see if the cookie matches the current account or not.
+          var pass_input = prompt("Please input the password for the account @"+username, "");
+        }
+      
+        if(valueCookie("saved-username")==username&&valueCookie("saved-password")!==null){pass_input=valueCookie("saved-username")}
+  if (pass_input == null || pass_input == "") {
+    {location.reload();return}
+  } else {
+if (valueCookie("saved-username")==username&&database.user[username.toLowerCase()].password==valueCookie("saved-password")){}
+else if (database.user[username.toLowerCase()].password==pass_input.toLowerCase()){alert("Success!"); 
+ if(valueCookie("saved-username")==null||valueCookie("saved-username")!==username){setCookie("saved-username", username, 30);setCookie("saved-password", pass_input, 30);}}
+    else{alert("Wrong password!");return location.reload();}
+  
+  }
+  }
     // If the username is valid
     if (username) {
       $loginPage.fadeOut();
+      $navPage.fadeOut();
       $chatPage.show();
       $roomPage.fadeIn();
       $loginPage.off('click');
@@ -115,6 +181,7 @@ var time = new Date();
       socket.emit('add user', username);
     }
   }
+
 
   // Sends a chat message.
   function sendMessage () {
@@ -163,7 +230,7 @@ var time = new Date();
         break;
         
       case 'help': // Command /help lists all commands
-        message = 'Help list: /help1, /help2, /help3 ';
+        message = 'Help list: '+prefix+'help1, '+prefix+'help2, '+prefix+'help3 ';
         log(message);
         break;
         
@@ -171,8 +238,12 @@ var time = new Date();
         log('--------------------');
         log('-- Help List --');
         log('-_- Page - 1 Useful Commands -_-');
-        log('/help - Shows a list of helping commands'); log('/fun - shows a list of fun commands'); log('/ree - Basically just says ree with audio (turn ur volume up)');
-        log('/commands - Shows a list of useable commands'); log('/updates - shows a list of new updates'); log('/refresh - This command refreshes the room list if new ones arent loading');
+        
+        log(prefix+'help - Shows a list of helping commands');log(prefix+'updates - shows a list of new updates'); 
+        log(prefix+'commands - Shows a list of useable commands'); log(prefix+'refresh - This command refreshes the room list if new ones arent loading');
+        log(prefix+'info - Shows server version and creator info'); log(prefix+'time - Shows the current time'); 
+        log(prefix+'reload - This command will reload the server page');
+        
         log('-- use /help2 for more info --');
         log('--------------------');
         break;
@@ -181,9 +252,9 @@ var time = new Date();
         log('--------------------');
         log('-- Help List --');
         log('-_- Page - 2 Useful Commands -_-');
-        log('/info - Shows server version and creator info'); log('/time - Shows the current time'); log('/reload - This command will reload the server page');
-        log(''); log(''); log('');
-        log('-- use /help3 for more info --');
+         
+        
+        log('-- use '+prefix+'help3 for more info --');
         log('--------------------');
         break;
         
@@ -191,58 +262,24 @@ var time = new Date();
         log('--------------------');
         log('-- Help List --');
         log('-_- Page - 3 Fun Commands -_-');
-        log('/ob - Makes you say okay boomer and jesus listens'); log('/pet - Shows a list of pets that can be used'); log('/cf - Flips a coin which will either end up with a heads or tails');
-        log('/bored - Will make a bot say this user is bored'); log(''); log('');
-        log('-- use /help for more info --');
+
+        log('EMPTY')
+        
+        
+        log('-- use '+prefix+'help for more info --');
         log('--------------------');
         break;
         
-      case 'updates': // Command /help lists all commands
-        log('--------------------');
-        log('-- Updates List --');
-        log('-_- Useful Commands -_-');
-        log('- Fixed Coin Flipping, /cf'); log('- Fixed the ob command'); log('- Fixed pets not functioning');
-        log('- Added a /ree command for fun'); log('- Added a month and day for /time'); log('- Added a /update function');
-        log('-- use /help2 for more info --');
-        log('--------------------');
+      case 'logs': // Command /help lists all commands
+
         break;
         
-      case 'commands': // Command /help lists all commands
-        message = 'Commands: '+cmdlist+'/help';
-        log(message);
-        break;
-        
-      case 'fun': // Command /fun a list of fun commands
-        message = 'Fun Commands: /slap, /bored, /cf, /pets, /ob, /ree';
-        log(message);
-        break;
-        
-      case 'pets': // Command /fun a list of fun commands
-        message = 'Pets: /cat, /dog';
-        log(message);
-        break;
-        
+
       case 'refresh':// Command /refresh = reload room list.
         socket.emit('room list');
         break;
-        
-      case 'beta':// Command /refresh = reload room list.
-        passWord()
-        break;
-        
-      case 'my':// Command /refresh = reload room list.
-        words.shift();
-        var jchat = words.join(' ');
-        if (jchat == "username"){
-          alert(username);
-        }
-        break;
-      case 'set-username':// Command /refresh = reload room list.
-        words.shift();
-        var jchat = words.join(' ');
-          
-          alert(username);
-        break; 
+
+
       case 'info':// Command /info = Server info
         message = 'This server is running V'+ver;
         log(message);
@@ -258,44 +295,35 @@ var time = new Date();
         message = 'Reloading will now commence...'
         log(message);
         break;    
+
+
         
-  //fun commands
-      case 'slap':// Slaps the text given
+        case 'register':
+        location.replace('./register');
+        break;
+        
+
+        
+        case 'search'|'user':
+        location.replace('./user');
+        break;
+        
+        case 'database':
+        location.replace('./data');
+        break;
+        
+        
+        case 'coins':
+        socket.emit('sync');
       words.shift();
-      var jchat = words.join(' ');
-      if (roomNameRule.test(jchat)) {
-      addChatMessage({
-          username: username,
-          message: 'has slapped ' + jchat
-        });
-        socket.emit('new message', message);}
-        else{
-          log('Please select a text that you would like to slap, ' +
-              'Example /slap cat', {})}
-        break;
+        if (!database.profiles.includes(username.toLowerCase())){return log("Please create a user with '"+prefix+"register' !")}
+        log("You have "+database.user[username.toLowerCase()].coins+" coins.");
         
-      case 'bored': //im bored
-      addChatMessage({
-          username: botname,
-          message: 'hi'
-          });
-          socket.emit('new message',botname);
         break;
+
         
-      case 'inverted':// Slaps the text given
-      words.shift();
-      var jchat = words.join(' ');
-        var cat='kitty'
-      if (cat='kitty') {
-      addChatMessage({
-          username: jchat,
-          message: username
-        });
-        socket.emit('i-chat',jchat);}
-        else{
-          log('Please use the command correctly, also must have less than 10 letters, ' +
-              'Example /slap cat', {})}
-        break;
+        
+        
 
       case 'say':// Slaps the text given
       words.shift();
@@ -306,10 +334,10 @@ var time = new Date();
           username: botname,
           message: jchat
         });
-        socket.emit('sbot',jchat);}
+        socket.emit('bot message',jchat);}
         else{
           log('Please use the command correctly, also must have less than 10 letters, ' +
-              'Example /slap cat', {})}
+              'Example '+prefix+'say cat', {})}
         break;
         
       case 'ree':// Slaps the text given
@@ -319,55 +347,26 @@ var time = new Date();
           username: botname,
           message: 'REEEEEEEEEEEEEEEEEEEEEeeeeeeeeeeeeeeee'
         });
-        socket.emit('new message','REE');
+        socket.emit('bot message','REE');
 
         break;
-      
+      case 'img':// Slaps the text given
+          addChatImage({
+          username: botname,
+          message: 'REEEEEEEEEEEEEEEEEEEEEeeeeeeeeeeeeeeee'
+        });
+        break;
         
         case 'cf': //coinflip
           var prob1 = Math.floor(Math.random() * 2) +1;
-
           var prob2 = Math.floor(Math.random() * 2) +1;
-
           if( prob1 === prob2){
-          socket.emit('cf-heads');
-          addChatMessage({
-          username: botname,
-          message:username+' flipped a coin and got Heads'
-          });
+          socket.emit('bot message',`${username}, flipped a coin and got heads!`);
+          addChatMessage({username: botname,message:username+' flipped a coin and got Heads'});
           }else{
-          socket.emit('cf-tails');
-          addChatMessage({
-          username: botname,
-          message:username+' flipped a coin and got Tails'
-        });}
-        break;
-        
-        //pets
-      case 'cat':
-        socket.emit('new message', 'Here Kitty!');
-                addChatMessage({
-        username: username,
-        message: 'Here Kitty!'
-        });
-        addChatMessage({
-        username: '🐈',
-        message: 'Meow!'
-        });
-        socket.emit('cat message');
-        break;
-        
-      case 'dog':
-        socket.emit('new message', 'Here Boy!');
-                addChatMessage({
-        username: username,
-        message: 'Here Boy!'
-        });
-        addChatMessage({
-        username: '🐕',
-        message: 'Woof!'
-        });
-        socket.emit('dog message');
+          addChatMessage({username: botname,message:username+' flipped a coin and got Heads'});
+          socket.emit('bot message',`${username}, flipped a coin and got tails!`);
+          }
         break;
         
       default:
@@ -381,7 +380,6 @@ var time = new Date();
   function log (message, options) {
     options = options || {};
     var $logDiv;
-
     if (typeof options.userConnEvent !== 'undefined') {
       var userName = options.username;
       var colorOfUserName = getUsernameColor(userName);
@@ -430,7 +428,29 @@ var time = new Date();
       addMessageElement($messageDiv, options);
     }
   }
+  
+function addChatImage (data, options) {
+    // Don't fade the message in if there is an 'X was typing'
+    var $typingMessages = getTypingMessages(data);
+    options = options || {};
+    if ($typingMessages.length !== 0) {
+      options.fade = false;
+      $typingMessages.remove();
+    }
 
+    var userName = data.username;
+    var colorOfUserName = getUsernameColor(userName);
+    if (data.typing !== true) {
+      userName += ': ';
+    }
+      var usernameDiv = $('<span class="username"/>').text(userName).css('color', colorOfUserName);
+      var messageBodyDiv = $('<img src="https://www.w3schools.com/html/pic_trulli.jpg" alt="Trulli" width="500" height="333">')
+
+      var typingClass = data.typing ? 'typing' : '';
+      var $messageDiv = $('<li class="message"/>').data('username', userName).addClass(typingClass).append(usernameDiv, messageBodyDiv);
+
+      addMessageElement($messageDiv, options);
+  }
   // Adds the visual chat typing message
   function addChatTyping (data) {
     data.typing = true;
@@ -575,6 +595,7 @@ var time = new Date();
     addParticipantsMessage(data);
   });
 
+  
   // Whenever the server emits 'new message', update the chat body
   socket.on('new message', function (data) {
     addChatMessage(data);

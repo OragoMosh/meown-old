@@ -1,0 +1,17 @@
+{
+    "prefix": "m$",
+    "home_prefix": "m$",
+    "kamiko_prefix": "k!",
+    "default_prefix": "!v!",
+    "api": "YOUTUBE API KEY",
+    "creator_id": "193127888646701056",
+    "creator_name": "Orago",
+    "color": "0x0099ff",
+    "mainbot_ver": "V1.1",
+    "kamiko_ver": "V1.01",
+    "admins": ["ADMIN ID's", "Supports multiple"],
+    "defaultvolume": "Default Playback Volume",
+    "homepage": "https://mittenscat.herokuapp.com",
+    "support": "https://discord.gg/zzthRpu",
+    "url":"mittzchat-beta.glitch.me"
+} 

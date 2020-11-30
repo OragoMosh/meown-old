@@ -1,0 +1,171 @@
+{
+  "passcode": "51password",
+  "user": {
+    "guest": {
+      "password": "$2a$10$w.OQABq6zrfUGl9t4gWK2O0ItUyhTMPV1CDGFxG05zYrF3FjuYZYK",
+      "coins": 0,
+      "preferred": "Guest account",
+      "background": "https://convertingcolors.com/plain-2C2F33.svg",
+      "banner": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
+      "description": "lol",
+      "color": "#000000",
+      "avatar": "https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png",
+      "creation_date": "10/26/2020 15:54:16 PM",
+      "following": [],
+      "followers": [],
+      "xp": 0
+    },
+    "king": {
+      "password": "$2a$10$yqW4g.1zsG5eCeT75v5PMOfkAyvSEYjhB5udA0IY1n5SflbB2zsWe",
+      "coins": 0,
+      "preferred": "k!ng",
+      "background": "https://convertingcolors.com/plain-2C2F33.svg",
+      "banner": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
+      "description": "lol",
+      "color": "#000000",
+      "avatar": "https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fwaffles.png",
+      "creation_date": "10/26/2020 16:18:17 PM",
+      "following": [],
+      "followers": [
+        "guest",
+        "catto",
+        "orago"
+      ],
+      "xp": 0
+    },
+    "orago": {
+      "password": "$2a$10$PkOfVFZJ/WD96Dx8xCJIieOPe.jntmJ06zaOY5N.vTZP59GorJxnS",
+      "coins": 11,
+      "preferred": "Orago",
+      "background": "https://cdn.discordapp.com/attachments/663553295180103702/775510089003958322/200.gif",
+      "banner": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
+      "color": "#000000",
+      "avatar": "https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fwaffles.png",
+      "description": "lol",
+      "creation_date": "10/28/2020 2:18:38 AM",
+      "following": [
+        "king",
+        "aouab"
+      ],
+      "followers": [
+        "guest",
+        "kind",
+        "king",
+        "null",
+        "empty"
+      ],
+      "badges":["creator","developer","moderator"],
+      "xp": 1
+    },
+    "null": {
+      "password": "$2a$10$AW/zWW12xkDi.CanAS4n0uw7ZiFI69PYxSjIFhQCOgoGsS5J87XG.",
+      "coins": 50,
+      "preferred": "null",
+      "background": "https://convertingcolors.com/plain-2C2F33.svg",
+      "banner": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
+      "description": "empty",
+      "color": "#000000",
+      "avatar": "https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png",
+      "following": [],
+      "followers": [],
+      "creation_date": "11/11/2020 14:33:30 PM",
+      "xp": 0
+    },
+    "empty": {
+      "password": "$2a$10$AW/zWW12xkDi.CanAS4n0uw7ZiFI69PYxSjIFhQCOgoGsS5J87XG.",
+      "coins": 51,
+      "preferred": "empty",
+      "background": "",
+      "banner": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
+      "description": "cool!",
+      "color": "#000000",
+      "avatar": "",
+      "following": [],
+      "followers": [],
+      "creation_date": "11/11/2020 14:33:30 PM",
+      "xp": 0
+    },
+    "kind": {
+      "password": "$2a$10$ZaVvm/1BHgOgBsXsh3zJd.vNvz5yVkPY14dK.r/Zxqt2EjUHMxqQK",
+      "coins": 54,
+      "preferred": "kind",
+      "background": "https://convertingcolors.com/plain-2C2F33.svg",
+      "description": "just a person looking to spread kindness",
+      "color": "#000000",
+      "avatar": "https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png",
+      "following": [
+        "orago"
+      ],
+      "followers": [],
+      "creation_date": "11/12/2020 0:26:34 AM",
+      "xp": 1
+    },
+    "aouab": {
+      "password": "$2a$10$cifJDzSgUGkgRgYLWGYRw.I/.ydKY120zYvXdhWooYvRKCgMuPE5.",
+      "coins": 50,
+      "preferred": "Aouab",
+      "background": "https://convertingcolors.com/plain-2C2F33.svg",
+      "banner": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
+      "description": "idk",
+      "color": "#000000",
+      "avatar": "https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png",
+      "following": [],
+      "followers": [
+        "orago"
+      ],
+      "creation_date": "11/16/2020 11:24:16 AM",
+      "xp": 0
+    },
+    "testuser": {
+      "password": "$2a$10$UQxZcDCzqJKWwo68huWKt.GFqqd2hQKcu/JhbYaKihAfFxCyr16Ya",
+      "coins": 50,
+      "xp": 0,
+      "preferred": "testuser",
+      "background": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
+      "banner": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
+      "description": "hello!",
+      "color": "#000000",
+      "avatar": "https://raw.githubusercontent.com/Ashwinvalento/cartoon-avatar/master/lib/images/male/24.png",
+      "following": [],
+      "followers": [],
+      "creation_date": "11/20/2020 15:6:37 PM"
+    }
+  },
+  "discord": {},
+  "badges": {
+    "creator": [
+      "orago"
+    ],
+    "developer": [
+      "orago",
+      "king"
+    ],
+    "moderator": [
+      "orago",
+      "aouab"
+    ],
+    "helper": [
+      "aouab"
+    ],
+    "early_member": [
+      "orago"
+    ],
+    "long_user": [],
+    "testing": [
+      "guest"
+    ]
+  },
+  "profiles": [
+    "guest",
+    "king",
+    "orago",
+    "brandy",
+    "null",
+    "empty",
+    "kind",
+    "aouab",
+    "d",
+    "test",
+    "testuser"
+  ]
+}
