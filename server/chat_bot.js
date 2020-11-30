@@ -268,4 +268,4 @@ client.on("guildDelete", guild => {
 
 
 
-client.login(process.env.bot_token);
+//client.login(process.env.bot_token);

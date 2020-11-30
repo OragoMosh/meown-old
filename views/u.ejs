@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<input id="cb" type="text" hidden>
+<script>
+<%- values.scripts %>
+  function copy(txt){
+  var cb = document.getElementById("cb");
+  cb.value = txt;
+  cb.style.display='block';
+  cb.select();
+  document.execCommand('copy');
+  cb.style.display='none';
+ }
+let params = (new URL(document.location)).searchParams;
+var popup_status = false;
+window.addEventListener("load", function () {/*Start - If website Loaded*/
+if (document.getElementById("popup")===null){/*Start - If variable popup equals null*/
+document.getElementById("assets").innerHTML+= '<div id="popup">\</div>';/*Add popup notification box*/
+}
+if (params.get('notification')==null){notification('Page Loaded!')}else{notification(params.get('notification'));}
+  document.getElementById("popup").style.backgroundColor = "#333"
+});
+function notification(text,time) {
+  if (time==null){
+    time = 2000
+  }
+if (popup_status !== true){
+	popup_status = true;
+	var popup = document.getElementById("popup");
+	popup.className = "show";
+	popup.innerHTML = text
+	setTimeout(function(){ popup.className = popup.className.replace("show", "");popup_status=false;}, time);
+  } 
+}
+</script>
+<html>
+<%- values.info_data(`User: `+values.username) %>
+<meta charset="UTF-8">
+<link href="../tools.css" rel="stylesheet" >
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="simple.css">
+<link rel="stylesheet" href="simple-theme-blue-grey.css">
+<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Open+Sans'>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>html, body, h1, h2, h3, h4, h5 {font-family: "Open Sans", sans-serif}</style>
+<body class="simple-theme-l5" style="background-image: linear-gradient(rgba(77, 99, 111,1),rgba(77, 99, 111,1),rgba(77, 99, 111,0.8));">
+<!-- Navbar -->
+<div class="simple-top">
+ <div class="simple-bar simple-theme-d2 simple-left-align simple-large" style="background-size: 100% 100%;background-image: linear-gradient(rgba(77, 99, 111,0.8),rgba(77, 99, 111,1),rgba(64, 82, 92,0.5));">
+  <a class="simple-bar-item simple-hide-medium simple-hide-large simple-right simple-large" href="javascript:void(0);" onclick="openNav()"><img src="<%- values.self_avatar %>" class="simple-circle" style="height:30px;width:30px" alt="Avatar"></a>
+  <a href="../" class="simple-bar-item simple-button simple-padding-large simple-theme-d4"><i class="fa fa-home simple-margin-right"></i>Meown</a>
+  <!--
+  <a href="#" class="simple-bar-item simple-button simple-hide-small simple-padding-large simple-hover-white" title="News"><i class="fa fa-globe"></i></a>
+  <a href="#" class="simple-bar-item simple-button simple-hide-small simple-padding-large simple-hover-white" title="Account Settings"><i class="fa fa-user"></i></a>
+  <a href="#" class="simple-bar-item simple-button simple-hide-small simple-padding-large simple-hover-white" title="Messages"><i class="fa fa-envelope"></i></a>
+  -->
+<a class="simple-hide-small">
+<form method="get" action="/u" style="display:inline-block;"><input type="text" name="search" class="simple-border simple-padding" placeholder="Find User" style="width:20vw;"></input></form>
+<form method="get" action="/c" style="display:inline-block;"><input type="text" name="search" class="simple-border simple-padding" placeholder="Find Community" style="width:20vw;"></input></form>
+<%- values.nav %></a>
+  <div class="simple-dropdown-hover simple-hide-small">
+    <button class="simple-button simple-padding-large" title="Notifications"><i class="fa fa-bell"></i><span class="simple-badge simple-right simple-small simple-green">3</span></button>     
+    <div class="simple-dropdown-content simple-card-4 simple-bar-block" style="width:300px;">
+      <a href="#" class="simple-bar-item simple-button">Item-1</a>
+      <a href="#" class="simple-bar-item simple-button">Item-2</a>
+      <a href="#" class="simple-bar-item simple-button">Item-3</a>
+    </div>
+  </div>
+  <div onclick=location.replace('https://'+window.location.hostname+'<%- values.self_link %>') style="background-image: linear-gradient(rgba(77, 99, 111,0.8),rgba(77, 99, 111,1),rgba(64, 82, 92,0.5));" class="simple-bar-item simple-button simple-hide-small simple-right simple-padding-large simple-hover-white simple-dropdown-hover" title="My Account" >
+<%- values.profile_menu %>
+    <img src="<%- values.self_avatar %>" class="simple-circle" style="height:23px;width:23px" alt="Avatar">
+  </div>
+ </div>
+</div>
+<!-- Navbar on small screens -->
+<div id="navDemo" class="simple-bar-block simple-theme-d2 simple-hide simple-hide-large simple-hide-medium simple-large">
+  <a href="javascript:void(0);" class="simple-bar-item simple-button simple-padding-large">Hidden</a>
+  <a>
+  <form method="get" action="/u" style="display:inline-block;"><input type="text" name="search" class="simple-border simple-padding"  placeholder="Find User" style="width:69vw;"></input></form>
+  <form method="get" action="/c" style="display:inline-block;"><input type="text" name="search" class="simple-border simple-padding"  placeholder="Find Community" style="width:69vw;"></input></form>
+  <%- values.nav_mobile %></a>
+  <a href="../" class="simple-bar-item simple-button simple-padding-large">Chat Room</a>
+  <a href="${this.self_link}" class="simple-bar-item simple-button simple-padding-large"><%- values.status %></a>
+</div>
+<!-- Page Container -->
+<div class="simple-container simple-content" style="max-width:1400px;margin-top:80px">    
+  <!-- The Grid -->
+  <div class="simple-row">
+    <!-- Left Column -->
+    <div class="simple-col m3">
+      <!-- Profile -->
+      <!--<div class="simple-card simple-round simple-white">-->
+      <div class="simple-card simple-round" style="background-image: linear-gradient(45deg, rgba(255,255,255,0.2), rgba(255,255,255,0.2) ),url('<%-database.user[values.username].background %>');background-color:white;">
+      <div class="simple-container"><br> 
+      <div class="simple-card simple-round" style="background-image: linear-gradient(45deg, rgba(255,255,255,0.3), rgba(255,255,255,0.3) )">
+        <div class="simple-container">
+         <h4 class="simple-center" style="color:<%- database.user[values.username].color %>"><%- database.user[values.username].preferred %> </h4>
+         <p class="simple-center"><img src="<%-database.user[values.username].avatar %>" class="simple-circle" style="height:106px;width:106px" alt="User Avatar"></p>
+         <hr>
+         <p><i class="fa fa-user fa-fw simple-margin-right simple-text-theme"></i> <%- values.username %></p>
+         <!--<p><i class="fa fa-comment fa-fw simple-margin-right simple-text-theme"></i> ${this.data.user[this.username].description}</p>-->
+         <p><i class="fa fa-birthday-cake fa-fw simple-margin-right simple-text-theme"></i> <%- database.user[values.username].creation_date %></p>
+        <p><i class="fa fa-money fa-fw simple-margin-right simple-text-theme"></i> <%-values.currency %>: <%-database.user[values.username].coins%></p>
+        <p><i class="fa fa-star fa-fw simple-margin-right simple-text-theme"></i> Experience: <%- database.user[values.username].xp%></p>
+        </div>
+      </div>
+      </div>
+      <br>
+      </div>
+      <br>
+      
+      <!-- Accordion -->
+      <div class="simple-card simple-round">
+        <div class="simple-white">
+          <button onclick="accordion('Demo1')" class="simple-button simple-block simple-theme-l1 simple-left-align"><i class="fa fa-shield fa-fw simple-margin-right"></i> Badges</button>
+          <div id="Demo1" class="simple-hide simple-container">
+            <p><%- values.badge_list %></p>
+          </div>
+          <button onclick="accordion('Demo2')" class="simple-button simple-block simple-theme-l1 simple-left-align"><i class="fa fa-heart fa-fw simple-margin-right"></i> Follows</button>
+          <div id="Demo2" class="simple-hide simple-container">
+            <p>Followers: <%- values.follow_amount %></p>
+            <p>Following: <%- values.follow_list %> </p>
+            <p>Communities: <%- values.community_list %> </p>
+          </div>
+        </div>      
+      </div>
+      <br>
+      
+      <!-- Interests --> 
+      <div class="simple-card simple-round simple-white simple-hide-small">
+        <div class="simple-container">
+          <p>Interests</p>
+          <p></p>
+        </div>
+      </div>
+      <br>
+      
+      <!-- Alert Box -->
+      <div class="simple-container simple-display-container simple-round simple-theme-l4 simple-border simple-theme-border simple-margin-bottom simple-hide-small">
+        <span onclick="this.parentElement.style.display='none'" class="simple-button simple-theme-l3 simple-display-topright">
+          <i class="fa fa-remove"></i>
+        </span>
+        <p><strong>Hello!</strong></p>
+        <p>This is a notification box which currently has no use :p</p>
+      </div>
+    
+    <!-- End Left Column -->
+    </div>
+    
+    <!-- Middle Column -->
+    <div class="simple-col m7">
+    <form method="post" action="/edit" class="<%- values.visible.post_bar %>">
+<div class="simple-row-padding"><div class="simple-col m12"><div class="simple-card simple-round simple-white"><div class="simple-container simple-padding">
+              <h6 class="simple-opacity">New Post</h6>
+              <input type="hidden" name="sentname" value="${request.cookies['saved-username']}">
+              <input type="hidden" name="sentpass" value="${request.cookies['saved-password']}">
+              <input type="hidden" name="method" value="new-post">
+              <input type="text" name="sentposttitle" class="simple-border simple-padding" placeholder="Post Title" required></input>
+              <input type="text" name="sentpostbody" class="simple-border simple-padding" placeholder="Post Body" required></input><br>
+              <button type="submit" class="simple-button simple-theme"><i class="fa fa-pencil"></i> Send</button>
+            </div></div></div></div>
+</form>
+<!--
+        <div class="simple-container simple-card simple-white simple-round simple-margin"><br>
+        <img src="https://images.vexels.com/media/users/3/163191/isolated/lists/3404f798db8118b2a5bd33cab9c1455c-leather-stitch-badge.png" alt="Badge Card" class="simple-left simple-circle simple-margin-right" style="width:60px">
+        <h4>User Badges</h4><br>
+        <p>Badges: ${this.badge_list}</p>
+      </div> -->
+<div class="simple-container simple-card simple-white simple-round simple-margin" style="background-size: 100% 100%;background-image: url('<%- database.user[values.username].banner%>');background-color:white;">
+<div class="simple-container simple-card simple-round simple-margin" style="background-image: linear-gradient(45deg, rgba(255,255,255,0.3), rgba(255,255,255,0.3) );">
+        <h4>[About me]</h4><br>
+        <p><%- database.user[values.username].description %></p>
+        </div>
+      </div>
+    <%- values.post_list %>
+    <!-- End Middle Column -->
+    </div>
+    
+    <!-- Right Column -->
+    <div class="simple-col m2">
+<%- values.side_bar %>
+      
+      <div class="<%- values.visible.login_register %>">
+      <div class=" simple-card simple-round simple-white simple-padding-16 simple-center" id="login"><p>LOGIN</p>
+<form method="POST" action="/login">
+<input type="text" name="sentname" class="simple-border simple-padding" style="width:200px;" placeholder="Username" required>
+<input type="password" name="sentpass" class="simple-border simple-padding" style="width:200px;" placeholder="Password" required>
+<br><button type="submit" class="simple-button simple-theme" style="width:200px;"> Login</button></form>
+  </div><br>
+<div class="simple-card simple-round simple-white simple-padding-16 simple-center" id="register"><p>REGISTER</p>
+<form method="POST" action="/register">
+<input type="text" name="sentname" class="simple-border simple-padding" style="width:200px;" placeholder="Username" minlength="3" maxlength="15" onkeyup="${anti}" required>
+<input type="text" name="sentdesc" class="simple-border simple-padding" style="width:200px;" placeholder="Description"required>
+<input type="password" name="sentpass" class="simple-border simple-padding" style="width:200px;" placeholder="Password" required>
+<input type="password" name="sentpassconfirm" class="simple-border simple-padding" style="width:200px;" placeholder="Password (Confirm)" required>
+<input type="email" id="email" name="sentemail" class="simple-border simple-padding" style="width:200px;" placeholder="Email" required>
+<br>Avatar:<br>
+Male: <input type="radio" name="avatar" onclick="onlyOne(this)" value="male" required>
+Female: <input type="radio" name="avatar" onclick="onlyOne(this)" value="female" required>
+Default: <input type="radio" name="avatar" onclick="onlyOne(this)" value="default" required>
+<br><button type="submit" class="simple-button simple-theme" style="width:200px;"> Sign Up</button>
+</form>
+  </div><br>
+      </div>
+      
+      
+      
+      
+      <div class="simple-card simple-round simple-white simple-padding-16 simple-center">
+      <p>ADS</p></div>
+      <br>
+      <div class="simple-card simple-round simple-white simple-padding-32 simple-center">
+        <p><i class="fa fa-bug simple-xxlarge"></i><br>Report bugs</p>
+      </div>
+    <!-- End Right Column -->
+    </div>
+  <!-- End Grid -->
+  </div>
+<!-- End Page Container -->
+</div>
+<br>
+<script>
+// Accordion
+function accordion(id) {
+  var x = document.getElementById(id);
+  if (x.className.indexOf("simple-show") == -1) {
+    x.className += " simple-show";
+    x.previousElementSibling.className += " simple-theme-d1";
+  } else { 
+    x.className = x.className.replace("simple-show", "");
+    x.previousElementSibling.className = 
+    x.previousElementSibling.className.replace(" simple-theme-d1", "");
+  }
+}
+// Used to toggle the menu on smaller screens when clicking on the menu button
+function openNav() {
+  var x = document.getElementById("navDemo");
+  if (x.className.indexOf("simple-show") == -1) {
+    x.className += " simple-show";
+  } else { 
+    x.className = x.className.replace(" simple-show", "");
+  }
+}
+</script>
+</body>
+</html>
+<div id="assets"></div><!--Loads the extra files that aren't written in the document.-->
