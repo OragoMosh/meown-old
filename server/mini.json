@@ -55,6 +55,12 @@
         "body": "Working on making sub-forums / categories, This may not be permanent but I am hoping for the best.",
         "likes": [],
         "comments": []
+      },
+      {
+        "title": "V0.07 Communities and Threads!",
+        "body": "It's official. Communities are finally coming + working and can currently only be created verified by moderators and developers but there will soon be a verification system. Threads will be similar to posts but anyone in a certain community can create them.",
+        "likes": [],
+        "comments": []
       }
     ]
   },

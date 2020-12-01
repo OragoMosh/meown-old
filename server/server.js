@@ -23,12 +23,18 @@ var hostname = config.url; // replace with the web domain you are currently usin
 var currency = "Coins";
 var botname = '⚙️ !v! ittz';
 var prefix = '$';
-var anti="this.value = this.value.replace(/[&*<>@!#$%^(){}|\\\\/,.\`~]/g, '')"
+var anti="this.value = this.value.replace(/[^a-z0-9]/i, '')"
 var logs = {
 views:{
   
       },
 changes:{}
+}
+function a0(x){
+  return /[^a-z0-9]/i.test(x)
+}
+function html_check(x){
+  return /<\s*[^>]*>/g.test(x)
 }
 var no_account_message = `🔏 **Whoops!** There is no such user with this name!<br><br>
 <button onclick="location.replace('/register')">Register an account.</button>`;
@@ -285,7 +291,7 @@ app.post("/edit", urlencodedParser, (request, response) => {
       if(!request.body.sentposttitle){return response.send(msg('include','Post Value','u'));}
       if(!request.body.sentpostbody){return response.send(msg('include','Post Value','u'));}
 
-      if(/<\s*[^>]*>/g.test(request.body.sentposttitle)||/<\s*[^>]*>/g.test(request.body.sentpostbody)) 
+      if(html_check(request.body.sentposttitle)||html_check(request.body.sentpostbody)) 
         {return response.send(msg('custom','Do not use html!','u'));}
 
 if(mini.posts[request.cookies['saved-username']]){
@@ -332,7 +338,7 @@ if(!request.body.sentcommunity){return response.send(msg('include','Comment Valu
       if(!request.body.sentposttitle){return response.send(msg('include','Post Value','u'));}
       if(!request.body.sentpostbody){return response.send(msg('include','Post Value','u'));}
 
-      if(/<\s*[^>]*>/g.test(request.body.sentposttitle)||/<\s*[^>]*>/g.test(request.body.sentpostbody)) 
+      if(html_check(request.body.sentposttitle)||html_check(request.body.sentpostbody)) 
         {return response.send(msg('custom','Do not use html!','u'));}
 
 if(mini.thread[community]){
@@ -389,7 +395,6 @@ if(mini.posts[request.cookies['saved-username']]&&mini.posts[request.cookies['sa
      background:"https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",banner:"https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
      description:request.body.sentdesc.toLowerCase(), 
      color:"#000000", avatar:avatar,
-     members:[],badges:[],
      creation_date:Date.now()
     }
     mail(database.user[username].email,`Your Community, ${request.body.sentcommunity} on Meown`,null,`A user with the name of ${request.body.sentcommunity} on <a href="https://meown.tk">Meown</a> created an account by this email, Your login details are <br><li>Username: ${request.body.sentname}</li><li>Password: ${request.body.sentpass}</li><li>Description: ${request.body.sentdesc}</li>`).catch(console.error);
@@ -511,6 +516,8 @@ app.post("/register", urlencodedParser, (request, response) => {
   if (request.body.sentdesc==null||request.body.sentdesc==undefined||!request.body.sentdesc){return response.send(msg('invalid','Description','register'));}
   if (request.body.sentpass!==request.body.sentpassconfirm){return response.send(msg('match','password & confirm password','register'));}
   //if (request.body.sentname.includes("_")||request.body.sentname.includes("!")||request.body.sentname.includes("_"))
+  if(a0(request.body.sentname)||html_check(request.body.sentdesc)) 
+  {return response.send(msg('custom','Do not use custom characters or html!','u'));}
   if (typeof database.user[request.query.sentname.toLowerCase()] == "undefined") {
   if (!request.body.avatar){avatar="https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png"}else
   if (request.body.avatar){if (request.body.avatar==="male"){avatar=cartoonavatar.generate_avatar({"gender":"male"});}
@@ -537,11 +544,12 @@ app.post("/register", urlencodedParser, (request, response) => {
   
 });
 app.post("/new-community", urlencodedParser, (request, response) => {
-  //console.log(request.body);
   var avatar;
   if (typeof database.community[request.body.sentcommunity.toLowerCase()] !== "undefined") {return response.send(msg('exists','d','u'));}
   if (request.body.sentcommunity==null||request.body.sentcommunity==undefined||!request.body.sentname){return response.send(msg('invalid','Username','register'));}
   if (request.body.sentdesc==null||request.body.sentdesc==undefined||!request.body.sentdesc){return response.send(msg('invalid','Description','register'));}
+  if(a0(request.body.sentcommunity)||html_check(request.body.sentdesc)) 
+  {return response.send(msg('custom','Do not use custom characters or html!','u'));}
   if (typeof database.user[request.body.sentname.toLowerCase()] == "undefined") {
   if (!request.body.avatar){avatar="https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png"}else
   if (request.body.avatar){if (request.body.avatar==="male"){avatar=cartoonavatar.generate_avatar({"gender":"male"});}

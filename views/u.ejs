@@ -182,13 +182,13 @@ if (popup_status !== true){
       <div class="<%- values.visible.login_register %>">
       <div class=" simple-card simple-round simple-white simple-padding-16 simple-center" id="login"><p>LOGIN</p>
 <form method="POST" action="/login">
-<input type="text" name="sentname" class="simple-border simple-padding" style="width:200px;" placeholder="Username" required>
+<input type="text" name="sentname" class="simple-border simple-padding" style="width:200px;" placeholder="Username" onkeyup="<%- values.anti %>" required>
 <input type="password" name="sentpass" class="simple-border simple-padding" style="width:200px;" placeholder="Password" required>
 <br><button type="submit" class="simple-button simple-theme" style="width:200px;"> Login</button></form>
   </div><br>
 <div class="simple-card simple-round simple-white simple-padding-16 simple-center" id="register"><p>REGISTER</p>
 <form method="POST" action="/register">
-<input type="text" name="sentname" class="simple-border simple-padding" style="width:200px;" placeholder="Username" minlength="3" maxlength="15" onkeyup="${anti}" required>
+<input type="text" name="sentname" class="simple-border simple-padding" style="width:200px;" placeholder="Username" minlength="3" maxlength="15" onkeyup="<%- values.anti %>" required>
 <input type="text" name="sentdesc" class="simple-border simple-padding" style="width:200px;" placeholder="Description"required>
 <input type="password" name="sentpass" class="simple-border simple-padding" style="width:200px;" placeholder="Password" required>
 <input type="password" name="sentpassconfirm" class="simple-border simple-padding" style="width:200px;" placeholder="Password (Confirm)" required>
