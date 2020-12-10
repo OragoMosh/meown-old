@@ -10,15 +10,15 @@
 .simple-theme-d5 {color:#fff !important; background-color:#303e45 !important}
 
 .simple-theme-light {color:#000 !important; background-color:#f5f7f8 !important}
-.simple-theme-dark {color:#fff !important; background-color:#303e45 !important}
-.simple-theme-action {color:#fff !important; background-color:#303e45 !important}
+.simple-theme-dark {color:#fff !important; background-color:#5c1e1e !important}
+.simple-theme-action {color:#fff !important; background-color:#5c1e1e!important}
 
-.simple-theme {color:#fff !important; background-color:#607d8b !important}
-.simple-text-theme {color:#607d8b !important}
-.simple-border-theme {border-color:#607d8b !important}
+.simple-theme {color:#fff !important; background-color:#b55757 !important}
+.simple-text-theme {color:#b55757 !important}
+.simple-border-theme {border-color:#b55757 !important}
 
-.simple-hover-theme:hover {color:#fff !important; background-color:#607d8b !important}
-.simple-hover-text-theme:hover {color:#607d8b !important}
-.simple-hover-border-theme:hover {border-color:#607d8b !important}
+.simple-hover-theme:hover {color:#fff !important; background-color:#b55757 !important}
+.simple-hover-text-theme:hover {color:#b55757 !important}
+.simple-hover-border-theme:hover {border-color:#b55757 !important}
 
 

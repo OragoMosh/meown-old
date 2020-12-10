@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<%- values.info_data(`Homepage!`) %>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://beta.meown.tk/simple.css">
+<link rel="stylesheet" href="https://beta.meown.tk/simple-theme-colors.css">
+<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Open+Sans'>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+html, body, h1, h2, h3, h4, h5 {font-family: "Open Sans", sans-serif}
+</style>
+<body class="simple-theme-background" >
+
+<!-- Navbar -->
+<div class="simple-top">
+ <div class="simple-bar simple-theme-d2 simple-left-align simple-large">
+  <a class="simple-bar-item simple-hide-medium simple-hide-large simple-right simple-padding-large simple-hover-white simple-theme-d2" href="javascript:void(0);" onclick="openNav()" ><i class="fa fa-bars"></i></a>
+  <a href="#" class="simple-bar-item simple-button simple-padding-large simple-theme-d4"><i class="fa fa-home simple-margin-right"></i>Meown</a>
+  
+  <div onclick="location.replace('https://'+window.location.hostname+'<%- values.self_link %>')"class="simple-bar-item simple-button simple-hide-small simple-right simple-padding-large simple-hover-white simple-dropdown-hover" title="My Account" >
+<%- values.profile_menu %>
+    <img src="<%- values.self_avatar %>" class="simple-circle" style="height:23px;width:23px" alt="Avatar">
+  </div>
+ </div>
+</div>
+
+<!-- Navbar on small screens -->
+<div id="navDemo" class="simple-bar-block simple-theme-d2 simple-hide simple-hide-large simple-hide-medium simple-large">
+  <a href="#" class="simple-bar-item simple-button simple-padding-large">You found me !</a>
+  <a href="#" class="simple-bar-item simple-button simple-padding-large">Link 1</a>
+  <a href="#" class="simple-bar-item simple-button simple-padding-large">Link 2</a>
+  <a href="#" class="simple-bar-item simple-button simple-padding-large">My Profile</a>
+</div>
+
+<!-- Page Container -->
+<div class="simple-container " style="max-width:1400px;margin-top:80px">    
+ <div class=" simple-card simple-round simple-container simple-tint-gradient">
+        <p class="crenzo center simple-text-large">Welcome to Meown!</p>
+ </div>
+ <br>
+  <div class=" simple-card simple-round simple-container simple-tint">
+        <p class="left">Meown is supposed to be a very simple social media with a very simple database structure capable of doing many things making it easier to expand!</p>
+        <br>
+        <p class="center"><a class="simple-button simple-round simple-theme-d2 simple-text-mini" href="u#register">Join now!</a> and be one of the <%- Object.keys(database.user).length %> peeps to try Meown.</p>
+        <br>
+        <p class="right">There is currently <%- Object.keys(database.community).length %> Communties, So why wait when you can be a part of one!</p>
+ </div>
+<!-- End Page Container -->
+</div>
+<br>
+
+<footer class="simple-container simple-theme-d5">
+  <p>Powered by <a href="https://www.simpleschools.com/simplecss/default.asp" target="_blank">simple.css</a></p>
+</footer>
+ 
+<script>
+// Accordion
+function myFunction(id) {
+  var x = document.getElementById(id);
+  if (x.className.indexOf("simple-show") == -1) {
+    x.className += " simple-show";
+    x.previousElementSibling.className += " simple-theme-d1";
+  } else { 
+    x.className = x.className.replace("simple-show", "");
+    x.previousElementSibling.className = 
+    x.previousElementSibling.className.replace(" simple-theme-d1", "");
+  }
+}
+
+// Used to toggle the menu on smaller screens when clicking on the menu button
+function openNav() {
+  var x = document.getElementById("navDemo");
+  if (x.className.indexOf("simple-show") == -1) {
+    x.className += " simple-show";
+  } else { 
+    x.className = x.className.replace(" simple-show", "");
+  }
+}
+</script>
+
+</body>
+</html> 
+
+
+

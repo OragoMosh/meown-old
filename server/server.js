@@ -16,8 +16,6 @@ const urlencodedParser = bodyParser.urlencoded({ extended: true });
 const bcrypt= require("bcryptjs");
 const nodemailer = require("nodemailer");
 var cartoonavatar = require('cartoon-avatar');
-const dashboard = require('./html/dashboard');
-const main = require('./html/main');
 var port = process.env.PORT || 3232;
 var hostname = config.url; // replace with the web domain you are currently using Ex. google.com which will then be a variable to added to https:// HOSTNAME then whatever redirect it's supposed to be
 var currency = "Coins";
@@ -69,18 +67,28 @@ function msg(type,part,url,version){
   return `<meta http-equiv="Refresh" content="0; url='/${url}?notification=${text}'"/>`;
   }
 
-var time = new Date();
+var date = new Date();
+ var time={
+  "full":date,
+  "year":date.getFullYear(),
+  "month":date.getMonth(),
+  "day":date.getDate(),
+  "hour":date.getHours(),
+  "minute":date.getMinutes(),
+  "second":date.getSeconds(),
+  "milisecond":date.getMiliseconds
+}
 do_am_pm();
 var am_pm;
 function do_am_pm(){
-  if (time.getHours()-4 < 12){ am_pm = "AM"
-  } else if (time.getHours()-4 > 12){ am_pm = "PM"
+  if (date.getHours()-4 < 12){ am_pm = "AM"
+  } else if (date.getHours()-4 > 12){ am_pm = "PM"
   } else {am_pm =  "broken??"}
 }
 server.listen(port, function () {
   console.log('Server listening at port %d', port);
   //console.log(process.env)
-console.log(`Time: ${(time.getMonth()+1)}/${(time.getDate())}/${(time.getFullYear())} ${time.getHours()-4}:${time.getMinutes()}:${time.getSeconds()} ${am_pm}`);
+console.log(`Time: ${(date.getMonth()+1)}/${(date.getDate())}/${(date.getFullYear())} ${date.getHours()-4}:${date.getMinutes()}:${date.getSeconds()} ${am_pm}`);
 });
 
 function save_database(){
@@ -150,14 +158,28 @@ app.get("/user", (request, response) => {response.render('user', {qs: request.qu
 app.get("/dashboard", (request, response) => {
   if (!request.cookies['saved-username']){return response.send(msg('not_logged','Username','u'))}
   if (!bcrypt.compareSync(request.cookies['saved-password'],database.user[request.cookies['saved-username']].password)){return response.send(msg('incorrect','Username','u'))}
+var me = request.cookies['saved-username'];
 
-var followers,follows, recent_followers, recent_follows,last, i,views,changes,recent_changes,forms;
-followers = database.user[request.cookies['saved-username']].followers;
-follows = database.user[request.cookies['saved-username']].following;
-changes=logs.changes[request.cookies['saved-username']];
-recent_followers="";recent_follows="";recent_changes=forms="";
-last=3;
-forms+=`
+  var values = {
+    "database":database,
+    "mini":mini,
+    "username":me,
+    "currency":currency,
+    "followers":database.user[me].followers,
+    "recent_followers":"",
+    "follows":database.user[me].following,
+    "recent_follows":"",
+    "changes":logs.changes[me],
+    "recent_changes":"",
+    "reports":"database.mini.reports.glitches[request.cookies['saved-username']]",
+    "recent_reports":"",
+    "last":3,
+    "i":"",
+    "views":"",
+    "forms":""
+    
+  }
+values.forms+=`
 <form method="post" action="/edit">
     <div class="row">
       <a style="font-size: 1.5em;">Change account info</a>
@@ -170,12 +192,12 @@ forms+=`
         <input type="text" name="sentnewavatar" placeholder="Change avatar (optional)" style="width:80vw;"><br>
 `;
 if(database.user[request.cookies['saved-username']].badges.includes("developer")||database.user[request.cookies['saved-username']].badges.includes("moderator")){
-  forms+=`
+  values.forms+=`
 <input type="text" name="sentnewbackground" placeholder="Change Background (optional)" style="width:80vw;"><br>
 <input type="text" name="sentnewbanner" placeholder="Change Banner (optional)" style="width:80vw;"><br>
 `
 }
-forms+=`
+values.forms+=`
         <input type="submit" value="Submit">
       </div>
     </div>
@@ -190,7 +212,6 @@ forms+=`
         <input type="hidden" name="sentpass" value="${request.cookies['saved-username']}">
         <input type="hidden" name="method" value="new-post">
         <input type="text" name="sentpost" class="simple-border simple-padding" placeholder="Post Input"></input>
-        <input type="submit" value="Submit">
       </div>
     </div>
   </form>
@@ -204,13 +225,22 @@ forms+=`
         <input type="hidden" name="sentname" value="${request.cookies['saved-username']}">
         <input type="hidden" name="sentpass" value="${request.cookies['saved-username']}">
         <input type="number" name="sentnum" placeholder="Post number" min="0" max="1000" required>
-        <input type="submit" value="Submit">
       </div>
     </div>
   </form>
   `
-forms+=`
-  
+values.forms+=`
+ <form method="post" action="/edit" >
+    <div class="row">
+      <a style="font-size: 1.5em;">Redeem code</a>
+      <div class="col">
+        <div class="hide-md-lg">
+        </div>
+        <input type="hidden" name="method" value="redeem">
+        <input type="text" name="sentcode" class="simple-border simple-padding" style="width:200px;" placeholder="Code" required>
+      </div>
+    </div>
+  </form> 
 <form method="post" action="/edit" >
     <div class="row">
       <a style="font-size: 1.5em;">New Community</a>
@@ -218,48 +248,50 @@ forms+=`
         <div class="hide-md-lg">
         </div>
         <input type="hidden" name="method" value="new-community">
-        <input type="text" name="sentcommunity" class="simple-border simple-padding" style="width:200px;" placeholder="Username" minlength="3" maxlength="15" onkeyup="${anti}" required>
+        <input type="text" name="sentcommunity" class="simple-border simple-padding" style="width:200px;" placeholder="Community Name" minlength="3" maxlength="15" onkeyup="${anti}" required>
         <input type="text" name="sentdesc" class="simple-border simple-padding" style="width:200px;" placeholder="Description"required>
-        <input type="submit" value="Submit">
       </div>
     </div>
   </form>
   `
-if (changes){
-if (changes.length<3){last=2}if (changes.length<2){last=1}if (changes.length<1){last=0}
-for (i = 0; i < last; i++) {
-  recent_changes += `<li class="simple-padding-16">
+if (values.changes){
+if (values.changes.length<3){values.last=2}if (values.changes.length<2){values.last=1}if (values.changes.length<1){values.last=0}
+for (values.i = 0; values.i < values.last; values.i++) {
+  if (typeof database.user[request.cookies['saved-username']] !== "undefined"){
+  values.recent_changes += `<li class="simple-padding-16">
         <img src="${database.user[request.cookies['saved-username']].avatar}" class="simple-left simple-circle simple-margin-right" style="width:35px">
-        <span class="simple-xlarge"><a href="../u?username=${request.cookies['saved-username']}">${changes[i+changes.length-last]}</a></span><br>
-      </li>`;}
-}else{recent_changes="None"}
-if (follows!==""){
-if (follows.length<3){last=2}if (follows.length<2){last=1}if (follows.length<1){last=0}
-for (i = 0; i < last; i++) {
-  
-  recent_follows += `<li class="simple-padding-16">
-        <img src="${database.user[follows[i+follows.length-last]].avatar}" class="simple-left simple-circle simple-margin-right" style="width:35px">
-        <span class="simple-xlarge"><a href="../u?username=${follows[i+follows.length-last]}">${follows[i+follows.length-last]}</a></span><br>
-      </li>`;}
-}else{recent_follows="None"}
-  if (followers!==""){
-if (followers.length>=3){last=3}if (followers.length<3){last=2}if (followers.length<2){last=1}if (followers.length<1){last=0}
-for (i = 0; i < last; i++) {
-  recent_followers += `<div class="simple-row">
+        <span class="simple-xlarge"><a href="../u?username=${request.cookies['saved-username']}">${values.changes[values.i+values.changes.length-values.last]}</a></span><br>
+      </li>`;}}
+}else{values.recent_changes="None"}
+if (values.follows!==""){
+if (values.follows.length<3){values.last=2}if (values.follows.length<2){values.last=1}if (values.follows.length<1){values.last=0}
+for (values.i = 0; values.i < values.last; values.i++) {
+  if (typeof database.user[values.follows[values.i+values.follows.length-values.last]] !== "undefined"){
+  values.recent_follows += `<li class="simple-padding-16">
+        <img src="${database.user[values.follows[values.i+values.follows.length-values.last]].avatar}" class="simple-left simple-circle simple-margin-right" style="width:35px">
+        <span class="simple-xlarge"><a href="../u?username=${values.follows[values.i+values.follows.length-values.last]}">${values.follows[values.i+values.follows.length-values.last]}</a></span><br>
+      </li>`;}}
+}else{values.recent_follows="None"}
+  if (values.followers!==""){
+if (values.followers.length>=3){values.last=3}if (values.followers.length<3){values.last=2}if (values.followers.length<2){values.last=1}if (values.followers.length<1){values.last=0}
+for (values.i = 0; values.i < values.last; values.i++) {
+  if (typeof database.user[values.followers[values.i+values.followers.length-values.last]] !== "undefined"){
+  values.recent_followers += `<div class="simple-row">
       <div class="simple-col m2 text-center">
-        <img class="simple-circle" src="${database.user[followers[i+followers.length-last]].avatar}" style="width:96px;height:96px">
+        <img class="simple-circle" src="${database.user[values.followers[values.i+values.followers.length-values.last]].avatar}" style="width:96px;height:96px">
       </div>
       <div class="simple-col m10 simple-container">
-        <h4>${followers[i+followers.length-last]} <span class="simple-opacity simple-medium">Follower #${i+followers.length-last}</span></h4>
-        <!--<p></p>--><br>
+        <h4>${values.followers[values.i+values.followers.length-values.last]} <span class="simple-opacity simple-medium">Follower #${values.i+values.followers.length-values.last}</span></h4>
+        <br>
       </div>
-    </div>`;}
-  }else{recent_followers ="None"}
+    </div>`;}}
+  }else{values.recent_followers ="None"}
   var username= request.cookies['saved-username'];
-if (!logs.views[request.cookies['saved-username']]){views=0};
-if (logs.views[request.cookies['saved-username']]){views=logs.views[request.cookies['saved-username']]};
-  var get = new dashboard(database, mini,username,currency,views,forms,recent_follows,recent_followers,recent_changes);
-response.send(get.html());
+if (!logs.views[request.cookies['saved-username']]){values.views=0};
+if (logs.views[request.cookies['saved-username']]){values.views=logs.views[request.cookies['saved-username']]};
+  //var get = new dashboard(database, mini,username,currency,views,forms,recent_follows,recent_followers,recent_changes);
+//response.send(get.html());
+  response.render('dashboard.ejs', { database: database,values:values});
   
 });
 
@@ -269,6 +301,7 @@ app.post("/edit", urlencodedParser, (request, response) => {
   if (!method){return response.send(msg('missing','Method','u'));}
   if(request.cookies['saved-username']==undefined||!request.cookies['saved-username']){return response.send(msg('include','Username','u'));}
   var username = request.cookies['saved-username'];
+  var me = request.cookies['saved-username'];
   if (typeof database.user[username] == "undefined") {return response.send(msg('no_account','Username',''));}
   if (!bcrypt.compareSync(request.cookies['saved-password'],database.user[request.cookies['saved-username']].password)){return response.send(msg('incorrect','Username','dashboard'));}
   
@@ -293,7 +326,14 @@ app.post("/edit", urlencodedParser, (request, response) => {
 
       if(html_check(request.body.sentposttitle)||html_check(request.body.sentpostbody)) 
         {return response.send(msg('custom','Do not use html!','u'));}
-
+        var text = "";
+var i = 0;var character = "!n ";
+        //var paren = str.includes("(")&&str.charAt(str.indexOf("(")+1)==character.charAt(0)/*if ( then !*/&&str.charAt(str.indexOf("(")+2)==character.charAt(1)/* if ( then !+n*/&&str.charAt(str.indexOf("(")+3)==character.charAt(2)/* if ( then !+n+ (SpaceBar)*/;
+while (i < request.body.sentpostbody.length&&request.body.sentpostbody.includes(character)) {
+  request.body.sentpostbody=request.body.sentpostbody.replace(character, '<br>');
+  i++;
+}
+      
 if(mini.posts[request.cookies['saved-username']]){
   if(mini.posts[request.cookies['saved-username']].includes((request.body.sentposttitle).toLowerCase())){return response.send(msg('post_exists','','u'));}
   }
@@ -307,49 +347,24 @@ if(mini.posts[request.cookies['saved-username']]){
     
     
     
-    if (method==="like"){
-      var type;var check;
-      if (!mini.posts[request.cookies['saved-username']]){response.send(msg('missing','Post??!!','u'))}
-      if(!request.body.sentid){return response.send(msg('include','Post Value','u'));}
-      if(!request.body.type){return response.send(msg('include','Type','u'));}else{type=request.body.type}
-      if (type==="post"){check=mini.posts[username][request.body.sentid]}else
-        if (type==="thread"){check=mini.thread[request.body.community][request.body.sentid]}else {response.send(msg('custom','Error??!!','u'))}
-      console.log(check);
-    if(!check.likes.includes(username)){
-      check.likes.push(username);
-  //database.user[(request.query.sentname).toLowerCase()].coins+=0.1;
-  fs.writeFileSync(mini_location, JSON.stringify(mini, null, 2));
-  return response.send(`<meta http-equiv="Refresh" content="0; url='/u?username=${username}&notification=User+Followed!'"/>`);
-  } else {
-    check.likes=check.likes.filter(item => item !== username);
-    fs.writeFileSync(mini_location, JSON.stringify(mini, null, 2));
-    return response.send(`<meta http-equiv="Refresh" content="0; url='/u?username=${username}&notification=User+Unfollowed!'"/>`);
-  }
-  fs.writeFileSync(mini_location, JSON.stringify(mini, null, 2));
-  return response.send(msg('post_created','Username',`u?username=${username}#${mini.posts[username].length-1}`,'redirect'))
-  }else
-    
-    
-    
-    if (method==="new-thread"){
-      //var re = ;
-if(!request.body.sentcommunity){return response.send(msg('include','Comment Value','u'));}
-      var community = request.body.sentcommunity;
+    if (method==="report"){
       if(!request.body.sentposttitle){return response.send(msg('include','Post Value','u'));}
       if(!request.body.sentpostbody){return response.send(msg('include','Post Value','u'));}
 
       if(html_check(request.body.sentposttitle)||html_check(request.body.sentpostbody)) 
         {return response.send(msg('custom','Do not use html!','u'));}
 
-if(mini.thread[community]){
-  if(mini.thread[community].includes((request.body.sentposttitle).toLowerCase())){return response.send(msg('post_exists','','u'));}
+if(mini.posts[request.cookies['saved-username']]){
+  if(mini.posts[request.cookies['saved-username']].includes((request.body.sentposttitle).toLowerCase())){return response.send(msg('post_exists','','u'));}
   }
-  if (!mini.thread[community]){mini.thread[community]=[]}
-  mini.thread[community].push({"title":request.body.sentposttitle,"body":request.body.sentpostbody,"likes":[],"comments":[]});
+  if (!mini.posts[request.cookies['saved-username']]){mini.posts[request.cookies['saved-username']]=[]}
+  mini.posts[request.cookies['saved-username']].push({"title":request.body.sentposttitle,"body":request.body.sentpostbody,"likes":[],"comments":[]});
+    database.user[request.cookies['saved-username']].coins+=1;
+  database.user[request.cookies['saved-username']].xp+=1;
   fs.writeFileSync(mini_location, JSON.stringify(mini, null, 2));
-  return response.send(msg('post_created','Username',`c?search=${community}#${mini.thread[community].length-1}`,'redirect'))
+  return response.send(msg('post_created','Username',`u?username=${request.cookies['saved-username']}#${mini.posts[request.cookies['saved-username']].length-1}`,'redirect'))
   }else
-    
+        
     
     
     if (method==="delete-post"){
@@ -362,6 +377,64 @@ if(mini.thread[community]){
   fs.writeFileSync(mini_location, JSON.stringify(mini, null, 2));
   return response.send(msg('post_deleted','Username',`u?username=${request.cookies['saved-username']}#${mini.posts[request.cookies['saved-username']].length-1}`,'redirect'));
     }else
+    
+    
+      
+      if (method==="redeem"){
+  if (typeof database.codes[request.body.sentcode] == "undefined"){return response.send(msg('custom','Invalid Code!','dashboard'));}
+  if (database.user[me].codes.includes(request.body.sentcode)){return response.send(msg('custom','Code Exists!','dashboard'));}
+  if (!logs.changes[me]){logs.changes[me]=[];}
+  if (logs.changes[me]){logs.changes[me].push(`Code Redeemed: "${request.body.sentcode}" for ${database.codes[request.body.sentcode]} ${currency} `)}
+  database.user[me].codes.push(request.body.sentcode);
+  database.user[me].coins+=database.codes[request.body.sentcode];
+  //fs.writeFileSync(mini_location, JSON.stringify(mini, null, 2));
+  return response.send(msg('custom','Code Redeemed',`dashboard`));
+    }else
+    
+    
+      
+    if (method==="like"){
+      var type;var check;
+      if (!mini.posts[request.cookies['saved-username']]){response.send(msg('missing','Post??!!','u'))}
+      if(!request.body.sentid){return response.send(msg('include','Post Value','u'));}
+      if(!request.body.type){return response.send(msg('include','Type','u'));}else{type=request.body.type}
+      if (type==="post"){check=mini.posts[username][request.body.sentid]}else
+        if (type==="thread"){check=mini.thread[request.body.community][request.body.sentid]}else {response.send(msg('custom','Error??!!','u'))}
+      //console.log(check);
+    if(!check.likes.includes(username)){
+      check.likes.push(username);
+  //database.user[(request.query.sentname).toLowerCase()].coins+=0.1;
+  fs.writeFileSync(mini_location, JSON.stringify(mini, null, 2));
+  return response.send(`<meta http-equiv="Refresh" content="0; url='/u?username=${username}&notification=Post+Liked!'"/>`);
+  } else {
+    check.likes=check.likes.filter(item => item !== username);
+    fs.writeFileSync(mini_location, JSON.stringify(mini, null, 2));
+    return response.send(`<meta http-equiv="Refresh" content="0; url='/u?username=${username}&notification=Post+UnLiked!'"/>`);
+  }
+  fs.writeFileSync(mini_location, JSON.stringify(mini, null, 2));
+  return response.send(msg('post_created','Username',`u?username=${username}#${mini.posts[username].length-1}`,'redirect'))
+  }else
+    
+    
+    
+    if (method==="new-thread"){
+if(!request.body.sentcommunity){return response.send(msg('include','Comment Value','u'));}
+      var community = request.body.sentcommunity;
+      if(!request.body.sentposttitle){return response.send(msg('include','Post Value','u'));}
+      if(!request.body.sentpostbody){return response.send(msg('include','Post Value','u'));}
+
+      if(html_check(request.body.sentposttitle)||html_check(request.body.sentpostbody)) 
+        {return response.send(msg('custom','Do not use html!','u'));}
+
+if(mini.thread[community]){
+  if(mini.thread[community].includes((request.body.sentposttitle).toLowerCase())){return response.send(msg('post_exists','','u'));}
+  }
+  if (!mini.thread[community]){mini.thread[community]=[]}
+  mini.thread[community].push({"sender":me,"title":request.body.sentposttitle,"body":request.body.sentpostbody,"likes":[],"comments":[]});
+  fs.writeFileSync(mini_location, JSON.stringify(mini, null, 2));
+  return response.send(msg('post_created','Username',`c?search=${community}#${mini.thread[community].length-1}`,'redirect'))
+  }else
+
       
       
       
@@ -374,7 +447,7 @@ if(mini.posts[request.cookies['saved-username']]&&mini.posts[request.cookies['sa
   if (!mini.posts[request.cookies['saved-username']]){mini.posts[request.cookies['saved-username']]=[]}
   if ((request.body.sentcomment.toLowerCase()).includes("<")&&(request.body.sentcomment.toLowerCase()).includes(">")||(request.body.sentcomment.toLowerCase()).includes("<")&&(request.body.sentpost.toLowerCase()).includes("/") )
   {return response.send("Bad!")}
-  mini.posts[request.cookies['saved-username']][request.body.commentid].comments.push({"username":request.cookies['saved-username'],"text":request.body.sentcomment});
+  mini.posts[request.cookies['saved-username']][request.body.commentid].comments.push({"sender":me,"text":request.body.sentcomment});
     database.user[request.cookies['saved-username']].coins+=0.2;
   database.user[request.cookies['saved-username']].xp+=1;
   fs.writeFileSync(mini_location, JSON.stringify(mini, null, 2));
@@ -384,13 +457,14 @@ if(mini.posts[request.cookies['saved-username']]&&mini.posts[request.cookies['sa
     
     
     if (method==="new-community"){
-      console.log(request.body)
+      //console.log(request.body)
   var avatar = "https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png";
   if (typeof database.community[request.body.sentcommunity.toLowerCase()] !== "undefined") {return response.send(msg('exists','d','u'));}
   if (request.body.sentcommunity==null||request.body.sentcommunity==undefined||!request.body.sentcommunity){return response.send(msg('invalid','Username','register'));}
   if (request.body.sentdesc==null||request.body.sentdesc==undefined||!request.body.sentdesc){return response.send(msg('invalid','Description','register'));}
   if (typeof database.community[request.body.sentcommunity.toLowerCase()] == "undefined") {
-  database.community[(request.body.sentcommunity).toLowerCase()]=
+    database.user[me].communities.push(request.body.sentcommunity.toLowerCase());
+    database.community[(request.body.sentcommunity).toLowerCase()]=
     {owner:username, preferred:request.body.sentcommunity,
      background:"https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",banner:"https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
      description:request.body.sentdesc.toLowerCase(), 
@@ -399,14 +473,14 @@ if(mini.posts[request.cookies['saved-username']]&&mini.posts[request.cookies['sa
     }
     mail(database.user[username].email,`Your Community, ${request.body.sentcommunity} on Meown`,null,`A user with the name of ${request.body.sentcommunity} on <a href="https://meown.tk">Meown</a> created an account by this email, Your login details are <br><li>Username: ${request.body.sentname}</li><li>Password: ${request.body.sentpass}</li><li>Description: ${request.body.sentdesc}</li>`).catch(console.error);
   fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
-    response.send(`<meta http-equiv="Refresh" content="0; url='/u?username=${request.body.sentcommunity.toLowerCase()}&notification=Account+Created!'"/>`);
+    response.send(msg('custom','',`c?search=${request.body.sentcommunity}`));
   console.log(`Account created, Username: ${(request.body.sentcommunity).toLowerCase()}, Password: ${(request.body.sentpass).toLowerCase()} , Description: ${(request.body.sentdesc).toLowerCase()}`)
       }
     }else
       
       
       
-    if (method==="new-community-comment"){
+    if (method==="new-thread-comment"){
       if(!request.body.sentcommunity){return response.send(msg('include','Comment Value','u'));}
       var community = request.body.sentcommunity;
       if(!request.body.sentcomment){return response.send(msg('include','Comment Value','u'));}
@@ -417,7 +491,7 @@ if(mini.thread[community]&&mini.thread[community][request.body.commentid].commen
   if (!mini.thread[community]){mini.thread[community]=[]}
   if ((request.body.sentcomment.toLowerCase()).includes("<")&&(request.body.sentcomment.toLowerCase()).includes(">")||(request.body.sentcomment.toLowerCase()).includes("<")&&(request.body.sentpost.toLowerCase()).includes("/") )
   {return response.send("Bad!")}
-  mini.thread[community][request.body.commentid].comments.push({"username":request.cookies['saved-username'],"text":request.body.sentcomment});
+  mini.thread[community][request.body.commentid].comments.push({"sender":me,"text":request.body.sentcomment});
     database.user[username].coins+=0.2;
   database.user[username].xp+=1;
   fs.writeFileSync(mini_location, JSON.stringify(mini, null, 2));
@@ -487,7 +561,7 @@ return response.send(msg('logged_in','','u'));
 }
 });
 
-app.post("/logout", urlencodedParser, (request, response) => {
+app.get("/logout", urlencodedParser, (request, response) => {
 if(!request.cookies['saved-username']&&!request.cookies['saved-password']){
 return response.send(msg('logged_not','','u','redirect'));
 }else{
@@ -510,7 +584,7 @@ app.get("/register", (request, response) => {response.render('register', {qs: re
 app.post("/register", urlencodedParser, (request, response) => {
   //console.log(request.body);
   var avatar;
-  if (typeof database.user[request.query.sentname.toLowerCase()] !== "undefined") {return response.send(msg('exists','d','u'));}
+  if (typeof database.user[request.body.sentname.toLowerCase()] !== "undefined") {return response.send(msg('exists','d','u'));}
   if (request.body.sentname==null||request.body.sentname==undefined||!request.body.sentname){return response.send(msg('invalid','Username','register'));}
   if (request.body.sentpass==null||request.body.sentpass==undefined||!request.body.sentpass){return response.send(msg('invalid','Password','register'));}
   if (request.body.sentdesc==null||request.body.sentdesc==undefined||!request.body.sentdesc){return response.send(msg('invalid','Description','register'));}
@@ -518,7 +592,7 @@ app.post("/register", urlencodedParser, (request, response) => {
   //if (request.body.sentname.includes("_")||request.body.sentname.includes("!")||request.body.sentname.includes("_"))
   if(a0(request.body.sentname)||html_check(request.body.sentdesc)) 
   {return response.send(msg('custom','Do not use custom characters or html!','u'));}
-  if (typeof database.user[request.query.sentname.toLowerCase()] == "undefined") {
+  if (typeof database.user[request.body.sentname.toLowerCase()] == "undefined") {
   if (!request.body.avatar){avatar="https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png"}else
   if (request.body.avatar){if (request.body.avatar==="male"){avatar=cartoonavatar.generate_avatar({"gender":"male"});}
   else if (request.body.avatar==="female"){avatar=cartoonavatar.generate_avatar({"gender":"female"})}
@@ -533,7 +607,7 @@ app.post("/register", urlencodedParser, (request, response) => {
      background:"https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",banner:"https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
      description:request.body.sentdesc.toLowerCase(), 
      color:"#000000", avatar:avatar,
-     following:[],followers:[],communities:[],/*Delete badges if needed*/badges:[],
+     following:[],followers:[],communities:[],codes:[],/*Delete badges if needed*/badges:[],
      creation_date:Date.now()
     }
     mail(request.body.sentemail,`Your account, ${request.body.sentname} on Meown`,null,`A user with the name of ${request.body.sentname} on <a href="https://meown.tk">Meown</a> created an account by this email, Your login details are <br><li>Username: ${request.body.sentname}</li><li>Password: ${request.body.sentpass}</li><li>Description: ${request.body.sentdesc}</li>`).catch(console.error);
@@ -565,7 +639,7 @@ app.post("/new-community", urlencodedParser, (request, response) => {
      background:"https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",banner:"https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
      description:request.body.sentdesc.toLowerCase(), 
      color:"#000000", avatar:avatar,
-     following:[],followers:[],communities:[],/*Delete badges if needed*/badges:[],
+     following:[],followers:[],members:[],/*Delete badges if needed*/badges:[],
      creation_date:Date.now()
     }
     mail(request.body.sentemail,`Your account, ${request.body.sentname} on Meown`,null,`A user with the name of ${request.body.sentname} on <a href="https://meown.tk">Meown</a> created an account by this email, Your login details are <br><li>Username: ${request.body.sentname}</li><li>Password: ${request.body.sentpass}</li><li>Description: ${request.body.sentdesc}</li>`).catch(console.error);
@@ -593,232 +667,34 @@ function info_data(x){
   
 }
 
-
-
-
-// Total number of users
-var numUsers = 0;
-// Current room list.
-var curRoomList = {};
-
-// Action: Create, Join, Left.
-var logCreate = 'Created ';
-var logJoin = 'joined ';
-var logLeft = 'Left ';
-
-// Location: Lab (main website, can be joined or left),
-//           Room (can be created, joined, Left)
-var logLab = 'Meown';
-var logRoom = ' room ';
-
-io.on('connection', function (socket) {
-  var addedUser = false;
-  var curRoomName = 'Lobby'
-  socket.on('sync', function (data) {
-   socket.emit('handshake',database);
-  });
-  
-
-  
-  socket.on('bot message', function (data) {
-    // we tell the client to execute 'new message'
-    socket.broadcast.to(curRoomName).emit('new message', {
-      username: botname,
-      message: data//data
-    });
-  });
-  
-  socket.on('get account', function (data) {
-    // we tell the client to execute 'new message'
-    (req, res) => res.send('Hello World!')
-    socket.broadcast.to(curRoomName).emit('get account', database/*.user[socket.username]*/);
-  });
-  
-    socket.on('get user', function (data) {
-    // we tell the client to execute 'new message'
-    socket.broadcast.to(curRoomName).emit('get account', {
-      username: socket.username,
-      password: data//data
-    });
-  });
-  // when the client emits 'new message', this listens and executes
-  socket.on('new message', function (data) {
-    // we tell the client to execute 'new message'
-    socket.broadcast.to(curRoomName).emit('new message', {
-      username: socket.username,
-      message: data
-    });
-  });
-
-  
-  
-  
-  // when the client emits 'add user', this listens and executes
-  socket.on('add user', function (username) {
-    if (addedUser) return;
-
-    // we store the username in the socket session for this client
-    socket.username = username;
-    ++numUsers;
-    addedUser = true;
-
-    // Default to join 'Lobby'.
-    socket.join(curRoomName);
-
-    // If there is no the same curRoomName in room list, add it to room list.
-    // And set user number in it = 1, else user number + 1.
-    if (!isRoomExist(curRoomName, curRoomList)) {
-      curRoomList[curRoomName] = 1;
-    } else {
-      ++curRoomList[curRoomName];
-    }
-
-    // First join chat room, show current room list.
-    socket.emit('show room list', curRoomName, curRoomList);
-
-    socket.emit('login', {
-      numUsers: numUsers
-    });
-
-    // echo to room (default as 'Lobby') that a person has connected
-    socket.broadcast.emit('user joined', {
-      username: socket.username,
-      numUsers: numUsers,
-      logAction: logJoin,
-      logLocation: logLab,
-      roomName: '',
-      userJoinOrLeftRoom: false
-    });
-  });
-
-  // when the client emits 'typing', we broadcast it to others
-  socket.on('typing', function () {
-    socket.broadcast.to(curRoomName).emit('typing', {
-      username: socket.username
-    });
-  });
-
-  // when the client emits 'stop typing', we broadcast it to others
-  socket.on('stop typing', function () {
-    socket.broadcast.emit('stop typing', {
-      username: socket.username
-    });
-  });
-
-  // when the user disconnects, perform this
-  socket.on('disconnect', function () {
-    if (addedUser) {
-      --numUsers;
-      --curRoomList[curRoomName];
-
-      // If there is no user in room, delete this room,
-      // Except this room is 'Lobby'.
-      if (curRoomList[curRoomName] === 0 && curRoomName !== 'Lobby') {
-        delete curRoomList[curRoomName];
-      }
-
-      if (numUsers === 0) {
-        curRoomList = {};
-      }
-      // echo globally that this client has left
-      socket.broadcast.emit('user left', {
-        username: socket.username,
-        numUsers: numUsers,
-        logAction: logLeft,
-        logLocation: logLab,
-        roomName: ''
-      });
-    }
-  });
-
-  // Show room list to user.
-  socket.on('room list', function () {
-    socket.emit('show room list', curRoomName, curRoomList);
-  });
-
-  socket.on('join room', function (room) {
-    socket.emit('stop typing');
-
-    if (room !== curRoomName) {
-      // Before join room, first need to leave current room. -------------------
-      socket.leave(curRoomName);
-      socket.broadcast.to(curRoomName).emit('user left', {
-        username: socket.username,
-        numUsers: numUsers,
-        logAction: logLeft,
-        logLocation: logRoom,
-        roomName: '「' + curRoomName + '」',
-        userJoinOrLeftRoom: true
-      });
-      --curRoomList[curRoomName];
-
-      // If there is no user in room, delete this room,
-      // Except this room is 'Lobby'.
-      if (curRoomList[curRoomName] === 0 && curRoomName !== 'Lobby') {
-        delete curRoomList[curRoomName];
-      }
-
-      // Then join a new room. -------------------------------------------------
-      socket.join(room);
-
-      // If there is no the same room in room list, add it to room list.
-      if (!isRoomExist(room, curRoomList)) {
-        curRoomList[room] = 1;
-        socket.emit('join left result', {
-          username: 'you ',
-          logAction: logCreate,
-          logLocation: logRoom,
-          roomName: '「' + room + '」'
-        });
-      } else {
-        ++curRoomList[room];
-        socket.emit('join left result', {
-          username: 'you ',
-          logAction: logJoin,
-          logLocation: logRoom,
-          roomName: '「' + room + '」'
-        });
-      }
-
-      // Every time someone join a room, reload current room list.
-      socket.emit('show room list', room, curRoomList);
-      curRoomName = room;
-      socket.broadcast.to(room).emit('user joined', {
-        username: socket.username,
-        numUsers: numUsers,
-        logAction: logJoin,
-        logLocation: logRoom,
-        roomName: '「' + room + '」',
-        userJoinOrLeftRoom: true
-      })
-    }
-  });
-});
-
-// Check if roomName is in roomList Object.
-function isRoomExist (roomName, roomList) {
-  return roomList[roomName] >= 0;
-}
-  
-
 app.get("/api", (request, response) => {
   //var params = request.protocol + "://" + request.headers.host + request.originalUrl;
   //var username = params.slice(params.search("username=")+9,Infinity).toLowerCase();
-  var username = request.query.username;if(!username){response.json({"missing":"username"})}
+  var search = request.query.search;
   var method = request.query.method;
-  if (typeof database.user[username] == "undefined") {response.json({"missing":"user_from_database"})}
-  if (!method){response.json({"missing":"method"})}
+  
+  if (!method){response.json({"response":"method"})}
   if (method){
   if (method==="user"){
-    var user = database.user[username];
+    if(!search){response.json({"response":"name_/_id_/_variant"})}
+    if (typeof database.user[search] == "undefined") {response.json({"response":"user_from_database"})}
+    var user = database.user[search];
     const cloneuser = Object.assign({}, user);
     delete cloneuser.password
     return response.json(cloneuser);
-  }
+  }else
+    if (method==="users"){
+    return response.json(Object.keys(database.user))
+  }else
      if (method==="posts"){
-    var posts = mini.posts[username]
+       if(!search){response.json({"response":"name_/_id_/_variant"})}
+       if (typeof mini.posts[search] == "undefined"||typeof database.user[search] == "undefined") {response.json({"response":"user_from_database"})}
+    var posts = mini.posts[search]
     return response.send(posts)
-  }
+  }else
+    if (method==="communities"){
+    return response.json(Object.keys(database.community))
+  }else{response.json({"response":"no_results"})}
   }
 });
 
@@ -827,14 +703,19 @@ app.get("/u", (request, response) => {
   //var username = params.slice(params.search("username=")+9,Infinity).toLowerCase();
   var username = request.query.search;
   var me = request.cookies['saved-username'];
+  //if (!me){me = "null"}
   if (!username){if (me){username=me}else username='null'}
   if (typeof database.user[username] === "undefined") {return response.send(msg('no_account',null,'u'));}
   //var post_number, post_list,comment_number,comment_list,badge_number, badge_list,follow_number, follow_list,community_number,community_list,status,post_bar,comment_bar,profile_menu,side_bar,scripts;
   //post_number=post_list=comment_number=comment_list=badge_number=badge_list=follow_number=follow_list=community_number=community_list=status=post_bar=comment_bar=profile_menu=side_bar=scripts="";
-  var vals ={
+  
+  var values ={
     "username":username,
+    "currency":currency,
+    "me":me,
+    "time":time,
     "anti":anti,
-    "post_number":"",
+    "post_number":0,
     "post_list":"",
     "comment_number":"",
     "comment_list":"",
@@ -845,8 +726,8 @@ app.get("/u", (request, response) => {
     "follow_amount":database.user[username].followers.length,
     "community_number":"",
     "community_list":"",
-    "like_number":0,
-    "like_list":0,
+    "like_number":"",
+    "like_list":"",
     "status":"",
     "post_bar":"",
     "comment_bar":"",
@@ -858,132 +739,154 @@ app.get("/u", (request, response) => {
     "nav":"",
     "nav_mobile":"",
     "info_data":info_data,
+    "i":"",
+    "details":"",
     "visible":{
-    "login_register":"",
+    "logged_in":"",
+    "logged_out":"hidden",
     "post_bar":"hidden"
   }
   }
-  var nav = ``//`<form method="get" action="/u" style="display:inline-block;"><input type="text" name="search" class="simple-border simple-padding" placeholder="Find User" style="width:20vw;"></input></form>`;
-  var nav_mobile = ``//`<form method="get" action="/u" style="display:inline-block;"><input type="text" name="search" class="simple-border simple-padding"  placeholder="Find User" style="width:69vw;"></input><button type="submit" class="simple-button simple-theme"><i class="fa fa-search"></i> Search</button></form>`;
-  
-  //if (request.query.notification){scripts+=`alert('${request.query.notification}');`}
-  
+if (!me){values.me = "null"}
   if(me!==undefined){
-    vals.self_avatar=database.user[me].avatar;
-    vals.self_link=`/u?username=${me}`;
-    vals.status=`Logged in as: ${me.toUpperCase()}`;
-    vals.profile_menu=` <div class="simple-dropdown-content simple-card-4 simple-bar-block" style="width:300px;right:0;top:51px;"><a href="../dashboard" class="simple-bar-item simple-button">Dashboard</a><form method="POST" action="/logout"><button type="submit" class="simple-bar-item simple-button">Logout</button></form></div> `;
-    vals.nav_mobile += `<a href="../dashboard" class="simple-bar-item simple-button simple-padding-large">Dashboard</a>`
+    values.self_avatar=database.user[me].avatar;
+    values.self_link=`/u?username=${me}`;
+    values.status=`Logged in as: ${me.toUpperCase()}`;
+    values.profile_menu=` <div class="simple-dropdown-content simple-card-4 simple-bar-block" style="width:300px;right:0;top:51px;"><a href="../dashboard" class="simple-bar-item simple-button">Dashboard</a><form method="get" action="/logout"><button type="submit" class="simple-bar-item simple-button">Logout</button></form></div> `;
+    values.nav_mobile += `<a href="../dashboard" class="simple-bar-item simple-button simple-padding-large">Dashboard</a>`
     
       
     if (bcrypt.compareSync(request.cookies['saved-password'],database.user[me].password)){
-      vals.visible.login_register = "hidden";
-      if(me==username){vals.visible.post_bar = ``}
+      values.visible.logged_in = "hidden";
+      values.visible.logged_out = "";
+      if(me==username){values.visible.post_bar = ``}
   }
   }else{
-    vals.status='not logged in';
-    vals.profile_menu = ` <div class="simple-dropdown-content simple-card-4 simple-bar-block" style="width:300px;right:0;top:51px;"><a href="#login" class="simple-bar-item simple-button">Login</a><a href="#register" class="simple-bar-item simple-button">Register</a></div> `
+    values.status='not logged in';
+    values.profile_menu = ` <div class="simple-dropdown-content simple-card-4 simple-bar-block" style="width:300px;right:0;top:51px;"><a href="#login" class="simple-bar-item simple-button">Login</a><a href="#register" class="simple-bar-item simple-button">Register</a></div> `
 
   };
   
   if(me!==undefined&&me!==username&&username!=='guest'&&username!=='null'){
   if (!logs.views[username]){logs.views[username]=0;}
   logs.views[username]+=1;
-  if (database.user[me].following.includes(username)){nav += `<a href="/connect?sent=${username}&method=follow" class="simple-bar-item simple-button simple-hide-small simple-padding-large simple-hover-white" title="Follow"><i class="fa fa-heartbeat"></i></a>`}else{
-  vals.nav += `<a href="/connect?sent=${username}&method=follow" class="simple-bar-item simple-button simple-hide-small simple-padding-large simple-hover-white" title="Follow"><i class="fa fa-heart"></i></a>`}
+  if (database.user[me].following.includes(username)){values.nav += `<a href="/connect?sent=${username}&method=follow" class="simple-bar-item simple-button simple-hide-small simple-padding-large simple-hover-white" title="Follow"><i class="fa fa-heartbeat"></i></a>`}else{
+  values.nav += `<a href="/connect?sent=${username}&method=follow" class="simple-bar-item simple-button simple-hide-small simple-padding-large simple-hover-white" title="Follow"><i class="fa fa-heart"></i></a>`}
   }
   
-    if(database.user[username].badges.includes("creator")){vals.badge_list += "Creator ";}
-    if(database.user[username].badges.includes("developer")){vals.badge_list += "Developer ";}
-    if(database.user[username].badges.includes("moderator")){vals.badge_list += "Moderator ";}
-    if(database.user[username].badges.includes("helper")){vals.badge_list += "Helper&nbsp:) ";}
-    if(database.user[username].badges.includes("early_member")){vals.badge_list += "Early Member ";}
-    if(database.user[username].badges.includes("long_user")){vals.badge_list += "Long Time User ";}
-    if(database.user[username].badges.includes("testing")){vals.badge_list += "Testing ";}
-    if (vals.badge_list){vals.badge_list = vals.badge_list.replace(/[ ]+/g, ", ");
-    fix_end();function fix_end(){if (vals.badge_list.endsWith(",")||vals.badge_list.endsWith(" ")){vals.badge_list=vals.badge_list.slice(0, -1);fix_end();}}}else
-    if (!vals.badge_list){vals.badge_list="This User has no badges"}
+    if(database.user[username].badges.includes("creator")){values.badge_list += "Creator ";}
+    if(database.user[username].badges.includes("developer")){values.badge_list += "Developer ";}
+    if(database.user[username].badges.includes("moderator")){values.badge_list += "Moderator ";}
+    if(database.user[username].badges.includes("helper")){values.badge_list += "Helper&nbsp:) ";}
+    if(database.user[username].badges.includes("early_member")){values.badge_list += "Early Member ";}
+    if(database.user[username].badges.includes("long_user")){values.badge_list += "Long Time User ";}
+    if(database.user[username].badges.includes("testing")){values.badge_list += "Testing ";}
+    if (values.badge_list){values.badge_list = values.badge_list.replace(/[ ]+/g, ", ");
+    fix_end();function fix_end(){if (values.badge_list.endsWith(",")||values.badge_list.endsWith(" ")){values.badge_list=values.badge_list.slice(0, -1);fix_end();}}}else
+    if (!values.badge_list){values.badge_list="This User has no badges"}
   
   
   
-    if(typeof mini.posts[username] !== "undefined"){vals.comment_list=``;
-  for (vals.post_number in mini.posts[username]) {
-    if(typeof mini.posts[username][vals.post_number] !== "undefined"){
-    for (vals.comment_number in mini.posts[username][vals.post_number].comments){
-      if (typeof database.user[mini.posts[username][vals.post_number].comments[vals.comment_number].username] !== "undefined"){
-      vals.comment_list+=`<a>${mini.posts[username][vals.post_number].comments[vals.comment_number].username}: ${mini.posts[username][vals.post_number].comments[vals.comment_number].text}</a><br>`
+    if(typeof mini.posts[username] !== "undefined"){values.comment_list=``;
+  //for (values.post_number in mini.posts[username]) {
+    while (values.post_number < mini.posts[username].length) {
+    if(typeof mini.posts[username][values.post_number] !== "undefined"){
+    for (values.comment_number in mini.posts[username][values.post_number].comments){
+      if (typeof database.user[mini.posts[username][values.post_number].comments[values.comment_number].sender] !== "undefined"){
+      values.comment_list+=`<a>${mini.posts[username][values.post_number].comments[values.comment_number].sender}: ${mini.posts[username][values.post_number].comments[values.comment_number].text}</a><br>`
       }
     }
       if(me!==undefined){
-      vals.comment_bar=`<form method="post" action="/edit">
+      values.comment_bar=`<form method="post" action="/edit">
 <div class="simple-row-padding"><div class="simple-col m12"><div class="simple-card simple-round simple-white"><div class="simple-container simple-padding">
               <hb class="simple-opacity">Add Comment</b>
               <input type="hidden" name="sentname" value="${me}">
               <input type="hidden" name="sentpass" value="${me}">
               <input type="hidden" name="method" value="new-post-comment">
-              <input type="hidden" name="commentid" value="${vals.post_number}">
+              <input type="hidden" name="commentid" value="${values.post_number}">
               <input type="text" name="sentcomment" class="simple-border simple-padding" placeholder="Comment Input" required></input>
               <button type="submit" class="simple-button simple-theme"><i class="fa fa-pencil"></i> Send</button>
             </div></div></div></div>
 </form>`
       }
     }
-    vals.like_list=0;for (vals.like_number in mini.posts[username][vals.post_number].likes){
-      if (typeof database.user[mini.posts[username][vals.post_number].likes[vals.like_number]] !== "undefined"){
-        vals.like_list+=1;
+    values.like_list=0;for (values.like_number in mini.posts[username][values.post_number].likes){
+      if (typeof database.user[mini.posts[username][values.post_number].likes[values.like_number]] !== "undefined"){
+        values.like_list+=1;
       }
     }
-    vals.post_list +=  `<div class="simple-container simple-card simple-white simple-round simple-margin" id="post-${[vals.post_number]}"><br>
+    values.post_list +=  `<div class="simple-container simple-card simple-white simple-round simple-margin" id="post-${[values.post_number]}"><br>
         <img src="${`${database.user[username].avatar}`}" alt="User_Avatar" class="simple-circle" style="width:90px;height:90px"> 
-        <span class="simple-right simple-opacity">#${vals.post_number}</span>
+        <span class="simple-right simple-opacity">#${values.post_number}</span>
         
-        <button class="simple-right simple-opacity" onclick="copy('https://${request.hostname}/u?search=${username}#post-${vals.post_number}');notification('Link Copied!')">
+        <button class="simple-right simple-opacity" onclick="copy('https://${request.hostname}/u?search=${username}#post-${values.post_number}');notification('Link Copied!')">
         <i class="fa fa-link"></i>
         &nbsp;</button>
         <span class="simple-right simple-opacity" >
         <form method="post" action="/edit">
         <input type="hidden" name="method" value="like">
         <input type="hidden" name="type" value="post">
-        <input type="hidden" name="sentid" value="${vals.post_number}">
+        <input type="hidden" name="sentid" value="${values.post_number}">
         <button type="submit" onclick="notification('<3!')">
         <i class="fa fa-heart" ></i>
-        ${vals.like_list}
+        ${values.like_list}
         </button>
         </form>
         &nbsp;</span>
         <br><b style="font-size: 2em;" >&nbsp${database.user[username].preferred}: </b>
-        <a style="font-size: 1.5em;">${mini.posts[username][vals.post_number].title} </a><br>
+        <a style="font-size: 1.5em;">${mini.posts[username][values.post_number].title} </a><br>
         <hr class="simple-clear">
-        <p>${mini.posts[username][vals.post_number].body}</p>
+        <p>${mini.posts[username][values.post_number].body}</p>
         <hr class="simple-clear">
-        <button onclick="accordion('comments_${vals.post_number}')" class="simple-button simple-block simple-theme-l1 simple-left-align"><i class="fa fa-shield fa-fw simple-margin-right"></i> Comments</button>
-          <div id="comments_${vals.post_number}" class="simple-hide simple-container">
-            <p>${vals.comment_list}${vals.comment_bar}</p>
+        <button onclick="accordion('comments_${values.post_number}')" class="simple-button simple-block simple-theme-l1 simple-left-align"><i class="fa fa-shield fa-fw simple-margin-right"></i> Comments</button>
+          <div id="comments_${values.post_number}" class="simple-hide simple-container">
+            <p>${values.comment_list}${values.comment_bar}</p>
           </div>
       </div>` ;
-    vals.comment_list=``;
-  }}
+    values.comment_list=``;
+      
+  values.post_number++}}
   
  
   if(typeof database.user[username].following !== "undefined"){
-    if(database.user[username].following.length-1 < 0){vals.follow_list="No One"}
-  for (vals.follow_number in database.user[username].following) {
-    vals.follow_list +=  `<span class="simple-tag simple-small simple-theme-d3" onclick="location.replace('/u?search=${database.user[username].following[vals.follow_number]}');">${database.user[username].following[vals.follow_number]}</span>`
-    if (database.user[username].following.length-1 > vals.follow_number){
-    if(database.user[username].following.length-1 > 0){vals.follow_list += `, `};
+    if(database.user[username].following.length-1 < 0){values.follow_list="No One"}
+  for (values.follow_number in database.user[username].following) {
+    values.follow_list +=  `<span class="simple-tag simple-small simple-theme-d3" onclick="location.replace('/u?search=${database.user[username].following[values.follow_number]}');">${database.user[username].following[values.follow_number]}</span>`
+    if (database.user[username].following.length-1 > values.follow_number){
+    if(database.user[username].following.length-1 > 0){values.follow_list += `, `};
     }
   }}
   if(typeof database.user[username].communities !== "undefined"){
-    if(database.user[username].communities.length-1 < 0){vals.community_list="None"}
-  for (vals.community_number in database.user[username].communities) {
-    vals.community_list +=  `<span class="simple-tag simple-small simple-theme-d3" onclick="location.replace('/c?search=${database.user[username].communities[vals.community_number]}');">${database.user[username].communities[vals.community_number]}</span>`
-    if (database.user[username].communities.length-1 > vals.community_number){
-    if(database.user[username].communities.length-1 > 0){vals.community_list += `, `};
+    if(database.user[username].communities.length-1 < 0){values.community_list="None"}
+  for (values.community_number in database.user[username].communities) {
+    values.community_list +=  `<span class="simple-tag simple-small simple-theme-d3" onclick="location.replace('/c?search=${database.user[username].communities[values.community_number]}');">${database.user[username].communities[values.community_number]}</span>`
+    if (database.user[username].communities.length-1 > values.community_number){
+    if(database.user[username].communities.length-1 > 0){values.community_list += `, `};
     }
   }}
+  function add_detail(icon,text){
+    if (!icon){icon='fa-question-circle'};
+    return `<p><i class="fa ${icon} fa-fw simple-margin-right simple-text-theme"></i>${text}</p>`
+  }
+  values.details = `
+  <h4 class="simple-center" style="color:${database.user[values.username].color }">${database.user[values.username].preferred} </h4>
+         <p class="simple-center"><img src="${database.user[values.username].avatar }" class="simple-circle" style="height:106px;width:106px" alt="User Avatar"></p>
+         <hr>
+         ${add_detail('fa-user',`${values.username}`)}
+         ${add_detail('fa-birthday-cake',`${database.user[values.username].creation_date}`)}
+         ${add_detail('fa-money',`${values.currency }: ${database.user[values.username].coins}`)}
+         ${add_detail('fa-star',`Experience: ${database.user[values.username].xp}`)}
+  `
   //var get = new main(database, mini,username,null,currency,status,self_avatar,self_link,profile_menu,scripts,info_data,nav,nav_mobile,badge_list,follow_amount,follow_list,community_list,post_bar,post_list,side_bar);
 //response.send(get.u());
-response.render('u.ejs', { database: database,values:vals});
+  var delete_passwords;
+  //const data = Object.assign({}, database);
+  const data = JSON.parse(JSON.stringify(database));
+  for (values.i = 0; values.i < Object.keys(data.user).length; values.i++) {
+delete_passwords = Object.keys(data.user)[values.i]
+delete data.user[delete_passwords]["password"]
+}
+response.render('u.ejs', { database: data,values:values});
 });
 
 
@@ -992,19 +895,13 @@ response.render('u.ejs', { database: database,values:vals});
 
 
 
-
-
-
-
-
-
-app.get("/c", (request, response) => {
+app.get("/d", (request, response) => {
   var username = request.query.username;
   var community = request.query.search;
   if (!username){if (request.cookies['saved-username']){username=request.cookies['saved-username']}else username='null'}
   if (typeof database.user[username] == "undefined") {return response.send(msg('no_account',null,'u'));}
   if (typeof database.community[community] == "undefined") {return response.send(msg('no_account',null,'u'));}
-    var vals ={
+    var values ={
     "username":username,
     "community":community,
     "anti":anti,
@@ -1033,71 +930,71 @@ app.get("/c", (request, response) => {
     "nav_mobile":"",
     "info_data":info_data,
     "visible":{
-    "login_register":"",
+    "logged_in":"",
+    "logged_out":"hidden",
     "post_bar":"hidden"
   }
   }
-  var nav = `<form method="get" action="/u" style="display:inline-block;"><input type="text" name="username" class="simple-border simple-padding" placeholder="Find User" style="width:20vw;"></input><button type="submit" class="simple-button simple-theme"><i class="fa fa-search"></i> Search</button></form>`;
-  var nav_mobile = `<form method="get" action="/u" style="display:inline-block;"><input type="text" name="username" class="simple-border simple-padding"  placeholder="Find User" style="width:69vw;"></input><button type="submit" class="simple-button simple-theme"><i class="fa fa-search"></i> Search</button></form>`;
-  
   //if (request.query.notification){scripts+=`alert('${request.query.notification}');`}
   
   if(request.cookies['saved-username']!==undefined){
-    vals.self_avatar=database.user[request.cookies['saved-username']].avatar;
-    vals.self_link=`/u?username=${request.cookies['saved-username']}`;
+    values.self_avatar=database.user[request.cookies['saved-username']].avatar;
+    values.self_link=`/u?username=${request.cookies['saved-username']}`;
     status=`Logged in as: ${request.cookies['saved-username'].toUpperCase()}`;
-    vals.profile_menu=` <div class="simple-dropdown-content simple-card-4 simple-bar-block" style="width:300px;right:0;top:51px;"><a href="../dashboard" class="simple-bar-item simple-button">Dashboard</a><form method="POST" action="/logout"><button type="submit" class="simple-bar-item simple-button">Logout</button></form></div> `;
-    vals.nav_mobile += `<a href="../dashboard" class="simple-bar-item simple-button simple-padding-large">Dashboard</a>`
+    values.profile_menu=` <div class="simple-dropdown-content simple-card-4 simple-bar-block" style="width:300px;right:0;top:51px;"><a href="../dashboard" class="simple-bar-item simple-button">Dashboard</a><form method="POST" action="/logout"><button type="submit" class="simple-bar-item simple-button">Logout</button></form></div> `;
+    values.nav_mobile += `<a href="../dashboard" class="simple-bar-item simple-button simple-padding-large">Dashboard</a>`
     
     if (bcrypt.compareSync(request.cookies['saved-password'],database.user[username].password)){
-      vals.visible.login_register = "hidden";
-      if(request.cookies['saved-username']==username){vals.visible.post_bar = ``;}
+      values.visible.logged_in = "hidden";
+      values.visible.logged_out = "";
+      if(request.cookies['saved-username']==username){values.visible.post_bar = ``;}
   }
   }else{
     status='not logged in';
-    vals.profile_menu = ` <div class="simple-dropdown-content simple-card-4 simple-bar-block" style="width:300px;right:0;top:51px;">
+    values.profile_menu = ` <div class="simple-dropdown-content simple-card-4 simple-bar-block" style="width:300px;right:0;top:51px;">
       <a href="#login" class="simple-bar-item simple-button">Login</a>
       <a href="#register" class="simple-bar-item simple-button">Register</a>
     </div> `
-    vals.visible.login_register = 'hidden';
   };
   
   if(typeof database.user[request.cookies['saved-username']] !== "undefined"){
   if (!logs.views[username]){logs.views[username]=0;}
   logs.views[username]+=1;
-  if (database.community[community].members.includes(username)){nav += `<a href="/connect?sent=${community}&method=join" class="simple-bar-item simple-button simple-hide-small simple-padding-large simple-hover-white" title="Follow"><i class="fa fa-heartbeat"></i></a>`}else{
-  nav += `<a href="/connect?sent=${community}&method=join" class="simple-bar-item simple-button simple-hide-small simple-padding-large simple-hover-white" title="Follow"><i class="fa fa-heart"></i></a>`}
+  if (database.community[community].owner!==username){
+  if (database.community[community].members.includes(username)){values.nav += `<a href="/connect?sent=${community}&method=join" class="simple-bar-item simple-button simple-hide-small simple-padding-large simple-hover-white" title="Follow"><i class="fa fa-heartbeat"></i></a>`}else{
+  values.nav += `<a href="/connect?sent=${community}&method=join" class="simple-bar-item simple-button simple-hide-small simple-padding-large simple-hover-white" title="Follow"><i class="fa fa-heart"></i></a>`}
   }
-    if(typeof mini.thread[community] !== "undefined"){vals.comment_list=``;
-  for (vals.post_number in mini.thread[community]) {
-    if(typeof mini.thread[community][vals.post_number] !== "undefined"){
-    for (vals.comment_number in mini.thread[community][vals.post_number].comments){
-      if (typeof database.user[mini.thread[community][vals.post_number].comments[vals.comment_number].username] !== "undefined"){
-      vals.comment_list+=`<a>${mini.thread[community][vals.post_number].comments[vals.comment_number].username}: ${mini.thread[community][vals.post_number].comments[vals.comment_number].text}</a><br>`
+  }
+    if(typeof mini.thread[community] !== "undefined"){values.comment_list=``;
+  for (values.post_number in mini.thread[community]) {
+    if(typeof mini.thread[community][values.post_number] !== "undefined"){
+    for (values.comment_number in mini.thread[community][values.post_number].comments){
+      if (typeof database.user[mini.thread[community][values.post_number].comments[values.comment_number].sender] !== "undefined"){
+      values.comment_list+=`<a>${mini.thread[community][values.post_number].comments[values.comment_number].sender}: ${mini.thread[community][values.post_number].comments[values.comment_number].text}</a><br>`
       }
     }
       if(request.cookies['saved-username']!==undefined){
-      vals.comment_bar=`<form method="post" action="/edit">
+      values.comment_bar=`<form method="post" action="/edit">
 <div class="simple-row-padding"><div class="simple-col m12"><div class="simple-card simple-round simple-white"><div class="simple-container simple-padding">
               <hb class="simple-opacity">Add Comment</b>
-              <input type="hidden" name="method" value="new-community-comment">
+              <input type="hidden" name="method" value="new-thread-comment">
               <input type="hidden" name="sentcommunity" value="${community}">
-              <input type="hidden" name="commentid" value="${vals.post_number}">
+              <input type="hidden" name="commentid" value="${values.post_number}">
               <input type="text" name="sentcomment" class="simple-border simple-padding" placeholder="Comment Input" required></input>
               <button type="submit" class="simple-button simple-theme"><i class="fa fa-pencil"></i> Send</button>
             </div></div></div></div>
 </form>`
       }
     }
-    vals.like_list=0;for (vals.like_number in mini.thread[vals.community][vals.post_number].likes){
-      if (typeof database.community[mini.thread[vals.community][vals.post_number].likes[vals.like_number]] !== "undefined"){
-        vals.like_list+=1;
+    values.like_list=0;for (values.like_number in mini.thread[values.community][values.post_number].likes){
+      if (typeof database.community[mini.thread[values.community][values.post_number].likes[values.like_number]] !== "undefined"){
+        values.like_list+=1;
       }
     }
-    vals.post_list +=  `<div class="simple-container simple-card simple-white simple-round simple-margin" id="post-${[vals.post_number]}"><br>
-        <img src="${`${database.user[username].avatar}`}" alt="User_Avatar" class="simple-circle" style="width:90px;height:90px">
-        <span class="simple-right simple-opacity">#${vals.post_number}</span>
-        <button class="simple-right simple-opacity" onclick="copy('https://${request.hostname}/c?search=${vals.community}#post-${vals.post_number}');notification('Link Copied!')">
+    values.post_list +=  `<div class="simple-container simple-card simple-white simple-round simple-margin" id="post-${[values.post_number]}"><br>
+        <img src="${`${database.user[mini.thread[community][values.post_number].sender].avatar}`}" alt="User_Avatar" class="simple-circle" style="width:90px;height:90px">
+        <span class="simple-right simple-opacity">#${values.post_number}</span>
+        <button class="simple-right simple-opacity" onclick="copy('https://${request.hostname}/c?search=${values.community}#post-${values.post_number}');notification('Link Copied!')">
         <i class="fa fa-link"></i>
         &nbsp;</button>
         
@@ -1105,66 +1002,90 @@ app.get("/c", (request, response) => {
         <form method="post" action="/edit">
         <input type="hidden" name="method" value="like">
         <input type="hidden" name="type" value="thread">
-        <input type="hidden" name="community" value="${vals.community}">
-        <input type="hidden" name="sentid" value="${vals.post_number}">
+        <input type="hidden" name="community" value="${values.community}">
+        <input type="hidden" name="sentid" value="${values.post_number}">
         <button type="submit" onclick="notification('<3!')">
         <i class="fa fa-heart"></i>
-        ${vals.like_list}
+        ${values.like_list}
         </button>
         </form></span>
-        <br><b style="font-size: 2em;">&nbsp${database.user[username].preferred}: </b>
-        <a style="font-size: 1.5em;">${mini.thread[community][vals.post_number].title} </a><br>
+        <br><b style="font-size: 2em;">&nbsp${database.user[mini.thread[community][values.post_number].sender].preferred}: </b>
+        <a style="font-size: 1.5em;">${mini.thread[community][values.post_number].title} </a><br>
         <hr class="simple-clear">
-        <p>${mini.thread[community][vals.post_number].body}</p>
+        <p>${mini.thread[community][values.post_number].body}</p>
         <hr class="simple-clear">
-        <button onclick="accordion('comments_${vals.post_number}')" class="simple-button simple-block simple-theme-l1 simple-left-align"><i class="fa fa-shield fa-fw simple-margin-right"></i> Comments</button>
-          <div id="comments_${vals.post_number}" class="simple-hide simple-container">
-            <p>${vals.comment_list}${vals.comment_bar}</p>
+        <button onclick="accordion('comments_${values.post_number}')" class="simple-button simple-block simple-theme-l1 simple-left-align"><i class="fa fa-shield fa-fw simple-margin-right"></i> Comments</button>
+          <div id="comments_${values.post_number}" class="simple-hide simple-container">
+            <p>${values.comment_list}${values.comment_bar}</p>
           </div>
       </div>` ;
-    vals.comment_list=``;
+    values.comment_list=``;
   }}
-response.render('c.ejs', { database: database,values:vals});
+  var delete_passwords;
+  const data = JSON.parse(JSON.stringify(database));
+  for (values.i = 0; values.i < Object.keys(data.user).length; values.i++) {
+delete_passwords = Object.keys(data.user)[values.i]
+delete data.user[delete_passwords]["password"]
+}
+response.render('c.ejs', { database: data,values:values});
 });
+
+
+
+
 
 
 
 
 app.get("/", function(request, response) {
-    var status = "";var post_bar = "";var profile_menu = "";var side_bar="";
-  var self_avatar="https://cdn.glitch.com/288a0b72-7e13-4dd2-bc7a-3cc2f4db2aab%2Fuser-slash.svg";
-  var self_link="/u#login";
-var username="empty";
-  
-  var nav = `<form method="get" action="/u" style="display:inline-block;"><input type="text" name="username" class="simple-border simple-padding" style="width:20vw;" placeholder="Find User"></input>
-              <button type="submit" class="simple-button simple-theme"><i class="fa fa-search"></i> Search</button></form>`;
-  var scripts = "";
-  
+  var values ={
+    "username":"empty",
+    "anti":anti,
+    "like_number":0,
+    "like_list":0,
+    "status":"",
+    "post_bar":"",
+    "comment_bar":"",
+    "profile_menu":"",
+    "side_bar":"",
+    "scripts":"",
+    "self_avatar":"https://cdn.glitch.com/288a0b72-7e13-4dd2-bc7a-3cc2f4db2aab%2Fuser-slash.svg",
+    "self_link":"/u#login",
+    "nav":`<form method="get" action="/u" style="display:inline-block;"><input type="text" name="username" class="simple-border simple-padding" style="width:20vw;" placeholder="Find User"></input>
+              <button type="submit" class="simple-button simple-theme"><i class="fa fa-search"></i> Search</button></form>`,
+    "nav_mobile":"",
+    "info_data":info_data,
+    "visible":{
+  }
+  }
   //if (request.query.notification){scripts+=`alert('${request.query.notification}');`}
   
   if(request.cookies['saved-username']!==undefined){
     if (typeof database.user[request.cookies['saved-username']] == "undefined") {return response.send(no_account_message+`<button onclick="location.replace('/user')">Find a different user.</button>`);}
-    self_avatar=database.user[request.cookies['saved-username']].avatar;
-    username=request.cookies['saved-username'];
-    self_link=`/u?username=${request.cookies['saved-username']}`;
-    status=`Logged in as: ${request.cookies['saved-username'].toUpperCase()}`;
-    profile_menu=` <div class="simple-dropdown-content simple-card-4 simple-bar-block" style="width:300px;right:0;top:51px;"><!--
+    values.self_avatar=database.user[request.cookies['saved-username']].avatar;
+    values.username=request.cookies['saved-username'];
+    values.self_link=`/u?username=${request.cookies['saved-username']}`;
+    values.status=`Logged in as: ${request.cookies['saved-username'].toUpperCase()}`;
+    values.profile_menu=` <div class="simple-dropdown-content simple-card-4 simple-bar-block" style="width:300px;right:0;top:51px;"><!--
       <form method="POST" action="/logout">
 <button type="submit" class="simple-bar-item simple-button">Logout</button>
 </form>-->
     </div> `
   }else{
-    status='not logged in';
-    profile_menu = ` <div class="simple-dropdown-content simple-card-4 simple-bar-block" style="width:300 px;right:0;top:51px;"><!--
+    values.status='not logged in';
+    values.profile_menu = ` <div class="simple-dropdown-content simple-card-4 simple-bar-block" style="width:300 px;right:0;top:51px;"><!--
       <a href="../u#login" class="simple-bar-item simple-button">Login</a>
       <a href="../u#register" class="simple-bar-item simple-button">Register</a>
 -->
     </div> `
   };
-  var get = new main(database,null,username,null,currency,status,self_avatar,self_link,profile_menu);
-response.send(get.slash());
+  var delete_passwords;
+  const data = JSON.parse(JSON.stringify(database));
+  for (values.i = 0; values.i < Object.keys(data.user).length; values.i++) {
+delete_passwords = Object.keys(data.user)[values.i]
+delete data.user[delete_passwords]["password"]
+}
+response.render('slash.ejs', {database: data,values:values});
 
   
 });
-
-

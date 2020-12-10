@@ -1,5 +1,10 @@
 {
   "passcode": "51password",
+  "codes": {
+    "Beta": 15,
+    "Merry": 50,
+    "Sixteen": 16
+  },
   "user": {
     "guest": {
       "password": "$2a$10$w.OQABq6zrfUGl9t4gWK2O0ItUyhTMPV1CDGFxG05zYrF3FjuYZYK",
@@ -12,6 +17,7 @@
       "color": "#000000",
       "avatar": "https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png",
       "creation_date": "10/26/2020 15:54:16 PM",
+      "codes": [],
       "following": [],
       "followers": [],
       "communities": [],
@@ -21,7 +27,7 @@
     "orago": {
       "password": "$2a$10$PkOfVFZJ/WD96Dx8xCJIieOPe.jntmJ06zaOY5N.vTZP59GorJxnS",
       "email": "",
-      "coins": 53,
+      "coins": 127,
       "preferred": "Orago",
       "background": "https://cdn.glitch.com/288a0b72-7e13-4dd2-bc7a-3cc2f4db2aab%2FMittens%20Banner.jpg",
       "banner": "https://cdn.glitch.com/288a0b72-7e13-4dd2-bc7a-3cc2f4db2aab%2Fvapormountain.jpg?v=1606422724403",
@@ -29,6 +35,10 @@
       "avatar": "https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fwaffles.png",
       "description": "Hello My name is Orago, I am a game & web developer also Creator of Meown!",
       "creation_date": "10/28/2020 2:18:38 AM",
+      "codes": [
+        "Merry",
+        "Sixteen"
+      ],
       "following": [
         "cat"
       ],
@@ -39,31 +49,33 @@
         "cat"
       ],
       "communities": [
-        "meown"
+        "meown",
+        "codes"
       ],
       "badges": [
         "creator",
         "developer",
         "moderator"
       ],
-      "xp": 6
+      "xp": 14
     },
     "null": {
       "password": "$2a$10$AW/zWW12xkDi.CanAS4n0uw7ZiFI69PYxSjIFhQCOgoGsS5J87XG.",
       "email": "",
-      "coins": 50.2,
+      "coins": 51.2,
       "preferred": "null",
       "background": "https://convertingcolors.com/plain-2C2F33.svg",
       "banner": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
       "description": "empty",
       "color": "#000000",
-      "avatar": "https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png",
+      "avatar": "https://cdn.glitch.com/288a0b72-7e13-4dd2-bc7a-3cc2f4db2aab%2Fuser-slash.svg",
+      "codes": [],
       "following": [],
       "followers": [],
       "communities": [],
       "creation_date": "11/11/2020 14:33:30 PM",
       "badges": [],
-      "xp": 1
+      "xp": 2
     },
     "empty": {
       "password": "$2a$10$AW/zWW12xkDi.CanAS4n0uw7ZiFI69PYxSjIFhQCOgoGsS5J87XG.",
@@ -75,6 +87,7 @@
       "description": "cool!",
       "color": "#000000",
       "avatar": "",
+      "codes": [],
       "following": [],
       "followers": [],
       "creation_date": "11/11/2020 14:33:30 PM",
@@ -91,6 +104,7 @@
       "description": "just a person looking to spread kindness",
       "color": "#000000",
       "avatar": "https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png",
+      "codes": [],
       "following": [
         "orago"
       ],
@@ -110,12 +124,71 @@
       "description": "idk",
       "color": "#000000",
       "avatar": "https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png",
+      "codes": [],
       "following": [],
       "followers": [],
       "communities": [],
       "creation_date": "11/16/2020 11:24:16 AM",
       "badges": [],
       "xp": 0
+    },
+    "meown": {
+      "password": "$2a$10$YpX7ZlJTiZ3M8yNOm1hEJ.l6fo9GrFCEHE0QjYf9lqxwt4D4yaOeu",
+      "email": "orago2004@gmail.com",
+      "coins": 51,
+      "xp": 1,
+      "preferred": "Meown",
+      "background": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
+      "banner": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
+      "description": "meown official",
+      "color": "#000000",
+      "avatar": "https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png",
+      "following": [],
+      "followers": [],
+      "communities": [],
+      "codes": [],
+      "badges": [],
+      "creation_date": 1607273501821
+    },
+    "yay": {
+      "password": "$2a$10$GspM/SRu8daN13AEQNPUNOFcJcK6WypC4TWA9z/5b7WVEIk0b6ZXW",
+      "email": "y@y",
+      "coins": 50,
+      "xp": 0,
+      "preferred": "yay",
+      "background": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
+      "banner": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
+      "description": "yay",
+      "color": "#000000",
+      "avatar": "https://raw.githubusercontent.com/Ashwinvalento/cartoon-avatar/master/lib/images/female/63.png",
+      "following": [],
+      "followers": [],
+      "communities": [],
+      "codes": [],
+      "badges": [],
+      "creation_date": 1607482956250
+    },
+    "tendallabagell": {
+      "password": "$2a$10$vepLbFBfRUSrfviqCYP82eNz23Uswh5qmYpdlOevu7nNaG9hsYWOm",
+      "email": "allwaysapornlover@email.com",
+      "coins": 132,
+      "xp": 1,
+      "preferred": "TenDallaBagell",
+      "background": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
+      "banner": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
+      "description": "bagel",
+      "color": "#000000",
+      "avatar": "https://th.bing.com/th/id/OIP.M_hV_g80DSvzEt3BLE1-0AHaEK?w=326&h=183&c=7&o=5&pid=1.7",
+      "following": [],
+      "followers": [],
+      "communities": [],
+      "codes": [
+        "Merry",
+        "Beta",
+        "Sixteen"
+      ],
+      "badges": [],
+      "creation_date": 1607493544607
     }
   },
   "community": {
@@ -140,10 +213,24 @@
       "color": "#000000",
       "avatar": "https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png",
       "members": [],
-      "badges": [],
       "creation_date": 1606684411751
+    },
+    "codes": {
+      "owner": "orago",
+      "preferred": "codes",
+      "background": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
+      "banner": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
+      "description": "the official promo codes community",
+      "color": "#000000",
+      "avatar": "https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png",
+      "members": [],
+      "creation_date": 1606924564743
     }
   },
   "discord": {},
-  "emails": []
+  "emails": [
+    "meown",
+    "yay",
+    "tendallabagell"
+  ]
 }

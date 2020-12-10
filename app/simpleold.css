@@ -13,7 +13,7 @@
 .simple-logo{border:none;padding:8px 16px;vertical-align:middle;overflow:hidden;text-decoration:none;color:inherit;background-color:inherit;text-align:center;cursor:pointer;white-space:nowrap}
 .simple-tint-gradient{background-image: linear-gradient(45deg, rgba(255,255,255,0.4), rgba(255,255,255,0.3) )}
 .simple-tint{background-image: linear-gradient(45deg, rgba(255,255,255,0.3), rgba(255,255,255,0.3) )}
-
+.simple-background{background-image: linear-gradient(rgba(77, 99, 111,1),rgba(77, 99, 111,1),rgba(77, 99, 111,0.8));background-attachment: fixed;}
 
 html{box-sizing:border-box}*,*:before,*:after{box-sizing:inherit}
 /* Extract from normalize.css by Nicolas Gallagher and Jonathan Neal git.io/normalize */

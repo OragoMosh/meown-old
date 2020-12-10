@@ -2,57 +2,26 @@
 <input id="cb" type="text" hidden>
 <script>
 <%- values.scripts %>
-  function copy(txt){
-  var cb = document.getElementById("cb");
-  cb.value = txt;
-  cb.style.display='block';
-  cb.select();
-  document.execCommand('copy');
-  cb.style.display='none';
- }
-let params = (new URL(document.location)).searchParams;
-var popup_status = false;
-window.addEventListener("load", function () {/*Start - If website Loaded*/
-if (document.getElementById("popup")===null){/*Start - If variable popup equals null*/
-document.getElementById("assets").innerHTML+= '<div id="popup">\</div>';/*Add popup notification box*/
-}
-if (params.get('notification')==null){notification('Page Loaded!')}else{notification(params.get('notification'));}
-  document.getElementById("popup").style.backgroundColor = "#333"
-});
-function notification(text,time) {
-  if (time==null){
-    time = 2000
-  }
-if (popup_status !== true){
-	popup_status = true;
-	var popup = document.getElementById("popup");
-	popup.className = "show";
-	popup.innerHTML = text
-	setTimeout(function(){ popup.className = popup.className.replace("show", "");popup_status=false;}, time);
-  } 
-}
 </script>
 <html>
 <%- values.info_data(`User: `+values.username) %>
 <meta charset="UTF-8">
-<link href="../tools.css" rel="stylesheet" >
+<link href="tools.css" rel="stylesheet" >
+<script src="tools.js"></script>
+<div id="assets"></div>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="simple.css">
-<link rel="stylesheet" href="simple-theme-blue-grey.css">
+<link rel="stylesheet" href="simple-theme-colors.css">
 <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Open+Sans'>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style>html, body, h1, h2, h3, h4, h5 {font-family: "Open Sans", sans-serif}</style>
-<body class="simple-theme-l5" style="background-image: linear-gradient(rgba(77, 99, 111,1),rgba(77, 99, 111,1),rgba(77, 99, 111,0.8));">
+<body class="simple-theme-background" >
 <!-- Navbar -->
 <div class="simple-top">
- <div class="simple-bar simple-theme-d2 simple-left-align simple-large" style="background-image: linear-gradient(rgba(77, 99, 111,0.8),rgba(77, 99, 111,1),rgba(64, 82, 92,0.5));">
+ <div class="simple-bar simple-theme-d2 simple-left-align simple-large">
   <a class="simple-bar-item simple-hide-medium simple-hide-large simple-right simple-large" href="javascript:void(0);" onclick="openNav()"><img src="<%- values.self_avatar %>" class="simple-circle" style="height:30px;width:30px" alt="Avatar"></a>
-  <a href="../" class="simple-bar-item simple-button simple-padding-large simple-theme-d4"><i class="fa fa-home simple-margin-right"></i>Meown</a>
-  <!--
-  <a href="#" class="simple-bar-item simple-button simple-hide-small simple-padding-large simple-hover-white" title="News"><i class="fa fa-globe"></i></a>
-  <a href="#" class="simple-bar-item simple-button simple-hide-small simple-padding-large simple-hover-white" title="Account Settings"><i class="fa fa-user"></i></a>
-  <a href="#" class="simple-bar-item simple-button simple-hide-small simple-padding-large simple-hover-white" title="Messages"><i class="fa fa-envelope"></i></a>
-  -->
+  <a href="/" class="simple-bar-item simple-button simple-padding-large simple-theme-d4"><i class="fa fa-home simple-margin-right"></i>Meown</a>
+
 <a class="simple-hide-small">
 <form method="get" action="/u" style="display:inline-block;"><input type="text" name="search" class="simple-border simple-padding" placeholder="Find User" style="width:20vw;"></input></form>
 <form method="get" action="/c" style="display:inline-block;"><input type="text" name="search" class="simple-border simple-padding" placeholder="Find Community" style="width:20vw;"></input></form>
@@ -65,7 +34,7 @@ if (popup_status !== true){
       <a href="#" class="simple-bar-item simple-button">Item-3</a>
     </div>
   </div>
-  <div onclick=location.replace('https://'+window.location.hostname+'<%- values.self_link %>') style="background-image: linear-gradient(rgba(77, 99, 111,0.8),rgba(77, 99, 111,1),rgba(64, 82, 92,0.5));" class="simple-bar-item simple-button simple-hide-small simple-right simple-padding-large simple-hover-white simple-dropdown-hover" title="My Account" >
+  <div onclick="location.replace('https://'+window.location.hostname+'<%- values.self_link %>')" class="simple-bar-item simple-button simple-hide-small simple-right simple-padding-large simple-hover-white simple-dropdown-hover" title="My Account" >
 <%- values.profile_menu %>
     <img src="<%- values.self_avatar %>" class="simple-circle" style="height:23px;width:23px" alt="Avatar">
   </div>
@@ -156,7 +125,7 @@ if (popup_status !== true){
     <div class="simple-col m2">
 <%- values.side_bar %>
       
-      <div class="<%- values.visible.login_register %>">
+      <div class="<%- values.visible.logged_in %>">
       <div class=" simple-card simple-round simple-white simple-padding-16 simple-center" id="login"><p>LOGIN</p>
 <form method="POST" action="/login">
 <input type="text" name="sentname" class="simple-border simple-padding" style="width:200px;" placeholder="Username" required>
