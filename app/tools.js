@@ -1,3 +1,11 @@
+
+   function change_theme(x){
+     var date = new Date();
+  date.setTime(date.getTime() + (30*24*60*60*1000));
+  document.cookie = "saved-background =" + x + ";" + "expires=" + date.toGMTString() + ";path=/";
+  location.reload();
+   }
+
 var SpeechRecognition = SpeechRecognition || window.webkitSpeechRecognition;
 var recognition = new SpeechRecognition();
 const synth = window.speechSynthesis;

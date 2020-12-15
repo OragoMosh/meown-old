@@ -3,15 +3,17 @@
 <%- values.info_data(`Homepage!`) %>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="tools.css" rel="stylesheet" >
+<script src="tools.js"></script>
 <link rel="stylesheet" href="https://beta.meown.tk/simple.css">
-<link rel="stylesheet" href="https://beta.meown.tk/simple-theme-colors.css">
+<link rel="stylesheet" href="<%- values.background %>">
 <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Open+Sans'>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style>
 html, body, h1, h2, h3, h4, h5 {font-family: "Open Sans", sans-serif}
 </style>
 <body class="simple-theme-background" >
-
+<script src="/app/assets/js/loader.js"></script>
 <!-- Navbar -->
 <div class="simple-top">
  <div class="simple-bar simple-theme-d2 simple-left-align simple-large">
@@ -46,12 +48,26 @@ html, body, h1, h2, h3, h4, h5 {font-family: "Open Sans", sans-serif}
         <br>
         <p class="right">There is currently <%- Object.keys(database.community).length %> Communties, So why wait when you can be a part of one!</p>
  </div>
+  <br>
+<div class=" simple-card simple-round simple-container simple-tint">
+  <p class="left">
+  | Owner: <%- values.roles.owner %> |
+  <br>
+  | Developers: <%- values.roles.developer %> |
+  <br>
+  | Moderators: <%- values.roles.moderator %> |
+  <br>
+  | Helper: <%- values.roles.helper %> |
+  <br>
+  | Verified Creators: <%- values.roles.verified %> |
+  </p>
+</div>
 <!-- End Page Container -->
 </div>
 <br>
 
 <footer class="simple-container simple-theme-d5">
-  <p>Powered by <a href="https://www.simpleschools.com/simplecss/default.asp" target="_blank">simple.css</a></p>
+  <p>Created by <a href="/u?search=orago" target="_blank">Orago</a></p>
 </footer>
  
 <script>

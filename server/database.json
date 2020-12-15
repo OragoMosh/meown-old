@@ -21,13 +21,13 @@
       "following": [],
       "followers": [],
       "communities": [],
-      "badges": [],
+      "roles": [],
       "xp": 0
     },
     "orago": {
       "password": "$2a$10$PkOfVFZJ/WD96Dx8xCJIieOPe.jntmJ06zaOY5N.vTZP59GorJxnS",
       "email": "",
-      "coins": 127,
+      "coins": 126,
       "preferred": "Orago",
       "background": "https://cdn.glitch.com/288a0b72-7e13-4dd2-bc7a-3cc2f4db2aab%2FMittens%20Banner.jpg",
       "banner": "https://cdn.glitch.com/288a0b72-7e13-4dd2-bc7a-3cc2f4db2aab%2Fvapormountain.jpg?v=1606422724403",
@@ -52,12 +52,12 @@
         "meown",
         "codes"
       ],
-      "badges": [
-        "creator",
+      "roles": [
+        "owner",
         "developer",
-        "moderator"
+        "verified"
       ],
-      "xp": 14
+      "xp": 13
     },
     "null": {
       "password": "$2a$10$AW/zWW12xkDi.CanAS4n0uw7ZiFI69PYxSjIFhQCOgoGsS5J87XG.",
@@ -74,7 +74,7 @@
       "followers": [],
       "communities": [],
       "creation_date": "11/11/2020 14:33:30 PM",
-      "badges": [],
+      "roles": [],
       "xp": 2
     },
     "empty": {
@@ -91,7 +91,7 @@
       "following": [],
       "followers": [],
       "creation_date": "11/11/2020 14:33:30 PM",
-      "badges": [],
+      "roles": [],
       "communities": [],
       "xp": 0
     },
@@ -111,7 +111,7 @@
       "followers": [],
       "communities": [],
       "creation_date": "11/12/2020 0:26:34 AM",
-      "badges": [],
+      "roles": [],
       "xp": 1
     },
     "aouab": {
@@ -129,14 +129,14 @@
       "followers": [],
       "communities": [],
       "creation_date": "11/16/2020 11:24:16 AM",
-      "badges": [],
+      "roles": [],
       "xp": 0
     },
     "meown": {
       "password": "$2a$10$YpX7ZlJTiZ3M8yNOm1hEJ.l6fo9GrFCEHE0QjYf9lqxwt4D4yaOeu",
       "email": "orago2004@gmail.com",
-      "coins": 51,
-      "xp": 1,
+      "coins": 52,
+      "xp": 2,
       "preferred": "Meown",
       "background": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
       "banner": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
@@ -147,7 +147,9 @@
       "followers": [],
       "communities": [],
       "codes": [],
-      "badges": [],
+      "roles": [
+        "developer"
+      ],
       "creation_date": 1607273501821
     },
     "yay": {
@@ -165,7 +167,7 @@
       "followers": [],
       "communities": [],
       "codes": [],
-      "badges": [],
+      "roles": [],
       "creation_date": 1607482956250
     },
     "tendallabagell": {
@@ -187,7 +189,7 @@
         "Beta",
         "Sixteen"
       ],
-      "badges": [],
+      "roles": [],
       "creation_date": 1607493544607
     }
   },
@@ -204,17 +206,6 @@
       ],
       "creation_date": "11/16/2020 11:24:16 AM"
     },
-    "lol": {
-      "owner": "orago",
-      "preferred": "lol",
-      "background": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
-      "banner": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
-      "description": "hewwo",
-      "color": "#000000",
-      "avatar": "https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png",
-      "members": [],
-      "creation_date": 1606684411751
-    },
     "codes": {
       "owner": "orago",
       "preferred": "codes",
@@ -228,6 +219,21 @@
     }
   },
   "discord": {},
+  "owners": [
+    "orago"
+  ],
+  "developers": [
+    "orago"
+  ],
+  "moderators": [
+    "none"
+  ],
+  "helpers": [
+    "none"
+  ],
+  "verified": [
+    "none"
+  ],
   "emails": [
     "meown",
     "yay",

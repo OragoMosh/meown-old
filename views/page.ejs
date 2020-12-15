@@ -6,6 +6,8 @@ function new_date(){
 document.getElementById("time").innerHTML = `<p>Time:</p>${new Date()}<br> (click to update)`;
 setTimeout(function(){ new_date() }, 3000);
 }
+  /*
+  */
 </script>
 <html>
 <%- values.info_data(`User: `+values.username) %>
@@ -14,16 +16,17 @@ setTimeout(function(){ new_date() }, 3000);
 <script src="tools.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="simple.css">
-<link rel="stylesheet" href="simple-theme-colors.css">
+<link rel="stylesheet" id="css-theme" href="<%- values.background %>"><!--simple-theme-orange-red.css-->
 <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Open+Sans'>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style>html, body, h1, h2, h3, h4, h5 {font-family: "Open Sans", sans-serif}</style>
+  
 <body class="simple-theme-background" >
 <!-- Navbar -->
 <div class="simple-top">
  <div class="simple-bar simple-theme-d2 simple-left-align simple-large">
   <a class="simple-bar-item simple-hide-medium simple-hide-large simple-right simple-large" href="javascript:void(0);" onclick="openNav()"><img src="<%- database.user[values.me].avatar %>" class="simple-circle" style="height:30px;width:30px" alt="Avatar"></a>
-  <a href="/" class="simple-bar-item simple-button simple-padding-large simple-theme-d4"><i class="fa fa-home simple-margin-right"></i>Meown</a>
+  <a href="/" class="simple-bar-item simple-button simple-padding-large simple-theme-d4" id="theme"><i class="fa fa-home simple-margin-right"></i>Meown</a>
 
 <a class="simple-hide-small">
 <form method="get" action="/u" style="display:inline-block;"><input type="text" name="search" class="simple-border simple-padding" placeholder="Find User" style="width:20vw;"></input></form>
@@ -61,7 +64,7 @@ setTimeout(function(){ new_date() }, 3000);
     <div class="simple-col m3">
       <!-- Profile -->
       <!--<div class="simple-card simple-round simple-white">-->
-      <div class="simple-card simple-round" style="background-image:url('<%-database.user[values.username].background %>');background-color:white;">
+      <div class="simple-card simple-round" style="background-size: 100% 100%;background-image:url('<%- values.data_type[values.id].background %>');background-color:white;">
       <div class="simple-container"><br> 
       <div class="simple-card simple-round" style="background-image: linear-gradient(45deg, rgba(255,255,255,0.3), rgba(255,255,255,0.3) )">
         <div class="simple-container">
@@ -76,16 +79,7 @@ setTimeout(function(){ new_date() }, 3000);
       <!-- Accordion -->
       <div class="simple-card simple-round">
         <div class="simple-white">
-          <button onclick="accordion('Demo1')" class="simple-button simple-block simple-theme-l1 simple-left-align"><i class="fa fa-shield fa-fw simple-margin-right"></i> Badges</button>
-          <div id="Demo1" class="simple-hide simple-container">
-            <p><%- values.badge_list %></p>
-          </div>
-          <button onclick="accordion('Demo2')" class="simple-button simple-block simple-theme-l1 simple-left-align"><i class="fa fa-heart fa-fw simple-margin-right"></i> Follows</button>
-          <div id="Demo2" class="simple-hide simple-container">
-            <p>Followers: <%- values.follow_amount %></p>
-            <p>Following: <%- values.follow_list %> </p>
-            <p>Communities: <%- values.community_list %> </p>
-          </div>
+          <%- values.buttons %>
         </div>      
       </div>
       <br>
@@ -130,10 +124,10 @@ setTimeout(function(){ new_date() }, 3000);
         <h4>User Badges</h4><br>
         <p>Badges: ${this.badge_list}</p>
       </div> -->
-<div class="simple-container simple-card simple-white simple-round simple-margin" style="background-size: 100% 100%;background-image: url('<%- database.user[values.username].banner%>');background-color:white;">
+<div class="simple-container simple-card simple-white simple-round simple-margin" style="background-size: 100% 100%;background-image: url('<%- values.data_type[values.username].banner%>');background-color:white;">
 <div class="simple-container simple-card simple-round simple-margin" style="background-image: linear-gradient(45deg, rgba(255,255,255,0.3), rgba(255,255,255,0.3) );">
         <h4>[About me]</h4><br>
-        <p><%- database.user[values.username].description %></p>
+        <p><%- values.data_type[values.id].description %></p>
         </div>
       </div>
     <%- values.post_list %>
@@ -168,6 +162,8 @@ Default: <input type="radio" name="avatar" onclick="onlyOne(this)" value="defaul
 <br><button type="submit" class="simple-button simple-theme" style="width:200px;"> Sign Up</button>
 </form>
   </div><br>
+        <div class="simple-card simple-round simple-white simple-padding-16 simple-center">
+        </div>
       </div>
       
       
@@ -175,12 +171,25 @@ Default: <input type="radio" name="avatar" onclick="onlyOne(this)" value="defaul
       <div class="simple-card simple-round simple-white simple-padding-16 simple-center">
       <p id="time" onclick="new_date()">Open Time<br>(May cause lag)</p>
       </div>
+      
       <br>
+      
       <div class="simple-card simple-round simple-white simple-padding-16 simple-center">
       <p>ADS</p></div>
+      
       <br>
+      
       <div class="simple-card simple-round simple-white simple-padding-32 simple-center">
         <p><i class="fa fa-bug simple-xxlarge"></i><br>Report bugs</p>
+      </div>
+      
+      <br>
+      
+      <div class="simple-card simple-round simple-white simple-padding-16 simple-center">
+      <p>Themes</p>
+      <button onclick="change_theme('simple-theme-orange-red.css')">Orange Theme</button>
+      <br><br>
+      <button onclick="change_theme('simple-theme-blue-grey.css')">Blue Theme</button>
       </div>
     <!-- End Right Column -->
     </div>
