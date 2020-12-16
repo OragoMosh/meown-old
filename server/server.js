@@ -116,7 +116,6 @@ async function mail(to,subject,text,html) {
     secure: true, // true for 465, false for other ports
     auth: {
       user: 'themittzcat@gmail.com', // generated ethereal user
-      pass: '1212004Drago', // generated ethereal password
     },
   });
 
