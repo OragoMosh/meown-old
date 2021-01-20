@@ -1,18 +1,77 @@
 /* SIMPLE.CSS 4.14 November 2020 by Jan Egil and Borge Refsnes */
-@font-face {
-  font-family: "Crenzo";src: url("https://cdn.glitch.com/0322d62f-81b5-4f06-9b33-557687636cec%2FCRENZO.otf") format("opentype");
+
+.simple-grid-container {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  padding: 10px;
 }
-.crenzo{font-family: 'Crenzo';color:rgba(200, 227, 227,0.6);-webkit-text-stroke-width: 4px;-webkit-text-stroke-color: rgba(130, 169, 232,0.3);
+.simple-meown-button {
+  display: inline-block;
+  border-radius: 4px;
+  background-color: #f4511e;
+  border: none;
+  color: #FFFFFF;
+  text-align: center;
+  font-size: 28px;
+  padding: 20px;
+  width: 200px;
+  transition: all 0.5s;
+  cursor: pointer;
+  margin: 5px;
 }
+
+.simple-meown-button span {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+}
+
+.simple-meown-button span:after {
+  content: '\00bb';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -20px;
+  transition: 0.5s;
+}
+
+.simple-meown-button:hover span {
+  padding-right: 25px;
+}
+
+.simple-meown-button:hover span:after {
+  opacity: 1;
+  right: 0;
+}
+.simple-grid-item {
+  background-color: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(0, 0, 0, 0.8);
+  padding: 10px;
+  font-size: 15px;
+  text-align: center;
+}
+.simple-img{
+background-size:cover;
+}
+.simple-split {
+  width: 48%;
+  height:200px;
+}
+.simple-middle{
+  display:table-cell;
+  vertical-align:middle;
+  text-align:center;
+  /*height:300px;*/
+  /*width:300px;*/
+}
+
 .center{text-align: center;}
 .left{text-align: left;}.right{text-align: right;}.justiy{text-align: justify;}
 .hide {display:none;}.show {display:block;}
-.simple-text-large{font-size:3vw}.simple-text-medium{font-size:2.5vw}.simple-text-small{font-size:2vw}.simple-text-mini{font-size:1vw}
+.simple-text-large{font-size:200%}.simple-text-medium{font-size:150%}.simple-text-small{font-size:100%}.simple-text-mini{font-size:70%}
 
-@media only screen and (max-width: 208px) {.simple-logo {display:none;}.simple-text-large {font-size:10px}}
-.simple-logo{border:none;padding:8px 16px;vertical-align:middle;overflow:hidden;text-decoration:none;color:inherit;background-color:inherit;text-align:center;cursor:pointer;white-space:nowrap}
-.simple-tint-gradient{background-image: linear-gradient(45deg, rgba(255,255,255,0.4), rgba(255,255,255,0.3) )}
-.simple-tint{background-image: linear-gradient(45deg, rgba(255,255,255,0.3), rgba(255,255,255,0.3) )}
+
 
 
 html{box-sizing:border-box}*,*:before,*:after{box-sizing:inherit}
@@ -85,7 +144,7 @@ hr{border:0;border-top:1px solid #eee;margin:20px 0}
 .simple-bar-block.simple-center .simple-bar-item{text-align:center}.simple-block{width:100%}
 .simple-responsive{display:block;overflow-x:auto}
 .simple-container:after,.simple-container:before,.simple-panel:after,.simple-panel:before,.simple-row:after,.simple-row:before,.simple-row-padding:after,.simple-row-padding:before,
-.simple-cell-row:before,.simple-cell-row:after,.simple-clear:after,.simple-clear:before,.simple-bar:before,.simple-bar:after{content:"";display:table;clear:both}
+.simple-cell-row:before,.simple-cell-row:after,.simple-clear:after,.simple-clear:before,.simple-bar:before,.simple-bar:after{content:"";clear:both;}
 .simple-col,.simple-half,.simple-third,.simple-twothird,.simple-threequarter,.simple-quarter{float:left;width:100%}
 .simple-col.s1{width:8.33333%}.simple-col.s2{width:16.66666%}.simple-col.s3{width:24.99999%}.simple-col.s4{width:33.33333%}
 .simple-col.s5{width:41.66666%}.simple-col.s6{width:49.99999%}.simple-col.s7{width:58.33333%}.simple-col.s8{width:66.66666%}

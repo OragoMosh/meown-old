@@ -1,3 +1,85 @@
+window.addEventListener("load", function () {
+  color_load()
+})
+reset_colors();
+function reset_colors(){
+colors = {"1":"#FFFFFF","2":"#dfe5e8","3":"#becbd2","4":"#9eb1bb","5":"#7d97a5",
+          "6":"#57707d","7":"#4d636f","8":"#435761","9":"#3a4b53","10":"#303e45",
+          "11":"#303e45","12":"#7d97a5","13":"#000000","14":"#FFFFFF","15":"#ff5252"}
+}
+
+var color_list = document.getElementsByClassName("colors");
+var color_length =  Object.keys(colors).length+1;
+var r = document.querySelector(':root');
+var rs = getComputedStyle(r);
+
+var colors = {}
+
+  var i;for (i = 0; i < color_length; i++) {
+    colors[i]="black";
+  }
+
+
+function color_get() {
+reset_colors();
+var i=1;
+while (i < color_length) {
+var color = color_list[i-1];
+var c = colors[i]
+color.value = c;
+  i++
+  }
+  
+}
+
+function color_save() {
+var i=1;
+while (i < color_length) {
+  colors[i] = color_list[i-1].value;
+  
+  i++
+  }
+localStorage.setItem('color-palette', JSON.stringify(colors));
+}
+  
+function color_copy(){
+  document.getElementById("colors").innerHTML = `<input id="color_values">`;
+  document.getElementById("color_values").value = localStorage.getItem('color-palette');
+  notification("It should copy automatically, but if not manually copy the input bar.")
+  var cb = document.getElementById("cb");
+  cb.value = localStorage.getItem('color-palette');
+  cb.style.display='block';
+  cb.select();
+  document.execCommand('copy');
+  cb.style.display='none';
+ }
+  
+function color_paste(){
+  localStorage.setItem('color-palette', prompt("colors?"));
+  color_load();
+  notification("Saved!")
+}
+  
+function color_load() {
+var i=1;
+while (i < color_length) {
+var loaded_colors="";
+var color = color_list[i-1];
+if (localStorage.getItem('color-palette')){
+loaded_colors = JSON.parse(localStorage.getItem('color-palette'));
+if (color){color.value = loaded_colors[i];}
+r.style.setProperty(`--${i}`, loaded_colors[i]);
+}
+
+  i++
+  }
+}
+
+
+
+
+
+
 
    function change_theme(x){
      var date = new Date();
@@ -88,7 +170,21 @@ voice_reply("Nice to meet you"+name);
 
 
 
-
+function getCookie(cname) {
+  var name = cname + "=";
+  var decodedCookie = decodeURIComponent(document.cookie);
+  var ca = decodedCookie.split(';');
+  for(var i = 0; i < ca.length; i++) {
+    var c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}
 
 
 

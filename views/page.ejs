@@ -6,65 +6,65 @@ function new_date(){
 document.getElementById("time").innerHTML = `<p>Time:</p>${new Date()}<br> (click to update)`;
 setTimeout(function(){ new_date() }, 3000);
 }
-  /*
-  */
 </script>
-<html>
+<html lang="en">
 <%- values.info_data(`User: `+values.username) %>
+  
 <meta charset="UTF-8">
 <link href="tools.css" rel="stylesheet" >
 <script src="tools.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="simple.css">
-<link rel="stylesheet" id="css-theme" href="<%- values.background %>"><!--simple-theme-orange-red.css-->
+<link rel="stylesheet" href="/simple.css">
+<link rel="stylesheet" href="/css/meown.css">
+<link rel="stylesheet" href="/simple-theme.css">
 <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Open+Sans'>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style>html, body, h1, h2, h3, h4, h5 {font-family: "Open Sans", sans-serif}</style>
   
 <body class="simple-theme-background" >
 <!-- Navbar -->
-<div class="simple-top">
- <div class="simple-bar simple-theme-d2 simple-left-align simple-large">
-  <a class="simple-bar-item simple-hide-medium simple-hide-large simple-right simple-large" href="javascript:void(0);" onclick="openNav()"><img src="<%- database.user[values.me].avatar %>" class="simple-circle" style="height:30px;width:30px" alt="Avatar"></a>
-  <a href="/" class="simple-bar-item simple-button simple-padding-large simple-theme-d4" id="theme"><i class="fa fa-home simple-margin-right"></i>Meown</a>
-
-<a class="simple-hide-small">
-<form method="get" action="/u" style="display:inline-block;"><input type="text" name="search" class="simple-border simple-padding" placeholder="Find User" style="width:20vw;"></input></form>
-<form method="get" action="/c" style="display:inline-block;"><input type="text" name="search" class="simple-border simple-padding" placeholder="Find Community" style="width:20vw;"></input></form>
+<div class="simple-navbar">
+  
+ <div class="simple-bar simple-theme-d2 simple-left-align simple-large simple-round-xlarge">
+  <br>
+  <a class="simple-bar-item simple-hide-medium simple-hide-large simple-right simple-padding-large simple-hover-white simple-theme-d2 simple-round simple-mobile-button" ><i class="fa fa-bars"></i></a>
+   
+   
+  <a href="/" class="simple-bar-item simple-button simple-padding-large simple-theme-logo simple-round"><i class="fa fa-home simple-margin-right"></i>Meown</a>
+  <a class="simple-hide-small">
+<form method="get" action="/u" style="display:inline-block;"><input type="text" name="search" class="simple-theme-l5 simple-border simple-padding" placeholder="Find User" style="width:20vw;"></input></form>
+<form method="get" action="/c" style="display:inline-block;"><input type="text" name="search" class="simple-theme-l5 simple-border simple-padding" placeholder="Find Community" style="width:20vw;"></input></form>
 <%- values.nav %></a>
-  <div class="simple-dropdown-hover simple-hide-small">
-    <button class="simple-button simple-padding-large" title="Notifications"><i class="fa fa-bell"></i><span class="simple-badge simple-right simple-small simple-green">3</span></button>     
-    <div class="simple-dropdown-content simple-card-4 simple-bar-block" style="width:300px;">
-      <a href="#" class="simple-bar-item simple-button">Item-1</a>
-      <a href="#" class="simple-bar-item simple-button">Item-2</a>
-      <a href="#" class="simple-bar-item simple-button">Item-3</a>
+  <div onclick="location.replace('/u')" class="simple-bar-item simple-button simple-hide-small simple-right simple-padding-large simple-hover-white simple-dropdown-hover" title="My Account" >
+    <div class="simple-round-large simple-theme-d2 simple-dropdown-content simple-bar-block" style="width:300px;right:0;top:78px;">
+    <%- values.profile_menu %>
     </div>
-  </div>
-  <div onclick="location.replace('https://'+window.location.hostname+'<%- values.self_link %>')"  class="simple-bar-item simple-button simple-hide-small simple-right simple-padding-large simple-hover-white simple-dropdown-hover" title="My Account" >
-<%- values.profile_menu %>
     <img src="<%- values.self_avatar %>" class="simple-circle" style="height:23px;width:23px" alt="Avatar">
-  </div>
- </div>
-</div>
-<!-- Navbar on small screens -->
-<div id="navDemo" class="simple-bar-block simple-theme-d2 simple-hide simple-hide-large simple-hide-medium simple-large">
-  <a href="javascript:void(0);" class="simple-bar-item simple-button simple-padding-large">Hidden</a>
+   </div>
+   
+   <!-- Navbar on small screens -->
+  <div class="simple-bar-block simple-theme-d2 simple-hide-large simple-hide-medium simple-large simple-mobile-options">
   <a>
-  <form method="get" action="/u" style="display:inline-block;"><input type="text" name="search" class="simple-border simple-padding"  placeholder="Find User" style="width:69vw;"></input></form>
-  <form method="get" action="/c" style="display:inline-block;"><input type="text" name="search" class="simple-border simple-padding"  placeholder="Find Community" style="width:69vw;"></input></form>
+  <form method="get" action="/u" style="display:inline-block;"><input type="text" name="search" class="simple-border simple-padding"  placeholder="Find User" style="width:100vw;"></input></form>
+  <form method="get" action="/c" style="display:inline-block;"><input type="text" name="search" class="simple-border simple-padding"  placeholder="Find Community" style="width:100vw;"></input></form>
   <%- values.nav_mobile %></a>
   <a href="../" class="simple-bar-item simple-button simple-padding-large">Chat Room</a>
-  <a href="${this.self_link}" class="simple-bar-item simple-button simple-padding-large"><%- values.status %></a>
+  <a href="/u" class="simple-bar-item simple-button simple-padding-large"><%- values.status %></a>
+  </div>
+   
+ </div>
 </div>
+
+
 <!-- Page Container -->
 <div class="simple-container simple-content" style="max-width:1400px;margin-top:80px">    
   <!-- The Grid -->
   <div class="simple-row">
     <!-- Left Column -->
-    <div class="simple-col m3">
+    <div class="simple-col m3 simple-theme-text-1">
       <!-- Profile -->
       <!--<div class="simple-card simple-round simple-white">-->
-      <div class="simple-card simple-round" style="background-size: 100% 100%;background-image:url('<%- values.data_type[values.id].background %>');background-color:white;">
+      <div class="simple-theme-l5 simple-card simple-round" style="background-size: 100% 100%;background-image:url('<%- database[values.category][values.id].background %>');">
       <div class="simple-container"><br> 
       <div class="simple-card simple-round" style="background-image: linear-gradient(45deg, rgba(255,255,255,0.3), rgba(255,255,255,0.3) )">
         <div class="simple-container">
@@ -85,7 +85,7 @@ setTimeout(function(){ new_date() }, 3000);
       <br>
       
       <!-- Interests --> 
-      <div class="simple-card simple-round simple-white simple-hide-small">
+      <div class="simple-theme-l5 simple-card simple-round simple-hide-small">
         <div class="simple-container">
           <p>Interests</p>
           <p></p>
@@ -94,8 +94,8 @@ setTimeout(function(){ new_date() }, 3000);
       <br>
       
       <!-- Alert Box -->
-      <div class="simple-container simple-display-container simple-round simple-theme-l4 simple-border simple-theme-border simple-margin-bottom simple-hide-small">
-        <span onclick="this.parentElement.style.display='none'" class="simple-button simple-theme-l3 simple-display-topright">
+      <div class="simple-theme-l4 simple-container simple-display-container simple-round simple-border simple-theme-border simple-margin-bottom simple-hide-small">
+        <span onclick="this.parentElement.style.display='none'" class="simple-theme-l4 simple-button simple-display-topright" style="filter: brightness(90%);">
           <i class="fa fa-remove"></i>
         </span>
         <p><strong>Hello!</strong></p>
@@ -106,91 +106,61 @@ setTimeout(function(){ new_date() }, 3000);
     </div>
     
     <!-- Middle Column -->
-    <div class="simple-col m7">
-    <form method="post" action="/edit" class="<%- values.visible.post_bar %>">
-<div class="simple-row-padding"><div class="simple-col m12"><div class="simple-card simple-round simple-white"><div class="simple-container simple-padding">
-              <h6 class="simple-opacity">New Post</h6>
-              <input type="hidden" name="sentname" value="${request.cookies['saved-username']}">
-              <input type="hidden" name="sentpass" value="${request.cookies['saved-password']}">
-              <input type="hidden" name="method" value="new-post">
-              <input type="text" name="sentposttitle" class="simple-border simple-padding" placeholder="Post Title" required></input>
-              <input type="text" name="sentpostbody" class="simple-border simple-padding" placeholder="Post Body" required></input><br>
-              <button type="submit" class="simple-button simple-theme"><i class="fa fa-pencil"></i> Send</button>
-            </div></div></div></div>
-</form>
-<!--
-        <div class="simple-container simple-card simple-white simple-round simple-margin"><br>
-        <img src="https://images.vexels.com/media/users/3/163191/isolated/lists/3404f798db8118b2a5bd33cab9c1455c-leather-stitch-badge.png" alt="Badge Card" class="simple-left simple-circle simple-margin-right" style="width:60px">
-        <h4>User Badges</h4><br>
-        <p>Badges: ${this.badge_list}</p>
-      </div> -->
-<div class="simple-container simple-card simple-white simple-round simple-margin" style="background-size: 100% 100%;background-image: url('<%- values.data_type[values.username].banner%>');background-color:white;">
+    <div class="simple-col m7 simple-theme-text-1">
+      <div class="simple-theme-l5 simple-container simple-card simple-round simple-margin" style="background-size: 100% 100%;background-image: url('<%- values.data_type[values.username].banner%>');">
 <div class="simple-container simple-card simple-round simple-margin" style="background-image: linear-gradient(45deg, rgba(255,255,255,0.3), rgba(255,255,255,0.3) );">
         <h4>[About me]</h4><br>
-        <p><%- values.data_type[values.id].description %></p>
+        <p><%- database[values.category][values.id].description %></p>
         </div>
       </div>
+      
+    <form method="post" action="/edit" class="<%- values.visible.post_bar %>" style="display:inline-block;width:100%">
+<div class="simple-row-padding"><div class="simple-col m12"><div class="simple-theme-l5 simple-card simple-round"><div class="simple-container simple-padding">
+  <h6 class="simple-opacity">New Post</h6>
+  <input type="hidden" name="method" value="new-post">
+  <input type="hidden" name="id" value="<%- values.id %>">
+  <input type="hidden" name="sentpostcategory" value="<%- values.category %>">
+  <input type="text" name="sentposttitle" class="simple-border simple-padding" placeholder="Post Title" required></input>
+  <input type="text" name="sentpostbody" class="simple-border simple-padding" placeholder="Post Body" required></input><br>
+  <button type="submit" class="simple-button simple-theme"><i class="fa fa-pencil"></i> Send</button>
+</div></div></div></div>
+</form>
+  
     <%- values.post_list %>
     <!-- End Middle Column -->
     </div>
     
     <!-- Right Column -->
-    <div class="simple-col m2">
+    <div class="simple-col m2 simple-theme-text-1">
 <%- values.side_bar %>
-      <div class=" simple-card simple-round simple-white simple-padding-16 simple-center" id="speec">
+      <div class="simple-theme-l5 simple-card simple-round simple-padding-16 simple-center" id="speec">
       <p><span type="button" id="microphone" onclick="runSpeechRecognition()"><i class="fa fa-microphone fa-fw simple-margin-right"></i></span><span id="action"></span></p>
         <div id="output" class="hide"></div>
       </div><br>
-      <div class="<%- values.visible.logged_in %>">
-      <div class=" simple-card simple-round simple-white simple-padding-16 simple-center" id="login"><p>LOGIN</p>
-<form method="POST" action="/login">
-<input type="text" name="sentname" class="simple-border simple-padding" style="width:200px;" placeholder="Username" onkeyup="<%- values.anti %>" required>
-<input type="password" name="sentpass" class="simple-border simple-padding" style="width:200px;" placeholder="Password" required>
-<br><button type="submit" class="simple-button simple-theme" style="width:200px;"> Login</button></form>
-  </div><br>
-<div class="simple-card simple-round simple-white simple-padding-16 simple-center" id="register"><p>REGISTER</p>
-<form method="POST" action="/register">
-<input type="text" name="sentname" class="simple-border simple-padding" style="width:200px;" placeholder="Username" minlength="3" maxlength="15" onkeyup="<%- values.anti %>" required>
-<input type="text" name="sentdesc" class="simple-border simple-padding" style="width:200px;" placeholder="Description"required>
-<input type="password" name="sentpass" class="simple-border simple-padding" style="width:200px;" placeholder="Password" required>
-<input type="password" name="sentpassconfirm" class="simple-border simple-padding" style="width:200px;" placeholder="Password (Confirm)" required>
-<input type="email" id="email" name="sentemail" class="simple-border simple-padding" style="width:200px;" placeholder="Email" required>
-<br>Avatar:<br>
-Male: <input type="radio" name="avatar" onclick="onlyOne(this)" value="male" required>
-Female: <input type="radio" name="avatar" onclick="onlyOne(this)" value="female" required>
-Default: <input type="radio" name="avatar" onclick="onlyOne(this)" value="default" required>
-<br><button type="submit" class="simple-button simple-theme" style="width:200px;"> Sign Up</button>
-</form>
-  </div><br>
-        <div class="simple-card simple-round simple-white simple-padding-16 simple-center">
-        </div>
-      </div>
       
-      
-      
-      <div class="simple-card simple-round simple-white simple-padding-16 simple-center">
+      <div class="simple-theme-l5 simple-card simple-round simple-padding-16 simple-center">
       <p id="time" onclick="new_date()">Open Time<br>(May cause lag)</p>
       </div>
       
       <br>
       
-      <div class="simple-card simple-round simple-white simple-padding-16 simple-center">
+      <div class="simple-theme-l5 simple-card simple-round simple-padding-16 simple-center">
       <p>ADS</p></div>
       
       <br>
       
-      <div class="simple-card simple-round simple-white simple-padding-32 simple-center">
+      <div class="simple-theme-l5 simple-card simple-round simple-padding-32 simple-center">
         <p><i class="fa fa-bug simple-xxlarge"></i><br>Report bugs</p>
       </div>
       
       <br>
       
-      <div class="simple-card simple-round simple-white simple-padding-16 simple-center">
+      <!--<div class="simple-card simple-round simple-white simple-padding-16 simple-center">
       <p>Themes</p>
       <button onclick="change_theme('simple-theme-orange-red.css')">Orange Theme</button>
       <br><br>
       <button onclick="change_theme('simple-theme-blue-grey.css')">Blue Theme</button>
-      </div>
+      </div>-->
     <!-- End Right Column -->
     </div>
   <!-- End Grid -->
@@ -204,11 +174,8 @@ function accordion(id) {
   var x = document.getElementById(id);
   if (x.className.indexOf("simple-show") == -1) {
     x.className += " simple-show";
-    x.previousElementSibling.className += " simple-theme-d1";
   } else { 
-    x.className = x.className.replace("simple-show", "");
-    x.previousElementSibling.className = 
-    x.previousElementSibling.className.replace(" simple-theme-d1", "");
+    x.className = x.className.replace(" simple-show", "");
   }
 }
 // Used to toggle the menu on smaller screens when clicking on the menu button
@@ -221,6 +188,51 @@ function openNav() {
   }
 }
 </script>
-</body>
-</html>
 <div id="assets"></div><!--Loads the extra files that aren't written in the document.-->
+  <div id="chat_all">
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/main.js" defer></script>
+  <script>try{Typekit.load({ async: true });}catch(e){}</script>
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/base/jquery-ui.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
+  <link href="/css/simple-extra.css" rel="stylesheet" >
+<button class="simple-open-button" onclick="openForm()">Chat</button>
+
+<div class="simple-chat" id="chat">
+  <div class="simple-form-container">
+    <h1>Chat</h1>
+	<ul id="messages" style="overflow:auto;height:150px;"></ul>
+    <label for="msg"><b>Message</b></label>
+    <ul class="room-list"></ul>
+    <input id="input" placeholder="Say something...">
+    <button onclick="sendMessage();" class="simple-btn">Send</button>
+    <button type="button" class="simple-btn simple-cancel" onclick="closeForm()">Close</button>
+  </div>
+</div>
+<script>
+var values = {}
+var chat = document.getElementById("chat");
+function openForm() {chat.style.display = "block";chat.setAttribute("opened", true); }
+function closeForm() {chat.style.display = "none";chat.setAttribute("opened", false);}
+</script>
+</div>
+
+<div id="popup" class="simple-modal simple-animate-opacity">
+  <div class="simple-modal-content" style="padding:32px">
+    <div class="simple-container simple-white">
+      <i onclick="document.getElementById('popup').style.display='none'" class="fa fa-remove simple-xlarge simple-button simple-transparent simple-right simple-xlarge"></i>
+      <h2 class="simple-wide">Contacts of Chico Entertainment</h2>
+      <p>Feel free to follow or contact me on one of my social medias, but facebook is most preferrable</p>
+  <div class="simple-section simple-xlarge">
+    <i class="fa fa-facebook-official simple-hover-opacity"></i>
+    <i class="fa fa-snapchat simple-hover-opacity"></i>
+    <i class="fa fa-pinterest-p simple-hover-opacity"></i>
+    <i class="fa fa-twitter simple-hover-opacity"></i>
+    <i class="fa fa-linkedin simple-hover-opacity"></i>
+  </div>
+    </div>
+  </div>
+</div>

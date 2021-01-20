@@ -1,0 +1,129 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+:root {
+  --1: #f5f7f8;
+  --2: #dfe5e8;
+  --3: #becbd2;
+  --4: #9eb1bb;
+  --5: #7d97a5;
+  --6: #57707d;
+  --7: #4d636f;
+  --8: #435761;
+  --9: #3a4b53;
+  --10: #303e45;
+  
+}
+
+body {
+  background-color: var(--5);
+}
+
+h2 {
+  border-bottom: 2px solid var(--5);
+}
+
+.container {
+  color: var(--blue);
+  background-color: var(--6);
+  padding: 15px;
+}
+
+.container button  {
+  background-color: var(--6);
+  color: var(--blue);
+  border: 1px solid var(--5);
+  padding: 5px;
+}
+
+</style>
+
+<script>
+// Get the root element
+var r = document.querySelector(':root');
+var rs = getComputedStyle(r);
+var colors = {
+"1":"",
+"2":"",
+"3":"",
+"4":"",
+"5":"",
+"6":"",
+"7":"",
+"8":"",
+"9":"",
+"10":""
+}
+
+
+function color_get() {
+var i=1;
+while (i < 11) {
+var color = document.getElementById(`color-picker-${i}`);
+var c = rs.getPropertyValue(`--${i}`).slice(1);
+color.value = c;
+  i++
+  }
+  
+}
+
+function color_set() {
+  r.style.setProperty('--5', 'lightblue');
+}
+
+function color_save() {
+var i=1;
+while (i < 11) {
+  colors[i] =  document.getElementById(`color-picker-${i}`).value;
+  i++
+  }
+
+localStorage.setItem('color-palette', JSON.stringify(colors));
+alert(localStorage.getItem('color-palette'))
+}
+
+function color_load() {
+var i=1;
+
+while (i < 11) {
+var loaded_colors;
+var color = document.getElementById(`color-picker-${i}`);
+if (localStorage.getItem('color-palette')){
+loaded_colors = JSON.parse(localStorage.getItem('color-palette'));
+color.value = loaded_colors[i];
+}
+  //colors[i] =  document.getElementById(`color-picker-${i}`).value;
+  
+
+  i++
+  }
+
+localStorage.setItem('color-palette', JSON.stringify(colors));
+alert(localStorage.getItem('color-palette'))
+}
+</script>
+</head>
+<body>
+
+1:<input type="color" id="color-picker-1" value="#ff0000">
+2:<input type="color" id="color-picker-2" value="#ff0000">
+3:<input type="color" id="color-picker-3" value="#ff0000">
+4:<input type="color" id="color-picker-4" value="#ff0000">
+5:<input type="color" id="color-picker-5" value="#ff0000">
+6:<input type="color" id="color-picker-6" value="#ff0000">
+7:<input type="color" id="color-picker-7" value="#ff0000">
+8:<input type="color" id="color-picker-8" value="#ff0000">
+9:<input type="color" id="color-picker-9" value="#ff0000">
+10:<input type="color" id="color-picker-10" value="#ff0000">
+
+<button type="button" onclick="color_get()">Load Template Colors</button>
+<button type="button" onclick="color_set()">Change CSS Variable with JavaScript</button>
+<button type="button" onclick="color_save()">Save</button>
+
+<button type="button" onclick="color_load()">Load Existing</button>
+
+</body>
+</html>

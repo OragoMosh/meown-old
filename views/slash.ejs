@@ -1,12 +1,13 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <%- values.info_data(`Homepage!`) %>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="tools.css" rel="stylesheet" >
 <script src="tools.js"></script>
-<link rel="stylesheet" href="https://beta.meown.tk/simple.css">
-<link rel="stylesheet" href="<%- values.background %>">
+<link rel="stylesheet" href="/simple.css">
+<link rel="stylesheet" href="/css/meown.css">
+<link rel="stylesheet" href="/simple-theme.css">
 <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Open+Sans'>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style>
@@ -15,38 +16,70 @@ html, body, h1, h2, h3, h4, h5 {font-family: "Open Sans", sans-serif}
 <body class="simple-theme-background" >
 <script src="/app/assets/js/loader.js"></script>
 <!-- Navbar -->
-<div class="simple-top">
- <div class="simple-bar simple-theme-d2 simple-left-align simple-large">
-  <a class="simple-bar-item simple-hide-medium simple-hide-large simple-right simple-padding-large simple-hover-white simple-theme-d2" href="javascript:void(0);" onclick="openNav()" ><i class="fa fa-bars"></i></a>
-  <a href="#" class="simple-bar-item simple-button simple-padding-large simple-theme-d4"><i class="fa fa-home simple-margin-right"></i>Meown</a>
+<div class="simple-navbar">
   
-  <div onclick="location.replace('https://'+window.location.hostname+'<%- values.self_link %>')"class="simple-bar-item simple-button simple-hide-small simple-right simple-padding-large simple-hover-white simple-dropdown-hover" title="My Account" >
+ <div class="simple-bar simple-theme-d2 simple-left-align simple-large simple-round-xlarge">
+  <br>
+  <a class="simple-bar-item simple-hide-medium simple-hide-large simple-right simple-padding-large simple-hover-white simple-theme-d2 simple-round simple-mobile-button" ><i class="fa fa-bars"></i></a>
+   
+   
+  <a href="#" class="simple-bar-item simple-button simple-padding-large simple-theme-d4 simple-round"><i class="fa fa-home simple-margin-right"></i>Meown</a>
+  
+  <div onclick="location.replace('/u')" class="simple-bar-item simple-button simple-hide-small simple-right simple-padding-large simple-hover-white simple-dropdown-hover" title="My Account" >
 <%- values.profile_menu %>
-    <img src="<%- values.self_avatar %>" class="simple-circle" style="height:23px;width:23px" alt="Avatar">
+    <img src="<%- values.self.avatar %>" class="simple-circle" style="height:23px;width:23px" alt="Avatar">
+   </div>
+   
+   <!-- Navbar on small screens -->
+  <div class="simple-bar-block simple-theme-d2 simple-hide-large simple-hide-medium simple-large simple-mobile-options">
+  <a>
+  <form method="get" action="/u" style="display:inline-block;"><input type="text" name="search" class="simple-border simple-padding"  placeholder="Find User" style="width:100vw;"></input></form>
+  <form method="get" action="/c" style="display:inline-block;"><input type="text" name="search" class="simple-border simple-padding"  placeholder="Find Community" style="width:100vw;"></input></form>
+  <%- values.nav_mobile %></a>
+  <a href="../" class="simple-bar-item simple-button simple-padding-large">Chat Room</a>
+  <a href="/u" class="simple-bar-item simple-button simple-padding-large"><%- values.status %></a>
   </div>
+   
  </div>
-</div>
-
-<!-- Navbar on small screens -->
-<div id="navDemo" class="simple-bar-block simple-theme-d2 simple-hide simple-hide-large simple-hide-medium simple-large">
-  <a href="#" class="simple-bar-item simple-button simple-padding-large">You found me !</a>
-  <a href="#" class="simple-bar-item simple-button simple-padding-large">Link 1</a>
-  <a href="#" class="simple-bar-item simple-button simple-padding-large">Link 2</a>
-  <a href="#" class="simple-bar-item simple-button simple-padding-large">My Profile</a>
 </div>
 
 <!-- Page Container -->
-<div class="simple-container " style="max-width:1400px;margin-top:80px">    
- <div class=" simple-card simple-round simple-container simple-tint-gradient">
+<div class="simple-container " style="max-width:1400px;margin-top:50px">   
+  
+ <br>
+
+ <div class=" simple-card simple-round simple-container simple-tint">
         <p class="crenzo center simple-text-large">Welcome to Meown!</p>
  </div>
+  
  <br>
+  
+ <div style="display:grid;grid-gap: 20px;grid-template-columns: 1.5fr 0.5fr;">
+        <div class="simple-card simple-round simple-container simple-tint" style="display:grid;grid-template-columns:auto auto auto auto;grid-auto-flow: row dense;">
+        <span>
+          Meown is supposed to be a very simple social media with a very simple database structure capable of doing many things making it easier to expand!
+        </span>
+        <span>
+          <a class="simple-button simple-theme simple-round" href="u#register">Join now !</a>
+          and be one of the <%- values.users.length %> peeps to try Meown.
+        </span>
+          
+        <span>
+          There is currently <%- Object.keys(values.communities).length %> Communties, So why wait when you can be a part of one!
+        </span>
+   
+
+   </div>
+        <p class="simple-card simple-round simple-container simple-tint">
+          <img src="<%- values.self.avatar %>" class="simple-circle center" style="height:60px;width:60px" alt="Avatar">
+          <%- values.self.preferred %>
+   </p>
+ </div>
+  
+  <br>
+   
   <div class=" simple-card simple-round simple-container simple-tint">
-        <p class="left">Meown is supposed to be a very simple social media with a very simple database structure capable of doing many things making it easier to expand!</p>
-        <br>
-        <p class="center"><a class="simple-button simple-round simple-theme-d2 simple-text-mini" href="u#register">Join now!</a> and be one of the <%- Object.keys(database.user).length %> peeps to try Meown.</p>
-        <br>
-        <p class="right">There is currently <%- Object.keys(database.community).length %> Communties, So why wait when you can be a part of one!</p>
+    <%- values.changelog %>
  </div>
   <br>
 <div class=" simple-card simple-round simple-container simple-tint">
@@ -57,19 +90,21 @@ html, body, h1, h2, h3, h4, h5 {font-family: "Open Sans", sans-serif}
   <br>
   | Moderators: <%- values.roles.moderator %> |
   <br>
-  | Helper: <%- values.roles.helper %> |
+  | Helpers: <%- values.roles.helper %> |
   <br>
   | Verified Creators: <%- values.roles.verified %> |
+  <br>
+  | Beta Testers: <%- values.roles.beta %> |
   </p>
 </div>
 <!-- End Page Container -->
 </div>
+  
 <br>
 
 <footer class="simple-container simple-theme-d5">
   <p>Created by <a href="/u?search=orago" target="_blank">Orago</a></p>
 </footer>
- 
 <script>
 // Accordion
 function myFunction(id) {
@@ -97,6 +132,7 @@ function openNav() {
 
 </body>
 </html> 
+<div id="assets"></div><!--Loads the extra files that aren't written in the document.-->
 
 
 

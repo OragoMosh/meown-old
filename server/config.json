@@ -1,0 +1,36 @@
+{
+  "passcode": "51password",
+  "codes": {
+    "2021": 20.21,
+    "new-years":10
+  },
+    "changelog":{
+      "beginning":["Where it all began or atleast hadn't been documented"]
+    },
+  "owner":"orago",
+    "role_info":{
+      "owner":{
+        "name":"Owner",
+        "color":"#e3c522",
+        "symbol":"♕"
+              },
+      "developer":{
+        "name":"Developer","color":"#cb3837","symbol":"<i class='fa fa-shield'></i>"
+      },
+      "moderator":{
+        "name":"Moderator","color":"#1fb8b5","symbol":"<i class='fa fa-tachometer'></i>"
+      },
+      "helper":{
+        "name":"Helper","color":"#c99a55","symbol":"<i class='fa-user-plus'></i>"
+      },
+      "verified":{
+        "name":"Verified","color":"#09f505","symbol":"<i class='fa fa-check'></i>"
+      },
+      "beta":{
+        "name":"Beta","color":"#999999","symbol":"<i class='fa fa-map-pin'></i>"
+      },
+      "bug-finder":{
+        "name":"Bug Finder","symbol":"<i class='fa fa-bug'></i>"
+      }
+    }
+}

@@ -43,7 +43,7 @@ function ms_minutes(x){ return x / 1000;}
 function save_database(){
   fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
 }
-setInterval(save_database, 600000);
+setInterval(save_database, 300000);
 /* \/ Important \/ */
 app.use(express.static('public'));
 app.listen(3002);
