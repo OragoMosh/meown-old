@@ -1,10 +1,11 @@
 /* SIMPLE.CSS 4.14 November 2020 by Jan Egil and Borge Refsnes */
-
 .simple-grid-container {
   display: grid;
   grid-template-columns: auto auto auto;
   padding: 10px;
 }
+
+
 .simple-meown-button {
   display: inline-block;
   border-radius: 4px;
@@ -14,7 +15,7 @@
   text-align: center;
   font-size: 28px;
   padding: 20px;
-  width: 200px;
+  /*width: 300px;*/
   transition: all 0.5s;
   cursor: pointer;
   margin: 5px;
@@ -181,13 +182,13 @@ hr{border:0;border-top:1px solid #eee;margin:20px 0}
 .simple-display-container:hover .simple-display-hover{display:block}.simple-display-container:hover span.simple-display-hover{display:inline-block}.simple-display-hover{display:none}
 .simple-display-position{position:absolute}
 .simple-circle{border-radius:50%}
-.simple-round-small{border-radius:2px}.simple-round,.simple-round-medium{border-radius:4px}.simple-round-large{border-radius:8px}.simple-round-xlarge{border-radius:16px}.simple-round-xxlarge{border-radius:32px}
+.simple-round-small{border-radius:2px}.simple-round,.simple-round-medium{border-radius:6px}.simple-round-large{border-radius:8px}.simple-round-xlarge{border-radius:16px}.simple-round-xxlarge{border-radius:32px}
 .simple-row-padding,.simple-row-padding>.simple-half,.simple-row-padding>.simple-third,.simple-row-padding>.simple-twothird,.simple-row-padding>.simple-threequarter,.simple-row-padding>.simple-quarter,.simple-row-padding>.simple-col{padding:0 8px}
 .simple-container,.simple-panel{padding:0.01em 16px}.simple-panel{margin-top:16px;margin-bottom:16px}
 .simple-code,.simple-codespan{font-family:Consolas,"courier new";font-size:16px}
 .simple-code{width:auto;background-color:#fff;padding:8px 12px;border-left:4px solid #4CAF50;word-wrap:break-word}
 .simple-codespan{color:crimson;background-color:#f1f1f1;padding-left:4px;padding-right:4px;font-size:110%}
-.simple-card,.simple-card-2{box-shadow:0 2px 5px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12)}
+.simple-card,.simple-card-2{word-wrap: break-word;box-shadow:0 2px 5px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12)}
 .simple-card-4,.simple-hover-shadow:hover{box-shadow:0 4px 10px 0 rgba(0,0,0,0.2),0 4px 20px 0 rgba(0,0,0,0.19)}
 .simple-spin{animation:simple-spin 2s infinite linear}@keyframes simple-spin{0%{transform:rotate(0deg)}100%{transform:rotate(359deg)}}
 .simple-animate-fading{animation:fading 10s infinite}@keyframes fading{0%{opacity:0}50%{opacity:1}100%{opacity:0}}

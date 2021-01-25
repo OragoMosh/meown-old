@@ -172,14 +172,16 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
       </div>
     </div>
   </form>
+  <form method="post" action="/command">
+    <input type="text" name="command" placeholder="Command" style="width:80vw;" class="simple-border simple-padding staff" readonly><br class="staff">
+    <input type="submit" value="Submit">
+  </form>
 <form method="post" action="/edit" >
     <div class="row">
       <a style="font-size: 1.5em;">New Post</a>
       <div class="col">
         <div class="hide-md-lg">
         </div>
-        <input type="hidden" name="sentname" value="${request.cookies["saved-username"]}">
-        <input type="hidden" name="sentpass" value="${request.cookies["saved-username"]}">
         <input type="hidden" name="method" value="new-post">
         <input type="text" name="sentpost" class="simple-border simple-padding" placeholder="Post Input"></input>
         <input type="submit" value="Submit">
@@ -194,8 +196,7 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
         <div class="hide-md-lg">
         </div>
         <input type="hidden" name="method" value="delete-post">
-        <input type="hidden" name="sentname" value="${request.cookies["saved-username"]}">
-        <input type="hidden" name="sentpass" value="${request.cookies["saved-username"]}">
+        <input type="hidden" name="id" value="<%- values.username %>">
         <input type="number" class="simple-border simple-padding" name="sentnum" placeholder="Post number" min="0" max="1000" style="width:200px;" required>
         <input type="submit" value="Submit">
       </div>
@@ -247,7 +248,7 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
   <div class="simple-grid-item">5: <input type="color" value="#ff0000" class="colors"> (Status Buttons)</div>
   <div class="simple-grid-item">6: <input type="color" value="#ff0000" class="colors"> (Disabled)</div>
   <div class="simple-grid-item">7: <input type="color" value="#ff0000" class="colors"> (Navigation Bar & Buttons)</div>
-  <div class="simple-grid-item">8: <input type="color" value="#ff0000" class="colors"> (Disabled)</div>
+  <div class="simple-grid-item">8: <input type="color" value="#ff0000" class="colors"> (Card Border)</div>
   <div class="simple-grid-item">9: <input type="color" value="#ff0000" class="colors"> (Disabled)</div>
   <div class="simple-grid-item">10: <input type="color" value="#ff0000" class="colors"> (Disabled)</div>
   <div class="simple-grid-item">11: <input type="color" value="#ff0000" class="colors"> (Background 1)</div>
@@ -328,8 +329,8 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
   --8: #435761;
   --9: #3a4b53;
   --10: #303e45;
-  --11: #C92C2Aff;
-  --12: #E47F7Dff;
+  --11: #C92C2A;
+  --12: #E47F7D;
 }
 
 body {

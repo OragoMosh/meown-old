@@ -3,9 +3,10 @@ window.addEventListener("load", function () {
 })
 reset_colors();
 function reset_colors(){
-colors = {"1":"#FFFFFF","2":"#dfe5e8","3":"#becbd2","4":"#9eb1bb","5":"#7d97a5",
+/*colors = {"1":"#FFFFFF","2":"#dfe5e8","3":"#becbd2","4":"#9eb1bb","5":"#7d97a5",
           "6":"#57707d","7":"#4d636f","8":"#435761","9":"#3a4b53","10":"#303e45",
-          "11":"#303e45","12":"#7d97a5","13":"#000000","14":"#FFFFFF","15":"#ff5252"}
+          "11":"#303e45","12":"#7d97a5","13":"#000000","14":"#FFFFFF","15":"#ff5252"}*/
+  colors = {"1":"#ffffff","2":"#dfe5e8","3":"#becbd2","4":"#9eb1bb","5":"#7d97a5","6":"#57707d","7":"#4d636f","8":"#435761","9":"#3a4b53","10":"#303e45","11":"#303e45","12":"#7d97a5","13":"#000000","14":"#ffffff","15":"#ff5252"}
 }
 
 var color_list = document.getElementsByClassName("colors");

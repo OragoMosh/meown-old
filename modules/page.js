@@ -114,16 +114,13 @@ class all_values {
         var myroles = '';
     if (this.values.category === "user") {
       values.myroles = [];
-      console.log("one");
       database["user"][values.id].roles.forEach(my_roles);
-      console.log("two");
       function my_roles(role,index) {
-        console.log("three");
         if (Object.keys(config.role_info).includes(role)){
           values.myroles+= `${config.role_info[role].name}, `
         }
       };
-      //values.myroles = function_pack.fix_end(values.myroles)
+      values.myroles = function_pack.fix_end(values.myroles)
     }
   if (this.values.me !== undefined && this.values.me !== this.values.id && this.values.id !== "guest" &&this.values.id !== "null") {
     
@@ -173,12 +170,9 @@ class all_values {
         }
         if (this.values.me !== undefined) {
           this.values.comment_bar = `<form method="post" action="/edit">
-<div class="simple-row-padding"><div class="simple-theme-l5 simple-col m12"><div class="simple-card simple-round"><div class="simple-container simple-padding">
+<div class="simple-row-padding"><div class="simple-theme-l5 simple-theme-border simple-col m12"><div class="simple-card simple-round"><div class="simple-container simple-padding">
               <hb class="simple-opacity">Add Comment</b>
-              <input type="hidden" name="sentname" value="${this.values.me}">
-              <input type="hidden" name="sentpass" value="${this.values.me}">
-              <input type="hidden" name="method" value="new-post-comment">
-              <input type="hidden" name="commentid" value="${this.values.post_number}">
+              <input type="hidden" name="sentname" value="${this.values.me}"><input type="hidden" name="sentpass" value="${this.values.me}"><input type="hidden" name="method" value="new-post-comment"><input type="hidden" name="commentid" value="${this.values.post_number}">
               <input type="text" name="sentcomment" class="simple-border simple-padding" placeholder="Comment Input" required></input>
               <button type="submit" class="simple-button simple-theme"><i class="fa fa-pencil"></i> Send</button>
             </div></div></div></div>
@@ -190,24 +184,36 @@ class all_values {
       for (this.values.like_number in this.database[this.values.category][this.values.id][post_type][this.values.post_number].likes) {if (typeof this.database.user[this.database[this.values.category][this.values.id][post_type][this.values.post_number].likes[this.values.like_number]] !== "undefined") {this.values.like_list += 1;}}
       var sender = this.values.id;if (this.values.category === "community" && this.database[this.values.category][this.values.id][post_type][this.values.post_number].sender){sender = this.database[this.values.category][this.values.id][post_type][this.values.post_number].sender}else if (this.values.category === "community"){sender = "Deleted User"}
       
-      this.values.post_list += `<div class="simple-theme-l5 simple-theme-text-1 simple-container simple-card simple-round simple-margin" id="post-${[length-this.values.post_number-1]}"><br>
+      this.values.post_list += `<div class="simple-theme-l5 simple-theme-border simple-theme-text-1 simple-container simple-card simple-round simple-margin" id="post-${[length-this.values.post_number-1]}"><br>
         <img src="${`${this.database.user[sender].avatar}`}" alt="User_Avatar" class="simple-circle" style="width:90px;height:90px"> 
         <span class="simple-right simple-opacity">#${this.values.post_number}</span>
-        
         <button class="simple-right simple-opacity" onclick="copy('https://${this.values.hostname}/u?search=${this.values.id}#post-${this.values.post_number}');notification('Link Copied!')">
         <i class="fa fa-link"></i>
         &nbsp;</button>
         <span class="simple-right simple-opacity" >
-        <form method="post" action="/edit">
+        <form method="post" action="/edit" style="display:inline-block;">
         <input type="hidden" name="method" value="like">
         <input type="hidden" name="type" value="${post_type}">
-        <input type="hidden" name="sentname" value="${this.values.id}">
+        <input type="hidden" name="sentname" value="${sender}">
         <input type="hidden" name="sentid" value="${this.values.post_number}">
         <button type="submit" onclick="notification('<3!')">
         <i class="fa fa-heart" ></i>
         ${this.values.like_list}
         </button>
-        </form>
+        </form>`;
+      if (sender === values.me){
+      this.values.post_list +=`<form method="post" action="/edit" style="display:inline-block;">
+        <input type="hidden" name="method" value="delete-post">
+        <input type="hidden" name="id" value="${values.id}">
+        <input type="hidden" name="sentnum" value="${values.post_number}">
+        <input type="hidden" name="category" value="${values.category}">
+        <button type="submit" onclick="notification('<3!')">
+        <i class="fa fa-trash" ></i>
+        ${this.values.like_list}
+        </button>
+        </form> `;
+      }
+      this.values.post_list +=`
         &nbsp;</span>
         <br><b style="font-size: 2em;color:${get_role(sender,"user").color};">&nbsp${function_pack.caps(get_role(sender,"user").name)}: </b>
         <a style="font-size: 1.5em;">${
@@ -216,12 +222,8 @@ class all_values {
         <hr class="simple-clear">
         <p>${this.database[this.values.category][this.values.id][post_type][this.values.post_number].body}</p>
         <hr class="simple-clear">
-        <button onclick="accordion('comments_${
-          this.values.post_number
-        }')" class="simple-button simple-block simple-theme-l1 simple-theme-text-2 simple-left-align"><i class="fa fa-shield fa-fw simple-margin-right"></i> Comments</button>
-          <div id="comments_${
-            this.values.post_number
-          }" class="simple-hide simple-container">
+        <button onclick="accordion('comments_${this.values.post_number}')" class="simple-button simple-block simple-theme-l1 simple-theme-text-2 simple-left-align"><i class="fa fa-shield fa-fw simple-margin-right"></i> Comments</button>
+          <div id="comments_${this.values.post_number}" class="simple-hide simple-container">
             <p>${this.values.comment_list}${this.values.comment_bar}</p>
           </div>
       </div>`;
@@ -266,10 +268,11 @@ class all_values {
   </p>
   <hr>
   `;
-    
+    var date =new Date(Number(this.database[this.values.category][this.values.id].creation_date));
   this.values.stats=[
     {"icon":"fa-user","value":this.values.id},
-    {"icon":"fa-birthday-cake","value":this.database[this.values.category][this.values.id].creation_date}
+    {"icon":"fa-birthday-cake","value":`${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}
+    ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`}
   ]
     
     if (this.values.category === "user"){this.values.stats.push(

@@ -311,7 +311,7 @@ var config = getConfig();
 
 async function addChatMessage(data,options){
 const newMessage = document.createElement("li");
-if (username !== getCookie("saved-username")){location.replace(`/error?text=You shouldn't do that!&value=${username} is sus!`)}
+if (username !== getCookie("saved-username")){location.replace(`/error?text=You shouldn't do that!&value=--${username} is-- ---sus!---`)}
 var who = data.username;//if(!who){who="error"}
 var msg = data.message;
 if (!options){options = {};}

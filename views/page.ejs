@@ -8,11 +8,11 @@ setTimeout(function(){ new_date() }, 3000);
 }
 </script>
 <html lang="en">
-<%- values.info_data(`User: `+values.username) %>
+<%- values.info_data(`User: `+values.username,values.category[0]) %>
   
 <meta charset="UTF-8">
-<link href="tools.css" rel="stylesheet" >
-<script src="tools.js"></script>
+<link href="/tools.css" rel="stylesheet" >
+<script src="/tools.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="/simple.css">
 <link rel="stylesheet" href="/css/meown.css">
@@ -20,9 +20,9 @@ setTimeout(function(){ new_date() }, 3000);
 <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Open+Sans'>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style>html, body, h1, h2, h3, h4, h5 {font-family: "Open Sans", sans-serif}</style>
-  
 <body class="simple-theme-background" >
 <!-- Navbar -->
+  
 <div class="simple-navbar">
   
  <div class="simple-bar simple-theme-d2 simple-left-align simple-large simple-round-xlarge">
@@ -95,7 +95,7 @@ setTimeout(function(){ new_date() }, 3000);
       
       <!-- Alert Box -->
       <div class="simple-theme-l4 simple-container simple-display-container simple-round simple-border simple-theme-border simple-margin-bottom simple-hide-small">
-        <span onclick="this.parentElement.style.display='none'" class="simple-theme-l4 simple-button simple-display-topright" style="filter: brightness(90%);">
+        <span onclick="this.parentElement.style.display='none'" class="simple-button simple-display-topright simple-round" style="filter: brightness(90%);">
           <i class="fa fa-remove"></i>
         </span>
         <p><strong>Hello!</strong></p>
@@ -139,7 +139,7 @@ setTimeout(function(){ new_date() }, 3000);
       </div><br>
       
       <div class="simple-theme-l5 simple-card simple-round simple-padding-16 simple-center">
-      <p id="time" onclick="new_date()">Open Time<br>(May cause lag)</p>
+      <p id="time" onload="new_date()">Open Time<br>(May cause lag)</p>
       </div>
       
       <br>
@@ -148,6 +148,13 @@ setTimeout(function(){ new_date() }, 3000);
       <p>ADS</p></div>
       
       <br>
+      
+      <span class="add-button">
+      <div class="simple-theme-l5 simple-card simple-round simple-padding-16 simple-center">
+      <p>ADS</p></div>
+      
+      <br>
+      </span>
       
       <div class="simple-theme-l5 simple-card simple-round simple-padding-32 simple-center">
         <p><i class="fa fa-bug simple-xxlarge"></i><br>Report bugs</p>
