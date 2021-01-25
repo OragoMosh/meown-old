@@ -1,0 +1,61 @@
+{
+  "passcode": "51password",
+  "codes": {
+    "Beta": 15,
+    "Merry": 50,
+    "Sixteen": 16
+  },
+  "user": {
+    "guest": {
+      "password": "$2a$10$w.OQABq6zrfUGl9t4gWK2O0ItUyhTMPV1CDGFxG05zYrF3FjuYZYK",
+      "email": "",
+      "coins": 0,
+      "preferred": "Guest account",
+      "background": "https://convertingcolors.com/plain-2C2F33.svg",
+      "banner": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
+      "description": "lol",
+      "color": "#000000",
+      "avatar": "https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png",
+      "creation_date": "10/26/2020 15:54:16 PM",
+      "codes": [],
+      "following": [],
+      "followers": [],
+      "communities": [],
+      "roles": [],
+      "xp": 0
+    },
+    
+  },
+  "community": {
+    "meown": {
+      "owner": "orago",
+      "preferred": "Meown Official",
+      "background": "https://cdn.glitch.com/0322d62f-81b5-4f06-9b33-557687636cec%2Fsmokehousechillin.gif",
+      "banner": "https://cdn.glitch.com/0322d62f-81b5-4f06-9b33-557687636cec%2F9e5ddb3fd1ba8dd983bb9569b35f8103.jpg",
+      "description": "Welcome to the Meown Official Subforum",
+      "avatar": "https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png",
+      "thread": [
+        {
+          "title": "Lol",
+          "body": "WOrks?",
+          "sender": "orago",
+          "likes": [
+            "orago",
+            "meown"
+          ],
+          "comments": []
+        }
+      ],
+      "members": [
+        "orago"
+      ],
+      "creation_date": "11/16/2020 11:24:16 AM"
+    }
+  },
+
+  "emails": [
+    "meown",
+    "yay",
+    "tendallabagell"
+  ]
+}

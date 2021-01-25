@@ -1,0 +1,226 @@
+<!--Info Fill -->
+
+<!-- Author GW19 <imgw19@gmail.com> -->
+<!doctype html>
+<html lang="En">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Mittz Chat</title>
+  <link href="style.css" rel="stylesheet" >
+  <meta name="google-signin-client_id" content="992058418175-6ttca63fm6ja767n9qq1f0pl2dvie5b5.apps.googleusercontent.com">
+  <!--<script src="https://use.typekit.net/ama5eep.js"></script>-->
+  <script>try{Typekit.load({ async: true });}catch(e){}</script>
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <link rel="stylesheet"
+        href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/base/jquery-ui.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
+          integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
+          crossorigin="anonymous"></script>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/main.js"></script>
+  
+  
+</head>
+
+<body>
+  <ul class="pages" id="all-page">
+
+    <li class="chat page" id="chat-page">
+      <div class="chatArea">
+        <ul class="messages"></ul>
+      </div>
+
+      <button class="btn btn-tips" title="Help">?</button>
+
+      <div id="effect-tips" class="ui-tips">
+        <h3 class="tips-title">Help</h3>
+        <div class="tips">
+          <h3>System Commands</h3>
+          <h4>$help or $commands</h4>
+          This command will show a list of other commands that can be used<br><br>
+          <br>
+          <br>
+          Creator: Orago 
+          <br>
+          &nbsp;
+          &lt; <a href="https://mittens.glitch.me">Home Page</a> &gt;<br>
+          <!--Github：<a href='https://github.com/gw19/join-and-chat'
+                    target='_blank'>join-and-chat</a>-->
+        </div>
+      </div>
+
+      <input class="inputMessage" placeholder="Say something..."/>
+    </li>
+  </ul>
+
+</body>
+</html>
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body {font-family: Arial, Helvetica, sans-serif;}
+* {box-sizing: border-box;}
+
+/* Button used to open the chat form - fixed at the bottom of the page */
+.open-button {
+  background-color: #555;
+  color: white;
+  padding: 16px 20px;
+  border: none;
+  cursor: pointer;
+  opacity: 0.8;
+  position: fixed;
+  bottom: 23px;
+  right: 28px;
+  width: 280px;
+}
+
+/* The popup chat - hidden by default */
+.chat-popup {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  right: 15px;
+  border: 3px solid #f1f1f1;
+  z-index: 9;
+}
+
+/* Add styles to the form container */
+.form-container {
+  max-width: 300px;
+  padding: 10px;
+  background-color: white;
+}
+
+/* Full-width textarea */
+.form-container input {
+  width: 100%;
+  padding: 15px;
+  margin: 5px 0 22px 0;
+  border: none;
+  background: #f1f1f1;
+  resize: none;
+  min-height: 30px;
+}
+
+/* When the textarea gets focus, do something */
+.form-container input:focus {
+  background-color: #ddd;
+  outline: none;
+}
+
+/* Set a style for the submit/send button */
+.form-container .btn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 16px 20px;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  margin-bottom:10px;
+  opacity: 0.8;
+}
+
+/* Add a red background color to the cancel button */
+.form-container .cancel {
+  background-color: red;
+}
+
+/* Add some hover effects to buttons */
+.form-container .btn:hover, .open-button:hover {
+  opacity: 1;
+}
+</style>
+</head>
+<body>
+  <link href="style.css" rel="stylesheet" >
+  <meta name="google-signin-client_id" content="992058418175-6ttca63fm6ja767n9qq1f0pl2dvie5b5.apps.googleusercontent.com">
+  <!--<script src="https://use.typekit.net/ama5eep.js"></script>-->
+  <script>try{Typekit.load({ async: true });}catch(e){}</script>
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <link rel="stylesheet"
+        href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/base/jquery-ui.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
+          integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
+          crossorigin="anonymous"></script>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/main.js"></script>
+<h2>Popup Chat Window</h2>
+<p>Click on the button at the bottom of this page to open the chat form.</p>
+<p>Note that the button and the form is fixed - they will always be positioned to the bottom of the browser window.</p>
+
+<button class="open-button" onclick="openForm()">Chat</button>
+
+<div class="chat-popup" id="myForm">
+  <div class="form-container">
+    <h1>Chat</h1>
+	<ul id="messages"><li class="message-object">Bot: Chat Session Opened!</li></ul>
+    <label for="msg"><b>Message</b></label>
+    <input placeholder="Type message.." name="msg" id="input" required>
+
+    <button onclick="add_message('me')" class="btn">Send</button>
+    <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+  </div>
+</div>
+<script src="https://beta.meown.tk/tools/functionpack.js"></script>
+<script>
+try {
+var values = {}
+var message = {
+"values":{"me":["item-1","item2"],"other":["item","item2"]},
+"object": document.getElementsByClassName("message-object"),
+"div":document.getElementById("messages"),
+"input":document.getElementById("input")
+}
+
+function add_message(who,message_value){
+
+const newMessage = document.createElement("li");
+
+if (message.object.length > 5){message.object[0].remove(this)}
+
+if (who==="me"){message_value=message.input.value}else{message_value = message.values.other[message.values.other.length-1]}
+message.values[who].push(message_value);
+message.input.value="";message.input.focus();
+newMessage.setAttribute("class", "message-object");
+newMessage.innerText = `${who}: ${message_value}`;
+message.div.appendChild(newMessage);
+}
+
+function openForm() {
+  document.getElementById("myForm").style.display = "block";
+  values.opened = "true";
+}
+
+function closeForm() {
+  document.getElementById("myForm").style.display = "none";
+  values.opened = "false";
+}
+
+document.addEventListener("keyup", function(event) {
+  if (event.code === 'Enter') {
+  if (values.opened === "true" && message.input.value.length>0){add_message("me")}else{alert("No!");}
+    
+  }
+});
+}//End of Try 
+catch (error){alert(error);}
+</script>
+
+</body>
+</html>
+

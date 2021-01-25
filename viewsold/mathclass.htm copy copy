@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<body>
+<input type="text" id="x" placeholder="X Value" onkeyup="math()">
+<input type="text" id="y" placeholder="Y Value" onkeyup="math()">
+<br>
+<button onclick="load()">Load Math</button>
+<button onclick="save()">Save Math</button>
+<br>
+<div id="result">
+</div>
+
+<script>
+function math(){
+
+var x = JSON.parse("["+document.getElementById("x").value+"]"),
+y = JSON.parse("["+document.getElementById("y").value+"]"),
+i = y[0];
+
+var m = y[1]-y[0];
+if (y[0]==0&&y[1]<0){var m = -Math.abs(y[1]-y[2]);}
+var b = y[0]-(m*x[0]),b_new = b;
+var result = document.getElementById("result"),
+x_result = m;
+
+if (x_result === 1){x_result = "x +";}else
+if (x_result === 0){x_result=""}else
+if (x_result){x_result=`${x_result}x +`
+}
+if (x_result.includes("+") && b <0){
+x_result = x_result.replace(/\+/g,"");
+}
+if (b_new===0){b_new="";x_result = x_result.replace(/\+/g,"")}
+result.innerHTML = `f(x) = ${x_result} ${b_new}<br>M = ${m}<br>B = ${b}`
+}
+function save(){
+var values = {
+x:document.getElementById("x").value,
+y:document.getElementById("y").value
+}
+localStorage.setItem("values", JSON.stringify(values));
+}
+function load(){
+var base = JSON.parse(localStorage.getItem("values"));
+if (base){
+document.getElementById("x").value = base.x;
+document.getElementById("y").value = base.y;
+math();
+	
+ }
+
+}
+
+</script>
+
+</body>
+</html>

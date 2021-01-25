@@ -1,0 +1,154 @@
+{
+  "reports": {
+    "glitches": [],
+    "users": [],
+    "communities": [],
+    "exploits": []
+  },
+  "posts": {
+    "orago": [
+      {
+        "title": "V0.01, Welcome to Meown!",
+        "body": "Welcome to meown a social media platform that may be abandoned, maybe not but enjoy the ride!",
+        "likes": [
+          "yay",
+          "guest",
+          "kind",
+          "empty",
+          "orago"
+        ],
+        "comments": [
+          {
+            "sender": "orago",
+            "text": "d"
+          }
+        ]
+      },
+      {
+        "title": "V0.02, Comments and details!",
+        "body": "yay creating and deleting posts has just been added",
+        "likes": [
+          "orago"
+        ],
+        "comments": []
+      },
+      {
+        "title": "V0.03, Comments and details!",
+        "body": "Added id #'s to each post",
+        "likes": [],
+        "comments": []
+      },
+      {
+        "title": "V0.04, Discord Bot!",
+        "body": "Made a discord bot that co-exists with the chat/blogging program and now you can earn coins by connecting your discord acccount and playing mini-games with the bot (Might be removed later).",
+        "likes": [],
+        "comments": []
+      },
+      {
+        "title": "V0.05, Security Should Be First!",
+        "body": "<!--<a href=\"/u?aouab\">@aouab</a> helped a ton with hashing passwords, --> I added hashing which helps make the website super secure!",
+        "likes": [],
+        "comments": []
+      },
+      {
+        "title": "V0.06, Comments and details!",
+        "body": "I am glad to say that Posts now Can have titles, body (detailed) text, and comments!",
+        "likes": [],
+        "comments": [
+          {
+            "sender": "orago",
+            "text": "See. Comments!"
+          }
+        ]
+      },
+      {
+        "title": "Sub-forums / categories?",
+        "body": "Working on making sub-forums / categories, This may not be permanent but I am hoping for the best.",
+        "likes": [],
+        "comments": []
+      },
+      {
+        "title": "V0.07 Communities and Threads!",
+        "body": "It's official. Communities are finally coming + working and can currently only be created verified by moderators and developers but there will soon be a verification system. Threads will be similar to posts but anyone in a certain community can create them.",
+        "likes": [],
+        "comments": []
+      },
+      {
+        "title": "v0.075 Speech Synthesis and Audio Recognition",
+        "body": "I am in the process of creating audio recognition and speech synthesis so that meown can be used with voice commands similar to google assistant and reply back, this is highly developmental and may not work on old browsers",
+        "likes": [],
+        "comments": []
+      },
+      {
+        "title": "v0.08 New theme and possibly upcoming themes!",
+        "body": "Normally Meown would be a blue color but it is currently orange-ish red, I am hoping that it will be possible to add custom themes, along with a few other bits but if you would like to see what Meown used to look like here is a before and after <br> Before: <img onclick='window.open(this.src), `_blank`' src='https://cdn.glitch.com/0322d62f-81b5-4f06-9b33-557687636cec%2FScreenshot%202020-12-08%20at%205.10.28%20PM.png' alt='Theme Before' width='50%' height='50%'><br> After: <img onclick='window.open(this.src), `_blank`' src='https://cdn.glitch.com/0322d62f-81b5-4f06-9b33-557687636cec%2FScreenshot%202020-12-08%20at%205.10.36%20PM.png' alt='Theme After' width='50%' height='50%'>",
+        "likes": [],
+        "comments": []
+      }
+    ],
+    "null": [
+      {
+        "title": "xd",
+        "body": "https://beta.meown.orago.tk/31cd376d-b84a-4d32-a0ef-da47d9ec73c8",
+        "likes": [],
+        "comments": []
+      }
+    ],
+    "meown": [
+      {
+        "title": "test",
+        "body": "Does this work > \\nNext Line>\\nIf these are on different lines.",
+        "likes": [],
+        "comments": []
+      },
+      {
+        "title": "Welcome to meown!",
+        "body": "Cool right?",
+        "likes": [
+          "meown"
+        ],
+        "comments": []
+      }
+    ],
+    "tendallabagell": [
+      {
+        "title": "smootj brian",
+        "body": "Lol.",
+        "likes": [],
+        "comments": []
+      }
+    ]
+  },
+  "thread": {
+    "meown": [
+      {
+        "title": "Lol",
+        "body": "WOrks?",
+        "sender": "orago",
+        "likes": [
+          "orago",
+          "meown"
+        ],
+        "comments": []
+      },
+      {
+        "title": "d",
+        "body": "d",
+        "sender": "orago",
+        "likes": [
+          "orago",
+          "meown"
+        ],
+        "comments": []
+      },
+      {
+        "title": "Hmm first working threads!!!!",
+        "body": "This is cool I guess lol",
+        "sender": "orago",
+        "likes": [],
+        "comments": []
+      }
+    ]
+  },
+  "logs": {}
+}

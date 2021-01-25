@@ -1,0 +1,45 @@
+<title><%- JSON.parse(error).text %></title>
+<meta property="og:title" content="Mittens Homepage | Missing" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://mittens.glitch.me" />
+<meta property="og:image" content="https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png?v=1594354728664" />
+<meta property="og:description" content="The missing page of Mittens." />
+<meta name="theme-color" content="#cb3837">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" href="https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie32bfull.png">
+
+
+<link rel="stylesheet" href="/css/error.css" />
+<h1 aria-label="Internal Server Error" id="error_numbers"></h1>
+<p><%- JSON.parse(error).text %></p><br>
+<span id="error_buttons"></span>
+<script>
+const text = document.createElement("a");
+var error = <%- error %>;
+var symbols="";
+
+var i;for (i = 0; i < error.code.length; i++) {
+  var error_numbers = document.getElementById("error_numbers");
+  const error_code = document.createElement("span");
+  error_code.innerText = error.code[i].symbol;
+  error_code.setAttribute("data-overlay", error.code[i].overlay);
+  symbols+=error.code[i].symbol
+  error_numbers.appendChild(error_code);
+}
+  
+  var i;for (i = 0; i < error.buttons.length; i++) {
+  var error_buttons = document.getElementById("error_buttons");
+  const error_button = document.createElement("a");
+  const text = document.createElement("a");
+  error_button.innerText = error.buttons[i].text;
+  
+  error_button.setAttribute("onclick", `${error.buttons[i].url}`);
+  error_button.setAttribute("class", "button big alt scrolly");
+    
+  text.innerText = " ";error_buttons.appendChild(text);
+  error_buttons.appendChild(error_button);
+  
+}
+  error_numbers.setAttribute("data-txt", symbols);
+  
+</script>

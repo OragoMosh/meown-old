@@ -1,0 +1,52 @@
+{
+  "passcode": "51password",
+  "codes": {
+    "2021": 20.21,
+    "new-years":10
+  },
+    "changelog":{
+      "V0.01 Beginning":
+      ["Where it all began or atleast hadn't been documented."],
+      "V0.02 Curious And Feeling Loved":
+      ["Added the ability to comment on other's posts","Added liking posts."],
+      "V0.04 Safety First!":
+      ["<a href=\"/u?\">@aouab</a> and <a href=\"/u?orago\">I (@Orago)</a> added hashing which helps make the website super secure!"],
+      "V0.06 Sub-forums / Groups":
+      ["Working on making sub-forums / categories.", "This may not be permanent but I am hoping for the best."],
+      "V0.07 Communities and Threads!":
+      ["Sub Forums renamed to communities","added threads which are basically posts for communities."],
+      "v0.075 Speech Synthesis and Audio Recognition":
+      ["I am in the process of creating audio recognition and speech synthesis so that meown can be used with voice commands similar to google assistant and reply back."," this is highly developmental and may not work on old browsers."],
+      "v0.08 New theme and possibly upcoming themes!":
+      ["Meown is now fully customizable meaning that you can change every single color including text.","Along with this you can import and export themes to text to share with your friends."],
+      "v0.09 Roles and permissions":
+      ["Added roles and colors for the roles to show status and priority of certain users.","Soon permissions will rely on what roles you have so there can be things such as moderators and staff to keep meown safe."]
+    },
+  "owner":"orago",
+    "role_info":{
+      "owner":{
+        "name":"Owner",
+        "color":"#e3c522",
+        "symbol":"♕",
+        "permission":0
+              },
+      "developer":{
+        "name":"Developer","color":"#cb3837","symbol":"<i class='fa fa-shield'></i>","permission":1
+      },
+      "moderator":{
+        "name":"Moderator","color":"#1fb8b5","symbol":"<i class='fa fa-tachometer'></i>","permission":2
+      },
+      "helper":{
+        "name":"Helper","color":"#c99a55","symbol":"<i class='fa-user-plus'></i>","permission":3
+      },
+      "verified":{
+        "name":"Verified","color":"#09f505","symbol":"<i class='fa fa-check'></i>"
+      },
+      "beta":{
+        "name":"Beta","color":"#999999","symbol":"<i class='fa fa-map-pin'></i>"
+      },
+      "bug-finder":{
+        "name":"Bug Finder","symbol":"<i class='fa fa-bug'></i>"
+      }
+    }
+}

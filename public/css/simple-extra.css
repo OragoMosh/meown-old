@@ -1,0 +1,70 @@
+@import "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css";
+/* Button used to open the chat form - fixed at the bottom of the page */
+.simple-open-button {
+  background-color: #555;
+  color: white;
+  padding: 16px 20px;
+  border: none;
+  cursor: pointer;
+  opacity: 0.8;
+  position: fixed;
+  bottom: 23px;
+  right: 28px;
+  width: 280px;
+}
+
+/* The popup chat - hidden by default */
+.simple-chat {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  right: 15px;
+  border: 3px solid #f1f1f1;
+  z-index: 9;
+}
+
+/* Add styles to the form container */
+.simple-form-container {
+  max-width: 500px;
+  padding: 10px;
+  background-color: white;
+}
+
+/* Full-width textarea */
+.simple-form-container input {
+  width: 100%;
+  padding: 15px;
+  margin: 5px 0 22px 0;
+  border: none;
+  background: #f1f1f1;
+  resize: none;
+  min-height: 30px;
+}
+
+/* When the textarea gets focus, do something */
+.simple-form-container input:focus {
+  background-color: #ddd;
+  outline: none;
+}
+
+/* Set a style for the submit/send button */
+.simple-form-container .simple-btn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 16px 20px;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  margin-bottom:10px;
+  opacity: 0.8;
+}
+
+/* Add a red background color to the cancel button */
+.simple-form-container .simple-cancel {
+  background-color: red;
+}
+
+/* Add some hover effects to buttons */
+.simple-form-container .simple-btn:hover, .simple-open-button:hover {
+  opacity: 1;
+}
