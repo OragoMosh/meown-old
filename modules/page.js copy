@@ -8,32 +8,7 @@ class all_values {
   }
 
   value() {
-    var values = this.values, database = this.database, config = this.config,function_pack = this.function_pack,bcrypt = this.bcrypt;
-    
-    values.post_number = 0;
-    values.post_list = "";
-    values.comment_number = "";
-    values.comment_list = "";
-    values.role_number = "";
-    values.follow_number = "";
-    values.follow_list = "";
-    values.follow_amount = database.user[values.id].followers.length;
-    values.community_number = "";
-    values.community_list = "";
-    values.like_number = "";
-    values.like_list = "";
-    values.status = "";
-    values.post_bar = "";
-    values.comment_bar = "";
-    values.profile_menu = "";
-    values.side_bar = "";
-    values.scripts = "";
-    values.self_avatar ="https://cdn.glitch.com/288a0b72-7e13-4dd2-bc7a-3cc2f4db2aab%2Fuser-slash.svg";
-    values.self_link = "/u#login";
-    values.nav = "";
-    values.nav_mobile = "";
-    values.i = "";
-    values.details = "";
+    var values = this.values, database = this.database, config = this.config,function_pack = this.function_pack;
     function add_detail(values) {
   var result="";
   var i;for (i = 0; i < values.length; i++) {
@@ -51,13 +26,13 @@ class all_values {
     return "ERROR";
   }
   if (!this.values.id) {
-    values.id = "username";
+    this.values.id = "username";
   }
   if (!this.values.category) {
-    values.id = "user";
+    this.values.id = "user";
   }
   if (!this.values.me) {
-    values.me = "null";
+    this.values.me = "null";
   }
   //var data_type;
   //if (values.category==="user"){data_type = database.user;}else
@@ -94,9 +69,9 @@ class all_values {
     }
   if (values.me !== undefined) {
 
-    values.self_avatar = database.user[values.me].avatar;
-    values.self_link = `/u?username=${values.me}`;
-    values.status = `Logged in as: ${values.me.toUpperCase()}`;
+    this.values.self_avatar = this.database.user[this.values.me].avatar;
+    this.values.self_link = `/u?username=${this.values.me}`;
+    this.values.status = `Logged in as: ${this.values.me.toUpperCase()}`;
     
     this.values.profile_menu = `
     
@@ -106,28 +81,24 @@ class all_values {
     <form method="get" action="/logout">
     <button type="submit" class="simple-bar-item simple-button">Logout</button></form>`;
     
-    values.nav_mobile += `<a href="../dashboard" class="simple-bar-item simple-button simple-padding-large">Dashboard</a>`;
+    this.values.nav_mobile += `<a href="../dashboard" class="simple-bar-item simple-button simple-padding-large">Dashboard</a>`;
 
-    if (typeof values.password !== "undefined") {
-      if (bcrypt.compareSync(values.password, database.user[values.me].password)) {
+    if (typeof this.values.password !== "undefined") {
+      if (this.bcrypt.compareSync(this.values.password, database.user[values.me].password)) {
         /*this.values.visible.logged_in = "hidden";
         this.values.visible.logged_out = "";*/
-        values.visible.postBar = ``;
-        values.visible.loggedIn = ``;
-        if (values.me&&values.me == values.id) {
-          values.visible.postBar = ``;
-        }else
-        {values.visible.postBar = `simple-hide`;}
+        if (this.values.me == this.values.id) {
+          this.values.visible.post_bar = ``;
+        }
       }
     }else{
-          values.profile_menu = `
+          this.values.profile_menu = `
     <a href="/login" class="simple-bar-item simple-button">Login</a>
     <a href="/register" class="simple-bar-item simple-button">Register</a>
     `;
-      values.visible.postBar = `simple-hide`;
     }
-    if (values.category === "community") {
-      if (values.data_type[values.id].members.includes(values.me)) {
+    if (this.values.category === "community") {
+      if (this.values.data_type[this.values.id].members.includes(this.values.me)) {
         /*this.values.visible.logged_in = "hidden";
         this.values.visible.logged_out = "";
         this.values.visible.post_bar = ``;*/
@@ -232,18 +203,37 @@ class all_values {
       for (this.values.like_number in this.database[this.values.category][this.values.id][post_type][this.values.post_number].likes) {if (typeof this.database.user[this.database[this.values.category][this.values.id][post_type][this.values.post_number].likes[this.values.like_number]] !== "undefined") {this.values.like_list += 1;}}
       var sender = this.values.id;if (this.values.category === "community" && this.database[this.values.category][this.values.id][post_type][this.values.post_number].sender){sender = this.database[this.values.category][this.values.id][post_type][this.values.post_number].sender}else if (this.values.category === "community"){sender = "Deleted User"}
       
-      this.values.post_list += `
-      <div class="simple-theme-l5 simple-theme-border simple-theme-text-1 simple-container simple-card simple-round simple-margin" id="post-${[length-this.values.post_number-1]}"><br>
+      this.values.post_list += `<div class="simple-theme-l5 simple-theme-border simple-theme-text-1 simple-container simple-card simple-round simple-margin" id="post-${[length-this.values.post_number-1]}"><br>
         <img src="${`${this.database.user[sender].avatar}`}" alt="User_Avatar" class="simple-circle" style="width:90px;height:90px"> 
-        
-        <button class="simple-right simple-opacity" onclick='menu({type:"post",id:"${sender}",number:"${values.post_number}",category:"${values.category}",likes:"${values.like_list}"});'><i class="fa fa-bars"></i></button>
-        <span class="simple-right simple-opacity"><i class="fa fa-heart" ></i>:${values.like_list}</span>&nbsp;
         <span class="simple-right simple-opacity">#${this.values.post_number}</span>
-        
-`;
-
+        <button class="simple-right simple-opacity" onclick="copy('https://${this.values.hostname}/u?search=${this.values.id}#post-${this.values.post_number}');notification('Link Copied!')">
+        <i class="fa fa-link"></i>
+        &nbsp;</button>
+        <span class="simple-right simple-opacity" >
+        <form method="post" action="/edit" style="display:inline-block;">
+        <input type="hidden" name="method" value="like">
+        <input type="hidden" name="type" value="${post_type}">
+        <input type="hidden" name="sentname" value="${sender}">
+        <input type="hidden" name="sentid" value="${this.values.post_number}">
+        <button type="submit" onclick="notification('<3!')">
+        <i class="fa fa-heart" ></i>
+        ${this.values.like_list}
+        </button>
+        </form>`;
+      if (sender === values.me){
+      this.values.post_list +=`<form method="post" action="/edit" style="display:inline-block;">
+        <input type="hidden" name="method" value="delete-post">
+        <input type="hidden" name="id" value="${values.id}">
+        <input type="hidden" name="sentnum" value="${values.post_number}">
+        <input type="hidden" name="category" value="${values.category}">
+        <button type="submit" onclick="notification('<3!')">
+        <i class="fa fa-trash" ></i>
+        ${this.values.like_list}
+        </button>
+        </form> `;
+      }
       this.values.post_list +=`
-        
+        &nbsp;</span>
         <br><b style="font-size: 2em;color:${get_role(sender,"user").color};">&nbsp${function_pack.caps(get_role(sender,"user").name)}: </b>
         <a style="font-size: 1.5em;">${
           this.database[this.values.category][this.values.id][post_type][this.values.post_number].title

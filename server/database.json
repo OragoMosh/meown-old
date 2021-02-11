@@ -123,7 +123,9 @@
         {
           "title": "Black Theme",
           "body": "{\"0\":\"black\",\"1\":\"#a6a6a6\",\"2\":\"#dfe5e8\",\"3\":\"#becbd2\",\"4\":\"#9eb1bb\",\"5\":\"#3f4040\",\"6\":\"#57707d\",\"7\":\"#1e1f1f\",\"8\":\"#435761\",\"9\":\"#3a4b53\",\"10\":\"#191a1a\",\"11\":\"#141414\",\"12\":\"#3b3e3f\",\"13\":\"#000000\",\"14\":\"#ffffff\",\"15\":\"#ff5252\"}",
-          "likes": [],
+          "likes": [
+            "orago"
+          ],
           "comments": []
         }
       ],
@@ -151,7 +153,8 @@
         "codes",
         "cat",
         "changelogs",
-        "themes"
+        "themes",
+        "mittzpost"
       ],
       "roles": [
         "owner",
@@ -344,6 +347,27 @@
       "posts": [],
       "roles": [],
       "creation_date": 1610645250268
+    },
+    "rick": {
+      "password": "$2a$10$nYwM/BqpmMdll4l88yokgeBBGdMruABcz4B7.vwfjXA/7BREQwnBO",
+      "email": "never@goona.giveyou.up",
+      "coins": 50,
+      "xp": 0,
+      "background": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
+      "banner": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
+      "description": "astley",
+      "avatar": "https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png",
+      "following": [],
+      "followers": [],
+      "communities": [],
+      "codes": [],
+      "posts": [],
+      "roles": [],
+      "audio": {
+        "url": "https://cdn.discordapp.com/attachments/800546678821617664/803334413869645884/soundcloud.mp3",
+        "volume": 0.3
+      },
+      "creation_date": 1611600171921
     }
   },
   "community": {
@@ -457,6 +481,17 @@
           "sender": "orago"
         }
       ]
+    },
+    "mittzpost": {
+      "owner": "orago",
+      "preferred": "MittzPost",
+      "background": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
+      "banner": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
+      "description": "lol",
+      "color": "#000000",
+      "members": [],
+      "avatar": "https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png",
+      "creation_date": 1612797844595
     }
   },
   "deposit": [
@@ -470,6 +505,8 @@
     "d@c.c",
     "t@s.t",
     "minkyuupark22@gmail.com",
-    "theoldtombstone@gmail.com"
-  ]
+    "theoldtombstone@gmail.com",
+    "never@goona.giveyou.up"
+  ],
+  "discord": {}
 }

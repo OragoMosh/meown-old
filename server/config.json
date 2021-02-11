@@ -1,8 +1,8 @@
 {
   "passcode": "51password",
   "codes": {
-    "2021": 20.21,
-    "new-years":10
+    "beta":10,
+    "soon-release":5
   },
     "changelog":{
       "V0.01 Beginning":
@@ -37,7 +37,7 @@
         "name":"Moderator","color":"#1fb8b5","symbol":"<i class='fa fa-tachometer'></i>","permission":2
       },
       "helper":{
-        "name":"Helper","color":"#c99a55","symbol":"<i class='fa-user-plus'></i>","permission":3
+        "name":"Helper","color":"#c99a55","symbol":"<i class='fa fa-user-plus'></i>","permission":3
       },
       "verified":{
         "name":"Verified","color":"#09f505","symbol":"<i class='fa fa-check'></i>"

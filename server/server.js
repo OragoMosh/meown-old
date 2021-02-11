@@ -1,18 +1,20 @@
 // Setup basic express server
-const express = require("express");
-const fs = require("fs");
-var cookieParser = require("cookie-parser");
+const express = require("express"),
+      btoa = require("btoa"),
+      fs = require("fs"),
+      fetch = require("fetch"),
+      cookieParser = require("cookie-parser"),
+      bodyParser = require("body-parser"),
+      bcrypt = require("bcryptjs"),
+      nodemailer = require("nodemailer"),
+      cartoonavatar = require("cartoon-avatar");
 var database_location=__dirname + "/database.json";
 const database = JSON.parse(fs.readFileSync(database_location));
 const app = express();
 const server = require("http").createServer(app);
 const io = require("socket.io")(server);
-const bodyParser = require("body-parser");
 const config = require(__dirname + "/config.json");
 const urlencodedParser = bodyParser.urlencoded({ extended: true });
-const bcrypt = require("bcryptjs");
-const nodemailer = require("nodemailer");
-var cartoonavatar = require("cartoon-avatar");
 var port = process.env.PORT || 3232;
 var hostname = config.url; // replace with the web domain you are currently using Ex. google.com which will then be a variable to added to https:// HOSTNAME then whatever redirect it's supposed to be
 var currency = "Coins";
@@ -36,7 +38,6 @@ app.use('/tools',express.static(__dirname + "/../modules/tools"));
 app.set("view engine", "ejs");
 
 var console_ = [];
-
 function msg(type, part, url, version) {var Message = require('../modules/msg');return new Message(type, part, url, version).value()}
 
 var date = new Date();
@@ -47,15 +48,7 @@ do_am_pm();
 
 var am_pm;
 
-function do_am_pm() {
-  if (date.getHours() - 4 < 12) {
-    am_pm = "AM";
-  } else if (date.getHours() - 4 > 12) {
-    am_pm = "PM";
-  } else {
-    am_pm = "broken??";
-  }
-}
+function do_am_pm() {if (date.getHours() - 4 < 12) {am_pm = "AM";} else if (date.getHours() - 4 > 12) {am_pm = "PM";} else {am_pm = "broken??";}}
 
 server.listen(port, function() {
   console.log("Server listening at port %d", port);
@@ -67,7 +60,7 @@ server.listen(port, function() {
 function save_database() {
   fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
   console.log(`Saving Database on bot server!`);
-  setTimeout(save_database(), 240000);
+  setTimeout(save_database(), 180000);
 }
 function real_user(username,password,debug){
   if(!database.user[username]){return false;if(debug===true){console.log("User with this username does not exist.");}}else
@@ -138,6 +131,7 @@ app.post("/result", urlencodedParser, (request, response) => {
     response.send("<br>Password sent: " +request.body.sentpass.toLowerCase() +"<br>Status: Failed");
   }
 });
+
 app.get("/manifest", (request, response) => {
   var link = request.query.url;
   if (!link){link = "/"}
@@ -151,6 +145,7 @@ app.get("/manifest", (request, response) => {
   "categories": ["social","media","meown"],
   "name": "Meown",
   "short_name": "Meown",
+  "orientation": "portrait-primary",
   "start_url": "/",
   "scope":"/",
   "related_applications": [
@@ -161,10 +156,16 @@ app.get("/manifest", (request, response) => {
       "src": "https://raw.githubusercontent.com/Orago/mittens/master/assets/images/boxie-x192-big.png",
       "sizes": "192x192",
       "type": "image/png"
+    },
+    {
+      "src": "https://cdn.glitch.com/0322d62f-81b5-4f06-9b33-557687636cec%2Fboxie-512px.png",
+      "sizes": "512x512",
+      "type": "image/png"
     }
   ]
   
 }
+
 
   return response.json(manifest)
 });
@@ -179,13 +180,22 @@ function render_login(type,me){
   }
   else{
   var values ={method:"POST",action:"/login",title:`Login`,button:"Log In",body:"Hello!"+`<br><br><a href="/register">Register</a> | <a href="#">Forgot</a> | `,
-  fields:`<input type="text" name="sentname" placeholder="Username" required/><input type="password" name="sentpass" placeholder="Password" required/>`
+  fields:`
+  <input type="text" id="username" name="sentname" placeholder="Username" required/>
+  <input type="password" id="password" name="sentpass" placeholder="Password" required/>
+  <div class="togglePassword">
+  <i class="fa fa-eye toggleIcon"></i>
+  </div>
+  <script>const togglePassword = document.querySelector('.togglePassword');const password = document.querySelector('#password');togglePassword.addEventListener('click', function (e) {/* toggle the type attribute */const type = password.getAttribute('type') === 'password' ? 'text' : 'password';password.setAttribute('type', type);/* toggle the icon */document.querySelector('.toggleIcon').classList.toggle('fa-eye-slash');});</script>
+  <style>.container>div .togglePassword {display: block;height: 40px;text-align: left;padding-left: 80%;padding-top: 5px;font: 22px sans-serif;position: relative;top: 0;left: 0;}.container>div .togglePassword>i {position: absolute;bottom: 57px;cursor: pointer}</style>
+  `
   }
   return values;
   }
 }else if (type === "register"){
     var values ={method:"POST",action:"/register",title:`Register`,button:"Create account!",body:`Welcome to ${project_name} if your are new please create an account with the correct details and then click Create account!`+`<br><br><a href="/login">Login</a> |`,
-    fields:`<input type="text" name="sentname" placeholder="Username" required/><input type="text" name="sentdesc" placeholder="Description" required/><input type="password" name="sentpass" placeholder="Password" required/><input type="password" name="sentpassconfirm" placeholder="Password Confirm" required/><input type="email" name="sentemail" placeholder="Email" required/>`
+    fields:`<input type="text" name="sentname" placeholder="Username" required/><input type="text" name="sentdesc" placeholder="Description" required/><input type="password" name="sentpass" placeholder="Password" required/><input type="password" name="sentpassconfirm" placeholder="Password Confirm" required/><input type="email" name="sentemail" placeholder="Email" required/><br>
+    By continuing you agree to the <a href="/terms">Terms and Service</a>`
   }
   return values;
 }
@@ -400,7 +410,6 @@ app.post("/edit", urlencodedParser, (request, response) => {
     }
     database[category][id].coins -= 1;
     database[category][id].xp -= 1;
-    fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
     return response.send(msg("post_deleted","Username",`u?username=${id}#${database[category][id].posts.length - 1}`,"redirect"));
   } else 
     
@@ -429,14 +438,11 @@ app.post("/edit", urlencodedParser, (request, response) => {
 
     if (!check.likes.includes(me)) {
       check.likes.push(me);
-      fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
       return response.send(`<meta http-equiv="Refresh" content="0; url='/u?username=${me}&notification=${type}+Liked!'"/>`);
     } else {
       check.likes = check.likes.filter(item => item !== me);
-      fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
       return response.send(`<meta http-equiv="Refresh" content="0; url='/u?username=${me}&notification=${type}+UnLiked!'"/>`);
     }
-    fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
     return response.send(
       msg("custom",`${type}`,`u?username=${me}#${database.user[me].posts.length - 1}`,"redirect")
     );
@@ -494,10 +500,9 @@ app.post("/edit", urlencodedParser, (request, response) => {
     }
     if (!request.body.sentcommunity) {return response.send(msg("invalid", "Community", "register"));}
     if (!request.body.sentdesc) {return response.send(msg("invalid", "Description", "register"));}
-    if (typeof database.community[request.body.sentcommunity.toLowerCase()] === "undefined") {
-      
+      community = request.body.sentcommunity.toLowerCase();
+    if (typeof database.community[community] === "undefined") {
       database.user[me].communities.push(request.body.sentcommunity.toLowerCase());
-      
       database.community[request.body.sentcommunity.toLowerCase()] = {
         owner: me,
         preferred: request.body.sentcommunity,
@@ -511,7 +516,7 @@ app.post("/edit", urlencodedParser, (request, response) => {
       };
 
       fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
-      response.send(msg("custom", "", `c`,`&search=${request.body.sentcommunity}`));
+      response.send(msg("custom", "", `c/${community}`));
     }
   } /*else if (method === "new-thread-comment") {
     if (!request.body.sentcommunity) {return response.send(msg("include", "Comment Value", "u"));}
@@ -538,11 +543,12 @@ app.post("/edit", urlencodedParser, (request, response) => {
 });
 
 app.get("/connect", urlencodedParser, (request, response) => {
-  var method = request.query.method,user = request.query.user.toLowerCase(),me = request.cookies["saved-username"].toLowerCase();
-  
-  if (!user) {return response.send(msg("missing", "user", "u"));}
+  var method = request.query.method,
+      user = request.query.user,
+      me = request.cookies["saved-username"]||undefined;
+  if (me){me = me.toLowerCase();}else{return response.send(msg("custom", "Not Logged in", "u"));}
+  if (user) {user = user.toLowerCase();}else{return response.send(msg("missing", "user", "u"));}
   if (!method) { return response.send(msg("missing", "Method", "u"));}
-  if (me == undefined ||!me) {return response.send(msg("include", "Username", "u"));}
   if (typeof database.user[me] === "undefined") {return response.send(msg("no_account", "Username", ""));}
   if (!bcrypt.compareSync(request.cookies["saved-password"],database.user[me].password)) {return response.send(msg("incorrect", "Username", "dashboard"));}
   if (method==="join" && typeof database.community[user] === "undefined") {return response.send(msg("custom", "ERROR", "c",`&search=${user}`));}
@@ -603,6 +609,47 @@ app.get("/logout", urlencodedParser, (request, response) => {
     return response.send(msg("logout", "", "u", "redirect"));
   }
 });
+
+app.get("/auth/:id?", urlencodedParser, (request, response) => {
+  var username,password;
+  var id = request.params.id||request.query.id||undefined;
+  if (!id){return response.send("No input given")}
+  id = id.toLowerCase();
+  if (!request.cookies["saved-username"]||!request.cookies["saved-password"]){
+    return response.send("Not Logged In")
+  }
+    username = request.cookies["saved-username"];
+    password = request.cookies["saved-password"];
+  if (username !== id){
+    return response.send("Username Headers don't match.")
+  }
+  if(!bcrypt.compareSync(password,database.user[username].password)){
+    return response.send("Unsuccessful")
+  }
+  return response.send("Successful")
+  
+});
+
+
+app.get("/discord/:id?/", urlencodedParser, (request, response) => {
+  var username,password;
+  var id = request.params.id||request.query.id||undefined;
+  id = id.replace(/\ /g,"#")
+  if (!id){return response.send("No input given")}
+  if (!request.cookies["saved-username"]||!request.cookies["saved-password"]){
+    return response.send("Not Logged In")
+  }
+    username = request.cookies["saved-username"];
+    password = request.cookies["saved-password"];
+  if(!bcrypt.compareSync(password,database.user[username].password)){
+    return response.send("Incorrect Password")
+  }
+  
+  database.discord[username] = id;
+  return response.send(`Discord ID set to ${id}`)
+  
+});
+
 
 app.get("/u-text", urlencodedParser, (request, response) => {
   var username = request.query.search.toLowerCase();
@@ -678,7 +725,7 @@ app.post("/register", urlencodedParser, (request, response) => {
     database.user[request.body.sentname.toLowerCase()] = {
       password: hash,
       email: request.body.sentemail,
-      coins: 50,
+      coins: 0,
       xp: 0,
       background: "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
       banner: "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
@@ -698,6 +745,7 @@ app.post("/register", urlencodedParser, (request, response) => {
     console.log(`Account created, Username: ${request.body.sentname.toLowerCase()}, Password: ${request.body.sentpass.toLowerCase()} , Description: ${request.body.sentdesc.toLowerCase()}`);
   }
 });
+
 /*
 app.post("/new-community", urlencodedParser, (request, response) => {
   var avatar;
@@ -746,54 +794,55 @@ app.post("/new-community", urlencodedParser, (request, response) => {
   var hash = bcrypt.hashSync("2004secret", salt);
 console.log(hash)*/
 
-function info_data(x,url) {
-  if (!url){url = ""}
-  return `
+function info_data(x,values) {
+  var result;
+  if (!values){values = {}}
+  values.description = `The newest, worst social media.`
+  if (values.category){
+    if (values.category === "user" && values.username){
+      if (database[values.category][values.username].description){values.description = database[values.category][values.username].description;}
+    }
+  }
+  result = `
 <title>${project_name} | ${function_pack.caps(x)}</title>
 <meta property="og:title" content="${project_name} | ${function_pack.caps(x)}" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://meown.tk" />
 <meta property="og:image" content="https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png?v=1594354728664" />
-<meta property="og:description" content="The newest, worst social media." />
+<meta property="og:description" content="${values.description}" />
 <meta name="theme-color" content="#cb3837">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" type="image/png" href="https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie32bfull.png">
 <link id="favicon" rel="icon" href="https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie32bfull.png" type="image/x-icon">
-<link rel="canonical" href="">
-<link rel="manifest" href="/manifest?url=${url}">
-<script src="/index.js" defer></script>
-<script>// Register service worker to control making site work offline
-//if('serviceWorker' in navigator) {navigator.serviceWorker.register('/sw.js').then(function() { console.log('Service Worker Registered'); });}
-function registerServiceWorker() {
-   if ('serviceWorker' in navigator) {
-     navigator.serviceWorker.register('/sw.js') //
-        .then(function(reg){
-            console.log("service worker registered")
-        }).catch(function(err) {
-        console.log(err)
-     });
-  }
-  else {
-    console.log("Could not find serviceWorker in navigator")
-  }
-}
-registerServiceWorker()
-</script>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="manifest" href="/manifest.json">
+<script>if ("serviceWorker" in navigator) {navigator.serviceWorker.register("/service-worker.js");}</script>
 
 `;
+  if (values){
+    if (values.hostname){
+      result+=`<link rel="canonical" href="https://${values.hostname}">`
+    }
+  }
+  return result;
 }
-app.get("/api", cors(), (request, response) => {
-  var search = request.query.search;
-  var method = request.query.method;
-  if (!method) {response.json({ response: "method" });}
+app.get("/api/:method?/:search?", cors(), (request, response) => {
+  var search = request.params.search||request.query.search;
+  var method = request.params.method||request.query.method;
+  if (!method) {response.json({ error: "method" });}
   if (method) {
     if (method === "user") {
-      if (!search) {response.json({ response: "name_/_id_/_variant" });}
-      if (typeof database.user[search] == "undefined") {response.json({ response: "user_from_database" });}
+      if (!search) {response.json({ error: "name_/_id_/_variant" });}
+      if (typeof database.user[search] == "undefined") {response.json({ error: "user_from_database" });}
       var user = database.user[search];
+      
       const cloneuser = Object.assign({}, user);
+      cloneuser.discord=database.discord[search]||undefined;
       delete cloneuser.password;
       delete cloneuser.email;
+      
       if (request.query.includeposts!=="true"){delete cloneuser.posts}
       return response.json({status:200,response:cloneuser});
     } else 
@@ -811,7 +860,7 @@ app.get("/api", cors(), (request, response) => {
       delete data.passcode;delete data.codes
       return response.json({status:200,result:data});
     } else {
-      return response.json({status:500,response: "no_results" });
+      return response.json({status:500,error: "no_results" });
     }
   }
 });
@@ -845,11 +894,6 @@ function get_roles() {
   }
   return roles;
 }
-function custom(values) {
-  if (typeof values.background === "undefined") {
-    values.background = "simple-theme.css";
-  }
-}
 app.get("/error", (request, response) => {
     var text = request.query.text,value = request.query.value,who = request.query.who,symbols=[];
   if (!value){value = "huh?"}
@@ -869,32 +913,17 @@ app.get("/error", (request, response) => {
   })
   });
 });
-app.get("/u/", (request, response) => {
-  var username = request.query.search,me = request.cookies["saved-username"];
-  if (!username) {/*if Username not given*/
-    if (me) {/*if logged in*/
-      username = me;
-    } /*end of if (me)*/
-    else {
-      response.redirect(`/login`);/*If no username is given and not logged in*/
-    }/*end of else*/
-  }/*End of if username*/
-  response.redirect(`/u/${username}`)
-});
 
-app.get("/u/:search", (request, response) => {
-  var username = request.params.search,me = request.cookies["saved-username"];
+app.get("/u/:search?", (request, response) => {
+  var me = request.cookies["saved-username"],
+      username = request.params.search||request.query.search||me||null;
+
   
-  function banned(type,who){
+  function banned(type,who){//I dunno lol
     response.redirect(`/error?value=${type}&text=@${who} is ${type} Lol`)
   }
-  if (!username) {
-    if (me) {
-      username = me;
-    } /*end of if (me)*/
-      else {
-        response.send(msg("no_account", null, "login"));/*If no username is given and not logged in*/
-    }/*end of else*/
+  if (!username) {//If not username
+          response.send(msg("no_account", null, "login"));
   }/*End of if username*/
   if (typeof database.user[username] === "undefined") {//If user exists in database
     return response.send(msg("no_account", null, "u"));
@@ -914,43 +943,19 @@ app.get("/u/:search", (request, response) => {
     time: time,
     anti: anti,
     hostname: request.hostname,
-    post_number: 0,
-    post_list: "",
-    comment_number: "",
-    comment_list: "",
-    role_number: "",
-    follow_number: "",
-    follow_list: "",
-    follow_amount: database.user[username].followers.length,
-    community_number: "",
-    community_list: "",
-    like_number: "",
-    like_list: "",
-    status: "",
-    post_bar: "",
-    comment_bar: "",
-    profile_menu: "",
-    side_bar: "",
-    scripts: "",
-    self_avatar: "https://cdn.glitch.com/288a0b72-7e13-4dd2-bc7a-3cc2f4db2aab%2Fuser-slash.svg",
-    self_link: "/u#login",
-    nav: "",
-    nav_mobile: "",
-    info_data: info_data,
-    i: "",
-    details: "",
+    //info_data: info_data,
     visible: {
-      logged_in: "",
-      logged_out: "hidden",
-      post_bar: "hidden"
+      postBar:"simple-hidden",
+      loggedIn:"simple-hidden"
     }
   };
-
-    if (!logs.views[values.id]) {
-      logs.views[values.id] = 0;
-    };logs.views[values.id] += 1;
+  values.header=info_data(`${values.category}: `+function_pack.caps(values.username),{category:values.category,username:values.username});
+  
+  if (!logs.views[values.id]) {logs.views[values.id] = 0;};
+  
+  logs.views[values.id] += 1;
+  
   var Page = require('../modules/page');new Page(values, database).value();
-  custom(values);
   //var get = new main(database, mini,username,null,currency,status,self_avatar,self_link,profile_menu,scripts,info_data,nav,nav_mobile,badge_list,follow_amount,follow_list,community_list,post_bar,post_list,side_bar);
   //response.send(get.u());
   var delete_passwords;
@@ -962,14 +967,24 @@ app.get("/u/:search", (request, response) => {
   }
   response.render("page.ejs", { database: data, values: values });
 });
-
-app.get("/c", (request, response) => {
+function maintenance_check(){
+  if (config.maintenance){
+    if (config.maintenance === true){
+      return {"status":true,"url":"/error?value=${type}&text=The server is undergoing maintenance"};
+    }else{
+      return {"status":false};
+    }
+  }else{
+    return {"status":false};
+  }
+}
+app.get("/c/:search?", (request, response) => {
+  if (maintenance_check().status){response.redirect()}
   //var params = request.protocol + "://" + request.headers.host + request.originalUrl;
   //var username = params.slice(params.search("username=")+9,Infinity).toLowerCase();
-  var community = request.query.search;
-  var me = request.cookies["saved-username"];
+  var community = request.params.search||request.query.search||"meown",
+      me = request.cookies["saved-username"];
   //if (!me){me = "null"}
-  if (!community) {community = "meown";}
   if (typeof database.community[community]  === "undefined") {
     return response.send(msg("custom", "No community with this name", "c","&search=meown"));
   }
@@ -985,41 +1000,16 @@ app.get("/c", (request, response) => {
     time: time,
     anti: anti,
     hostname: request.hostname,
-    post_number: 0,
-    post_list: "",
-    comment_number: "",
-    comment_list: "",
-    role_number: "",
-    role_list: "",
-    follow_number: "",
-    follow_list: "",
-    follow_amount: database.community[community].members.length,
-    community_number: "",
-    community_list: "",
-    like_number: "",
-    like_list: "",
-    status: "",
-    post_bar: "",
-    comment_bar: "",
-    profile_menu: "",
-    side_bar: "",
-    scripts: "",
-    self_avatar:
-      "https://cdn.glitch.com/288a0b72-7e13-4dd2-bc7a-3cc2f4db2aab%2Fuser-slash.svg",
-    self_link: "/u#login",
-    nav: "",
-    nav_mobile: "",
-    info_data: info_data,
-    i: "",
-    details: "",
+    //info_data: info_data,
     visible: {
-      logged_in: "",
-      logged_out: "hidden",
-      post_bar: "hidden"
+      post_bar: "simple-hidden",
+      logged_in: "simple-hidden"
     }
   };
+  values.header=info_data(`${values.category}: `+function_pack.caps(values.username));
+  
   var Page = require('../modules/page');new Page(values, database).value();
-  custom(values);
+  
   //var get = new main(database, mini,username,null,currency,status,self_avatar,self_link,profile_menu,scripts,info_data,nav,nav_mobile,badge_list,follow_amount,follow_list,community_list,post_bar,post_list,side_bar);
   //response.send(get.u());
   var delete_passwords;
@@ -1033,11 +1023,11 @@ app.get("/c", (request, response) => {
 });
 
 app.get("/", function(request, response) {
+  var me = request.cookies["saved-username"];
   var values = {
     username: "empty",
     roles: get_roles(),
     anti: anti,
-    background: request.cookies["saved-background"],
     users: Object.keys(database.user),
     communities:Object.keys(database.community),
     like_number: 0,
@@ -1058,7 +1048,7 @@ app.get("/", function(request, response) {
     visible: {},
     changelog:""
   };
-  var me = request.cookies["saved-username"];
+  
   function changelog (number){
     if (number==="last"){number === Object.keys(config.changelog).length-1}
     if (number&&!isNaN(number)){return {name:function_pack.caps(Object.keys(config.changelog)[number]),values:config.changelog[Object.keys(config.changelog)[number]]}}
@@ -1104,20 +1094,21 @@ app.get("/", function(request, response) {
     values.self.preferred="Name: "+values.self.preferred}
   }
   }else{values.self = JSON.parse(JSON.stringify(database.user["null"]));}
-
-
-  custom(values);
   response.render("slash.ejs", { values: values });
 });
-app.get("/follow-button", (request, response) => {
-  var value = request.query.value,respond="";
+app.get("/salt/:value", (request, response) => {
+  var value = request.params.value,respond="";
   if (!value){value="L"}
   response.send(bcrypt.hashSync(value, bcrypt.genSaltSync(10)))
 });
 
-app.get("/follow-button", (request, response) => {
-  var search = request.query.search,result,url,username = search.toLowerCase();
-  if(!search){search = config.owner;}
+app.get("/follow-button/:search", (request, response) => {
+  var search = request.params.search,result,url,username = search.toLowerCase();
+  if(!search){
+    if (request.query.search){search = request.query.search;}
+    else{search = config.owner;}
+    
+  }
   if (typeof database.user[username]  !== "undefined"){
     result = `Follow @${search}`;
     url = `/connect?method=follow&user=${username}`
@@ -1135,16 +1126,19 @@ app.get("/follow-button", (request, response) => {
   </button>`
   response.send(button)
 });
+
 function staff_check(username){
   if (get_roles().owner.includes(username)){return config.role_info["owner"].permission} else
   if (get_roles().developer.includes(username)){return config.role_info["developer"].permission} else
   if (get_roles().moderator.includes(username)){return config.role_info["moderator"].permission} else 
   if (get_roles().helper.includes(username)){return config.role_info["helper"].permission}
 }
+
 function permission(num,who){
   if(!who){who = "guest";}
   return num >=staff_check(who);
 }
+
 app.post("/command", urlencodedParser, (request, response) => {
 var command_values = request.body.command.split(" "),
     command = command_values[0],
@@ -1182,10 +1176,11 @@ if (command==="add_coins"&&permission(1,username)){
 {return response.send(msg("custom",`Invalid Command or Error`,"dashboard"));}
   
 });
+/*
 app.get("/console", (request, response) => {
   return response.render("terms");
 });
-
+*/
 app.get('*', function(request, response){
 response.redirect("/error?value=4⬡4&text=This%20page%20does%20not%20exist,%20maybe%20head%20back?")
   });
