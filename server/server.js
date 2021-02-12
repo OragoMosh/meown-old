@@ -1,13 +1,10 @@
 // Setup basic express server
 const express = require("express"),
-      btoa = require("btoa"),
       fs = require("fs"),
-      fetch = require("fetch"),
       cookieParser = require("cookie-parser"),
       bodyParser = require("body-parser"),
       bcrypt = require("bcryptjs"),
-      nodemailer = require("nodemailer"),
-      cartoonavatar = require("cartoon-avatar");
+      nodemailer = require("nodemailer");
 var database_location=__dirname + "/database.json";
 const database = JSON.parse(fs.readFileSync(database_location));
 const app = express();
@@ -56,12 +53,19 @@ server.listen(port, function() {
     `Time: ${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()} ${date.getHours() - 4}:${date.getMinutes()}:${date.getSeconds()} ${am_pm}`
   );
 });
-
+/*
 function save_database() {
   fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
   console.log(`Saving Database on bot server!`);
   setTimeout(save_database(), 180000);
 }
+*/
+
+setInterval(function(){ 
+  fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
+  console.log(`Saving Database on bot server!`);
+}, 180000);
+
 function real_user(username,password,debug){
   if(!database.user[username]){return false;if(debug===true){console.log("User with this username does not exist.");}}else
   if(!bcrypt.compareSync(password,database.user[username].password)){return false;if(debug===true){console.log("Incorrect username or password.");}}else
