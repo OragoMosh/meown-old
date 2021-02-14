@@ -1,24 +1,16 @@
 <!DOCTYPE html>
-<input id="cb" type="text" hidden>
-<script>
-<%- values.scripts %>
-function new_date(){
-document.getElementById("time").innerHTML = `<p>Time:</p>${new Date()}<br> (click to update)`;
-setTimeout(function(){ new_date() }, 3000);
-}
-</script>
 <html lang="en">
-<%- values.info_data(`User: `+values.username,values.category[0]) %>
-  
+<head id="header">
+<%- values.header %>
 <meta charset="UTF-8">
+<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Open+Sans'>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link href="/tools.css" rel="stylesheet" >
 <script src="/tools.js"></script>
-<meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="/simple.css">
 <link rel="stylesheet" href="/css/meown.css">
 <link rel="stylesheet" href="/simple-theme.css">
-<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Open+Sans'>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
 <style>html, body, h1, h2, h3, h4, h5 {font-family: "Open Sans", sans-serif}</style>
 <body class="simple-theme-background" >
 <!-- Navbar -->
@@ -48,8 +40,9 @@ setTimeout(function(){ new_date() }, 3000);
   <form method="get" action="/u" style="display:inline-block;"><input type="text" name="search" class="simple-border simple-padding"  placeholder="Find User" style="width:100vw;"></input></form>
   <form method="get" action="/c" style="display:inline-block;"><input type="text" name="search" class="simple-border simple-padding"  placeholder="Find Community" style="width:100vw;"></input></form>
   <%- values.nav_mobile %></a>
-  <a href="../" class="simple-bar-item simple-button simple-padding-large">Chat Room</a>
+  
   <a href="/u" class="simple-bar-item simple-button simple-padding-large"><%- values.status %></a>
+  <a href="/logout" class="simple-bar-item simple-button simple-padding-large">Log Out</a>
   </div>
    
  </div>
@@ -114,7 +107,7 @@ setTimeout(function(){ new_date() }, 3000);
         </div>
       </div>
       
-    <form method="post" action="/edit" class="<%- values.visible.post_bar %>" style="display:inline-block;width:100%">
+    <form method="post" action="/edit" class="<%- values.visible.postBar %>" style="display:inline-block;width:100%">
 <div class="simple-row-padding"><div class="simple-col m12"><div class="simple-theme-l5 simple-card simple-round"><div class="simple-container simple-padding">
   <h6 class="simple-opacity">New Post</h6>
   <input type="hidden" name="method" value="new-post">
@@ -139,7 +132,7 @@ setTimeout(function(){ new_date() }, 3000);
       </div><br>
       
       <div class="simple-theme-l5 simple-card simple-round simple-padding-16 simple-center">
-      <p id="time" onload="new_date()">Open Time<br>(May cause lag)</p>
+      <p id="time" >Open Time<br>(May cause lag)</p>
       </div>
       
       <br>
@@ -148,13 +141,6 @@ setTimeout(function(){ new_date() }, 3000);
       <p>ADS</p></div>
       
       <br>
-      
-      <span class="add-button">
-      <div class="simple-theme-l5 simple-card simple-round simple-padding-16 simple-center">
-      <p>ADS</p></div>
-      
-      <br>
-      </span>
       
       <div class="simple-theme-l5 simple-card simple-round simple-padding-32 simple-center">
         <p><i class="fa fa-bug simple-xxlarge"></i><br>Report bugs</p>
@@ -175,8 +161,47 @@ setTimeout(function(){ new_date() }, 3000);
 <!-- End Page Container -->
 </div>
 <br>
+<input id="cb" type="text" hidden>
 <script>
 // Accordion
+function menu(values){
+  var popup = {
+    main:document.getElementById('popup'),
+    title:document.getElementById('popupTitle'),
+    body:document.getElementById('popupBody')
+  }
+  if (values && values.type === "post"){
+  popup.main.style.display='block';
+  popup.title.innerText=`@${values.id}, Post #${values.number}`;
+  popup.body.innerHTML=`<form method="post" action="/edit" style="display:inline-block;">
+<input type="hidden" name="method" value="delete-post">
+<input type="hidden" name="id" value="${values.id}">
+<input type="hidden" name="sentnum" value="${values.number}">
+<input type="hidden" name="category" value="${values.category}">
+<button type="submit">
+Delete Post
+</button>
+</form>
+<button onclick="
+copy('https://${location.hostname}/u/${values.id}#post-${values.number};');
+notification('Link Copied!');">
+Copy URL <i class="fa fa-link"></i>
+&nbsp;</button>`;
+  if (values.likes){
+  popup.body.innerHTML+=`
+  <form method="post" action="/edit" style="display:inline-block;">
+  <input type="hidden" name="method" value="like">
+  <input type="hidden" name="type" value="posts">
+  <input type="hidden" name="sentname" value="${values.id}">
+  <input type="hidden" name="sentid" value="${values.number}">
+  <button type="submit" onclick="notification('<3!')">
+  Likes: <i class="fa fa-heart" ></i>${values.likes}
+  </button>
+  </form>
+  `
+  }
+  }
+}
 function accordion(id) {
   var x = document.getElementById(id);
   if (x.className.indexOf("simple-show") == -1) {
@@ -196,6 +221,25 @@ function openNav() {
 }
 </script>
 <div id="assets"></div><!--Loads the extra files that aren't written in the document.-->
+<script>
+  window.onload = new_date();
+<%- values.scripts %>
+function new_date(){
+var time = new Date().toString()
+time=time.split(" ")
+  time = `${time[0]} ${time[1]} ${time[2]} ${time[3]}<br>${time[4]}`
+document.getElementById("time").innerHTML = `<p>Time:</p>${time}`;
+setTimeout(function(){ new_date() }, 1300);
+}
+</script>
+<!--<script onload = "check_https()">
+  function check_https(){
+  if (location.protocol.toString() === "http:"){
+    location.replace(`https://${location.hostname}${location.pathname}`);
+  }
+}
+</script>-->
+<!--
   <div id="chat_all">
 <script src="/socket.io/socket.io.js"></script>
 <script src="/js/main.js" defer></script>
@@ -226,19 +270,19 @@ function openForm() {chat.style.display = "block";chat.setAttribute("opened", tr
 function closeForm() {chat.style.display = "none";chat.setAttribute("opened", false);}
 </script>
 </div>
-
+-->
 <div id="popup" class="simple-modal simple-animate-opacity">
   <div class="simple-modal-content" style="padding:32px">
     <div class="simple-container simple-white">
       <i onclick="document.getElementById('popup').style.display='none'" class="fa fa-remove simple-xlarge simple-button simple-transparent simple-right simple-xlarge"></i>
-      <h2 class="simple-wide">Contacts of Chico Entertainment</h2>
-      <p>Feel free to follow or contact me on one of my social medias, but facebook is most preferrable</p>
-  <div class="simple-section simple-xlarge">
-    <i class="fa fa-facebook-official simple-hover-opacity"></i>
+      <h2 class="simple-wide" id="popupTitle">Null Title</h2>
+      <p id="popupBody">Null Body</p>
+  <div class="simple-section simple-xlarge" id="popupIcons">
+    <!--<i class="fa fa-facebook-official simple-hover-opacity"></i>
     <i class="fa fa-snapchat simple-hover-opacity"></i>
     <i class="fa fa-pinterest-p simple-hover-opacity"></i>
     <i class="fa fa-twitter simple-hover-opacity"></i>
-    <i class="fa fa-linkedin simple-hover-opacity"></i>
+    <i class="fa fa-linkedin simple-hover-opacity"></i>-->
   </div>
     </div>
   </div>

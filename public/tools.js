@@ -1,12 +1,16 @@
 window.addEventListener("load", function () {
-  color_load()
+  color_load();
+  if (document.getElementsByTagName("BODY")){check_https();}
 })
+
+function check_https(){if(location.protocol.toString()==="http:"){location.replace(`https://${location.hostname}${location.pathname}`);}}
+
 reset_colors();
 function reset_colors(){
-/*colors = {"1":"#FFFFFF","2":"#dfe5e8","3":"#becbd2","4":"#9eb1bb","5":"#7d97a5",
+colors = {"1":"#FFFFFF","2":"#dfe5e8","3":"#becbd2","4":"#9eb1bb","5":"#7d97a5",
           "6":"#57707d","7":"#4d636f","8":"#435761","9":"#3a4b53","10":"#303e45",
-          "11":"#303e45","12":"#7d97a5","13":"#000000","14":"#FFFFFF","15":"#ff5252"}*/
-  colors = {"1":"#ffffff","2":"#dfe5e8","3":"#becbd2","4":"#9eb1bb","5":"#7d97a5","6":"#57707d","7":"#4d636f","8":"#435761","9":"#3a4b53","10":"#303e45","11":"#303e45","12":"#7d97a5","13":"#000000","14":"#ffffff","15":"#ff5252"}
+          "11":"#303e45","12":"#7d97a5","13":"#000000","14":"#FFFFFF","15":"#ff5252"}
+  
 }
 
 var color_list = document.getElementsByClassName("colors");
@@ -46,7 +50,7 @@ localStorage.setItem('color-palette', JSON.stringify(colors));
 function color_copy(){
   document.getElementById("colors").innerHTML = `<input id="color_values">`;
   document.getElementById("color_values").value = localStorage.getItem('color-palette');
-  notification("It should copy automatically, but if not manually copy the input bar.")
+  //notification("It should copy automatically, but if not manually copy the input bar.")
   var cb = document.getElementById("cb");
   cb.value = localStorage.getItem('color-palette');
   cb.style.display='block';
@@ -58,7 +62,7 @@ function color_copy(){
 function color_paste(){
   localStorage.setItem('color-palette', prompt("colors?"));
   color_load();
-  notification("Saved!")
+  //notification("Saved!")
 }
   
 function color_load() {
@@ -187,7 +191,14 @@ function getCookie(cname) {
   return "";
 }
 
-
+async function share(values){
+  try {
+    await navigator.share({ title: "Example Page", url: "" });
+    console.log("Data was shared successfully");
+  } catch (err) {
+    console.error("Share failed:", err.message);
+  }
+}
 
   function copy(txt){
   var cb = document.getElementById("cb");
@@ -196,15 +207,20 @@ function getCookie(cname) {
   cb.select();
   document.execCommand('copy');
   cb.style.display='none';
+    
+
  }
 let params = (new URL(document.location)).searchParams;
 var popup_status = false;
 window.addEventListener("load", function () {/*Start - If website Loaded*/
-if (document.getElementById("popup")===null){/*Start - If variable popup equals null*/
-document.getElementById("assets").innerHTML+= '<div id="popup">\</div>';/*Add popup notification box*/
+if (document.getElementById("notification")===null){/*Start - If variable popup equals null*/
+document.getElementById("assets").innerHTML+= '<div id="notification">\</div>';/*Add popup notification box*/
+//document.getElementById("assets").innerHTML+= '<script onload="check_https()">check_https();function check_https(){if(location.protocol.toString()==="http:"){location.replace(`https://${location.hostname}${location.pathname}`);}}</script>'
+
 }
-if (params.get('notification')==null){notification('Page Loaded!')}else{notification(params.get('notification'));}
-  document.getElementById("popup").style.backgroundColor = "#333"
+
+  if (params.get('notification')==null){notification('Page Loaded!')}else{notification(params.get('notification'));}
+  document.getElementById("notification").style.backgroundColor = "#333"
 });
 function notification(text,time) {
   if (time==null){
@@ -212,7 +228,7 @@ function notification(text,time) {
   }
 if (popup_status !== true){
 	popup_status = true;
-	var popup = document.getElementById("popup");
+	var popup = document.getElementById("notification");
 	popup.className = "show";
 	popup.innerHTML = text
 	setTimeout(function(){ popup.className = popup.className.replace("show", "");popup_status=false;}, time);

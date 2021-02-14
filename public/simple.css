@@ -67,9 +67,9 @@ background-size:cover;
   /*width:300px;*/
 }
 
-.center{text-align: center;}
-.left{text-align: left;}.right{text-align: right;}.justiy{text-align: justify;}
-.hide {display:none;}.show {display:block;}
+.simple-center{text-align: center;}
+.simple-left{text-align: left;}.right{text-align: right;}.justiy{text-align: justify;}
+.simple-hide {display:none;}.simple-show {display:block;}
 .simple-text-large{font-size:200%}.simple-text-medium{font-size:150%}.simple-text-small{font-size:100%}.simple-text-mini{font-size:70%}
 
 

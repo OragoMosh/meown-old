@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+<body>
+Screen:
+<p id="demo"></p>
+Debug:
+<p id="debug"></p>
+<script>
+var game, map, player, display,debug="Nothing Yet",display = "";
+
+
+map = [
+[0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0],
+[0,0,0,1,0,0,0,0,0,0],
+[0,1,1,1,1,1,0,0,0,0],
+[1,1,1,1,1,1,1,1,1,1]
+]
+game = {
+player:{
+symbol:"x"
+},
+map:map,
+air:0
+}
+
+function exists_player(){
+    var i = 0;
+    var found = false;
+    while (i <map.length&&found===false) {
+    
+    if (map[i].includes(game.player.symbol)){
+    found=true;
+    return {result:true,x:map[i].indexOf(game.player.symbol),y:i};
+    }
+      i++;
+    }
+    return {result:false}
+}
+
+
+if(exists_player().result){
+game.player.x = exists_player().x;
+game.player.y = exists_player().y;
+}
+else
+{
+new_player();
+}
+
+function fix_map(){
+var i1=0,i2=0;
+while (i1 <map.length) {//Beginning of while loop
+if (map[i1-1]){//beginning of if previous map
+if (map[i1-1].length > map[i1].length){//Beginning of if previous larger than next
+map[i1].length.push(1)
+    }//End of if previous larger than next
+    if (map[i1-1].length < map[i1].length){//Beginning of if previous smaller than next
+map[i1-1].length.push(1)
+    }//End of if previous smaller than next
+    
+}//End if previous map
+i1++
+	}//End of while loop
+}
+
+
+function new_player(){
+fix_map()
+var i = 0, found = false;
+while (i <map.length&&found===false) {
+if (map[0][i]===0||map[0][i]==="0"){
+map[0][i]=game.player.symbol;found=true;game.player.x = 0;game.player.y = 0;
+}//end of if statement.
+i++
+}// end of while.
+setInterval(physics, 500);
+}// end of new_player function.
+
+function physics(){
+	if (game.player.y.toString()){
+    
+		if (map[game.player.y+1]){
+        if (map[game.player.y+1][game.player.x]===0){  move_player({x1:game.player.x,y1:game.player.y,x2:game.player.x,y2:game.player.y+1})
+        }
+		}
+	}
+}
+var body = document.getElementsByTagName("BODY");
+body[0].addEventListener("keydown", controller);
+        function controller(event) {
+			var key = event.keyCode;
+             switch (key) {
+           case 32://SpaceBar
+        		if (map[game.player.y+1][game.player.x]===1){
+              move_player({x1:game.player.x,y1:game.player.y,x2:game.player.x,y2:game.player.y-1})
+            }
+           	  break;
+           case 37://Left Key
+              if (map[game.player.y][game.player.x-1]!==1&&map[game.player.y][game.player.x-1]!==undefined){
+                move_player({x1:game.player.x,y1:game.player.y,x2:game.player.x-1,y2:game.player.y})
+            	}
+              break;
+           case 38://Up Key
+        		if (map[game.player.y+1][game.player.x]===1){
+              move_player({x1:game.player.x,y1:game.player.y,x2:game.player.x,y2:game.player.y-1})
+            }
+              break;
+           case 39://Right Key
+              if (map[game.player.y][game.player.x+1]!==1&&map[game.player.y][game.player.x+1]!==undefined){
+                move_player({x1:game.player.x,y1:game.player.y,x2:game.player.x+1,y2:game.player.y})
+            	}
+              break;
+        }
+        } 
+function move_player(val){
+if (typeof val.y1 !== "undefined" && typeof val.y2 !== "undefined"){
+map[val.y1][val.x1]=game.air;
+map[val.y2][val.x2]=game.player.symbol;
+game.player.y=val.y2;
+game.player.x=val.x2;
+draw();
+}
+}
+
+setInterval(function(){ draw(); }, 500);
+function draw(input){
+var i = 0;
+var line = "";
+    while (i < map.length) {
+    var i2 = 0;
+    while (i2 < map[i].length) {
+    style = "color:white;";
+    if (map[i][i2]==="x"){style="color:red;";}
+    if (map[i][i2]===1){style="color:black;";}
+    line += `<span style="${style}">${map[i][i2]}</span> `
+    i2++
+    }
+display += `${line}<br>`;
+line="";
+      i++;
+    }
+    debug=new Date();
+document.getElementById("demo").innerHTML = display;
+document.getElementById("debug").innerHTML = debug;
+display = "";
+}
+
+</script>
+<style>
+#popup {
+  visibility: hidden;
+  min-width: 250px;
+  margin-left: -125px;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 2px;
+  padding: 16px;
+  position: fixed;
+  z-index: 1;
+  left: 50%;
+  bottom: 30px;
+  font-size: 17px;
+}
+
+#popup.show {
+  visibility: visible;
+  -webkit-animation: fadein_popup 0.5s;
+  animation: fadein_popup 0.5s;
+}
+
+</style>
+<script>
+let params = (new URL(document.location)).searchParams;
+var popup_status = false;
+window.addEventListener("load", function () {/*Start - If website Loaded*/
+if (document.getElementById("popup")===null){/*Start - If variable popup equals null*/
+document.getElementById("assets").innerHTML+= '<div id="popup">\</div>';/*Add popup notification box*/
+}
+if (params.get('notification')==null){notification('Page Loaded!')}else{notification(params.get('notification'));}
+  document.getElementById("popup").style.backgroundColor = "#333"
+});
+function notification(text,time) {
+  if (time==null){
+    time = 2000
+  }
+if (popup_status !== true){
+	popup_status = true;
+	var popup = document.getElementById("popup");
+	popup.className = "show";
+	popup.innerHTML = text
+	setTimeout(function(){ popup.className = popup.className.replace("show", "");popup_status=false;}, time);
+  } 
+}
+</script>
+<div id="assets"></div>
+</body>
+</html>
