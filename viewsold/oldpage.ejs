@@ -202,13 +202,6 @@ Copy URL <i class="fa fa-link"></i>
   }
   }
 }
-  function toggleClass(element,className) {
-  var temp = element;
-  temp.className.indexOf(className) == -1?
-  temp.className += ` ${className}`:
-  temp.className = temp.className.replace(` ${className}`, "");
-}
-  
 function accordion(id) {
   var x = document.getElementById(id);
   if (x.className.indexOf("simple-show") == -1) {

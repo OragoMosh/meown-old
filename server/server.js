@@ -5,6 +5,7 @@ const express = require("express"),
       bodyParser = require("body-parser"),
       bcrypt = require("bcryptjs"),
       nodemailer = require("nodemailer");
+
 var database_location=__dirname + "/database.json";
 const database = JSON.parse(fs.readFileSync(database_location));
 const app = express();
@@ -13,6 +14,8 @@ const io = require("socket.io")(server);
 const config = require(__dirname + "/config.json");
 const urlencodedParser = bodyParser.urlencoded({ extended: true });
 var port = process.env.PORT || 3232;
+
+
 var hostname = config.url; // replace with the web domain you are currently using Ex. google.com which will then be a variable to added to https:// HOSTNAME then whatever redirect it's supposed to be
 var currency = "Coins";
 var prefix = "$";
@@ -20,8 +23,8 @@ var project_name = "Meown";
 var anti = "this.value = this.value.replace(/[^a-z0-9]/i, '')";
 //const User = require('./modules/dashboard');
 //var Message = require('./modules/tools/msg');
-var variable_pack = require('../modules/tools/variablepack');
-var function_pack = require('../modules/tools/functionpack');
+var variablePack = require('../modules/tools/variablepack'),
+    functionPack = require('../modules/tools/functionpack');
 var cors = require('cors');
 var logs = {
   views: {},
@@ -35,11 +38,12 @@ app.use('/tools',express.static(__dirname + "/../modules/tools"));
 app.set("view engine", "ejs");
 
 var console_ = [];
+
 function msg(type, part, url, version) {var Message = require('../modules/msg');return new Message(type, part, url, version).value()}
 
 var date = new Date();
 
-var time = variable_pack.time;
+var time = variablePack.time;
 
 do_am_pm();
 
@@ -53,6 +57,23 @@ server.listen(port, function() {
     `Time: ${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()} ${date.getHours() - 4}:${date.getMinutes()}:${date.getSeconds()} ${am_pm}`
   );
 });
+
+var fake_user = {
+      "password": "$2a$10$w49HxOAv6PN5HSpexhNu1OUNrohjJeEoBTta7dsqp4EtX1RPTZy36",
+      "email": "",
+      "coins": 0,
+      "preferred": "Guest account",
+      "background": "https://convertingcolors.com/plain-2C2F33.svg",
+      "banner": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
+      "description": "lol",
+      "avatar": "https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png",
+      "creation_date": "1603731256000",
+      "communities": [],
+      "roles": [],
+      "followers":[],
+      "following":[],
+      "xp": 0
+    };
 /*
 function save_database() {
   fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
@@ -67,17 +88,28 @@ setInterval(function(){
 }, 180000);
 
 function real_user(username,password,debug){
-  if(!database.user[username]){return false;if(debug===true){console.log("User with this username does not exist.");}}else
-  if(!bcrypt.compareSync(password,database.user[username].password)){return false;if(debug===true){console.log("Incorrect username or password.");}}else
-  {
-    return true;
-  } 
+  if(!database.user[username]){
+    if(debug===true) {console.log("User with this username does not exist.");}
+    return false;
+    
+  }
+  else
+    
+  if(!bcrypt.compareSync(password,database.user[username].password)){
+    if(debug===true) {console.log("Incorrect username or password.");}
+    return false;
+  }
+  else return true;
 }
+
+
 function exists_user(username,debug){
-  if(!database.user[username]){return false;if(debug===true){console.log("User with this username does not exist.");}}else
-  {
-    return true;
-  } 
+  if(!database.user[username]){
+    return false;
+    if(debug===true) {console.log("User with this username does not exist.");}
+  }
+  
+  else return true;
   
 }
 async function mail(to, subject, text, html) {
@@ -87,13 +119,14 @@ async function mail(to, subject, text, html) {
 
   // create reusable transporter object using the default SMTP transport
   let transporter = nodemailer.createTransport({
-    host: "smtp.ethereal.email",
+    //host: "smtp.ethereal.email",
     //requireTLS: true,
-    port: 587,
-    secure: false,
+    //port: 587,
+    //secure: false,
+    service: 'gmail',
     auth: {
-      user: testAccount.user, // generated ethereal user
-      pass: testAccount.pass // generated ethereal password
+      user: 'themittzcat@gmail.com', // generated ethereal user
+      pass: process.env.mailPassword // generated ethereal password
     }
   });
 
@@ -109,36 +142,19 @@ async function mail(to, subject, text, html) {
   console.log("Message sent: %s", info.messageId);
   console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
 }
-var fake_user = {
-      "password": "$2a$10$w.OQABq6zrfUGl9t4gWK2O0ItUyhTMPV1CDGFxG05zYrF3FjuYZYK",
-      "email": "",
-      "coins": 0,
-      "preferred": "Guest account",
-      "background": "https://convertingcolors.com/plain-2C2F33.svg",
-      "banner": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
-      "description": "lol",
-      "avatar": "https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png",
-      "creation_date": "1603731256000",
-      "communities": [],
-      "roles": [],
-      "xp": 0
-    };
+
 //mail(to,subject,text,html).catch(console.error);
 
 app.get("/data", (request, response) => {response.render("database", { qs: request.query });});
 
 app.post("/result", urlencodedParser, (request, response) => {
   console.log(request.body);
-  if (request.body.sentpass.toLowerCase() == config.passcode) {
-    response.send(JSON.stringify(database, null, 2));
-  } else {
-    response.send("<br>Password sent: " +request.body.sentpass.toLowerCase() +"<br>Status: Failed");
-  }
+  if (request.body.sentpass.toLowerCase() == config.passcode) response.send(JSON.stringify(database, null, 2));
+  else response.send("<br>Password sent: " +request.body.sentpass.toLowerCase() +"<br>Status: Failed");
 });
 
 app.get("/manifest", (request, response) => {
-  var link = request.query.url;
-  if (!link){link = "/"}
+  var link = request.query.url||"/";
   var manifest = {
   "dir": "ltr",
   "lang": "EN",
@@ -187,16 +203,20 @@ function render_login(type,me){
   fields:`
   <input type="text" id="username" name="sentname" placeholder="Username" required/>
   <input type="password" id="password" name="sentpass" placeholder="Password" required/>
-  <div class="togglePassword">
-  <i class="fa fa-eye toggleIcon"></i>
-  </div>
-  <script>const togglePassword = document.querySelector('.togglePassword');const password = document.querySelector('#password');togglePassword.addEventListener('click', function (e) {/* toggle the type attribute */const type = password.getAttribute('type') === 'password' ? 'text' : 'password';password.setAttribute('type', type);/* toggle the icon */document.querySelector('.toggleIcon').classList.toggle('fa-eye-slash');});</script>
+  <b onclick="Toggle();document.getElementById('password').type==='password' ? this.innerText='Show Password' : this.innerText='Hide Password';">Show Password</b>
+  <script>
+  function Toggle() { 
+      var temp = document.getElementById("password");
+      temp.type==='password' ? temp.type = "text" :  temp.type = "password";
+  } 
+  </script>
   <style>.container>div .togglePassword {display: block;height: 40px;text-align: left;padding-left: 80%;padding-top: 5px;font: 22px sans-serif;position: relative;top: 0;left: 0;}.container>div .togglePassword>i {position: absolute;bottom: 57px;cursor: pointer}</style>
   `
   }
   return values;
   }
-}else if (type === "register"){
+}else 
+  if (type === "register"){
     var values ={method:"POST",action:"/register",title:`Register`,button:"Create account!",body:`Welcome to ${project_name} if your are new please create an account with the correct details and then click Create account!`+`<br><br><a href="/login">Login</a> |`,
     fields:`<input type="text" name="sentname" placeholder="Username" required/><input type="text" name="sentdesc" placeholder="Description" required/><input type="password" name="sentpass" placeholder="Password" required/><input type="password" name="sentpassconfirm" placeholder="Password Confirm" required/><input type="email" name="sentemail" placeholder="Email" required/><br>
     By continuing you agree to the <a href="/terms">Terms and Service</a>`
@@ -210,24 +230,23 @@ app.get("/terms", (request, response) => {
 });
 
 app.get("/login", (request, response) => {
-  var me = request.cookies["saved-username"];
-  var values = render_login("login",me)
+  var me = request.cookies["saved-username"],
+      values = render_login("login",me)
   return response.render("login", { values:values });
 });
 
 app.get("/register", (request, response) => {
-  var me = request.cookies["saved-username"];
-  var values;
+  var me = request.cookies["saved-username"],
+      values;
   if (me){values = render_login("login",me)}
   else{values = render_login("register",me)}
   return response.render("login", { values:values });
 });
 
 app.get("/dashboard", (request, response) => {
-  var me = request.cookies["saved-username"],password = request.cookies["saved-password"];
-  if (!me) {
-    return response.send(msg("not_logged", "Username", "u"));
-  }
+  var me = request.cookies["saved-username"],
+      password = request.cookies["saved-password"];
+  if (!me) return response.send(msg("notLogged", "Username", "/u"));
   /*if (real_user(me,password) === true) {
     return response.send(msg("incorrect", "Username", "u"));
   }*/
@@ -239,24 +258,22 @@ app.get("/dashboard", (request, response) => {
     recent_reports: "",last: 3,i: "",
     views: "",forms: "",staff:false
   };
-if (database.user[me].roles.includes("developer")||database.user[me].roles.includes("moderator")){
-  values.staff = true;
-}
+if (database.user[me].roles.includes("developer")||database.user[me].roles.includes("moderator"))values.staff = true;
+  
   if (values.changes) {
-    values.last = function_pack.max(values.changes.length,2);
+    values.last = functionPack.max(values.changes.length,2);
     for (values.i = 0; values.i < values.last; values.i++) {
-      if (typeof database.user[me] !== "undefined") {
+      if (typeof database.user[me] !== "undefined") 
         values.recent_changes += `<li class="simple-padding-16">
         <img src="${database.user[me].avatar}" class="simple-left simple-circle simple-margin-right" style="width:35px">
-        <span class="simple-xlarge"><a href="../u?username=${me}">${values.changes[values.i + values.changes.length - values.last]}</a></span><br>
+        <span class="simple-xlarge"><a href="../u/${me}">${values.changes[values.i + values.changes.length - values.last]}</a></span><br>
       </li>`;
-      }
+      
     }
-  } else {
-    values.recent_changes = "None";
-  }
+  } else {values.recent_changes = "None";}
+  
   if (values.follows !== "") {
-    values.last = function_pack.max(values.follows.length,2);
+    values.last = functionPack.max(values.follows.length,2);
     for (values.i = 0; values.i < values.last; values.i++) {
       if (typeof database.user[values.follows[values.i + values.follows.length - values.last]] !== "undefined") {
         values.recent_follows += `<li class="simple-padding-16">
@@ -268,9 +285,9 @@ if (database.user[me].roles.includes("developer")||database.user[me].roles.inclu
   } else {values.recent_follows = "None";}
   
   if (values.followers !== "") {
-    values.last = function_pack.max(values.followers.length,3);
+    values.last = functionPack.max(values.followers.length,3);
     for (values.i = 0; values.i < values.last; values.i++) {
-      if (typeof database.user[values.followers[values.i + values.followers.length - values.last]] !== "undefined") {
+      if (typeof database.user[values.followers[values.i + values.followers.length - values.last]] !== "undefined") 
         values.recent_followers += `<div class="simple-row">
       <div class="simple-col m2 text-center">
         <img class="simple-circle" src="${database.user[values.followers[values.i + values.followers.length - values.last]].avatar}" style="width:96px;height:96px">
@@ -281,17 +298,17 @@ if (database.user[me].roles.includes("developer")||database.user[me].roles.inclu
         <br>
       </div>
     </div>`;
-      }
+      
     }
-  } else {values.recent_followers = "None";}
+  } else values.recent_followers = "None";
   
-  if (!logs.views[me]) {values.views = 0;}
-  if (logs.views[me]) {values.views = logs.views[me];}
-  var new_el = function_pack.new_el;
+  if (logs.views[me]) values.views = logs.views[me];
+  else values.views = 0;
+  var new_el = functionPack.new_el;
   function new_feed(values){
-    if (!values.text){values.text=""}
-    if (!values.when){values.when=""}
-    if (!values.text){values.text=""}
+    if (!values.text) {values.text="";}
+    if (!values.when) {values.when="";}
+    if (!values.text) {values.text="";}
 return new_el({"element":"tr",type:"double",value:
 new_el({"element":"td",type:"double",value:new_el({"element":"i",type:"double",class:`fa fa-${values.icon} simple-text-blue simple-large`})})+
 new_el({"element":"td",type:"double",value:values.text})+new_el({"element":"i",type:"double",value:values.when})
@@ -306,16 +323,14 @@ app.post("/edit", urlencodedParser, (request, response) => {
   
   var me = request.cookies["saved-username"];
   
-  if (!method) {return response.send(msg("missing", "Method", "u"));}
+  if (!method) return response.send(msg("missing", "Method", "/u"));
   
-  if (me == undefined ||!me) {return response.send(msg("include", "Username", "u"));}
+  if (me == undefined ||!me) return response.send(msg("include", "Username", "/u"));
   
-  if (typeof database.user[me] == "undefined") {return response.send(msg("no_account", "Username", ""));}
+  if (typeof database.user[me] == "undefined") return response.send(msg("noAccount", "Username"));
   
-  if (!bcrypt.compareSync(request.cookies["saved-password"],database.user[me].password)) {
-    return response.send(msg("incorrect", "Username", "dashboard"));
-  }
-
+  if (!bcrypt.compareSync(request.cookies["saved-password"],database.user[me].password)) return response.send(msg("incorrect", "Username", "/dashboard"));
+  
   
   if (method === "details") {
     var text_add = "";
@@ -323,122 +338,125 @@ app.post("/edit", urlencodedParser, (request, response) => {
       database.user[me].password = request.body.sentnewpass;
       text_add += `New Password: ${request.body.sentnewpass}`;
     }
-    if (request.body.sentnewdesc) {database.user[me].description = request.body.sentnewdesc;}
+    if (request.body.sentnewdesc) database.user[me].description = request.body.sentnewdesc;
     
-    if (request.body.sentnewavatar) {database.user[me].avatar = request.body.sentnewavatar;}
+    if (request.body.sentnewavatar) database.user[me].avatar = request.body.sentnewavatar;
     
     if (database.user[me].roles.includes("developer") ||database.user[me].roles.includes("moderator")) {
       
-      if (request.body.sentnewbackground) {database.user[me].background =request.body.sentnewbackground;}
+      if (request.body.sentnewbackground) database.user[me].background =request.body.sentnewbackground;
       
-      if (request.body.sentnewbanner) {database.user[me].banner =request.body.sentnewbanner;}
+      if (request.body.sentnewbanner) database.user[me].banner =request.body.sentnewbanner;
       
     }
     
     fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
 
-    return response.send(msg("edited", "Username", "u"));
+    return response.send(msg("edited", "Username", "/u"));
   } else 
     
     
     if (method === "new-post") {
-    if (!request.body.sentposttitle) {return response.send(msg("include", "Post Title", "u"));}
+    if (!request.body.sentposttitle) return response.send(msg("include", "Post Title", "/u"));
+    if (!request.body.sentpostbody) return response.send(msg("include", "Post Body", "/u"));
+    if (!request.body.sentpostcategory) return response.send(msg("include", "Post Category", "/u"));
+    if (!request.body.id) return response.send(msg("include", "ID (user / community)", "/u"));
+    if (functionPack.html_check(JSON.stringify(request.body))) {return response.send(msg("custom", "Do not use html!", "/u"));}
       
-    if (!request.body.sentpostbody) {return response.send(msg("include", "Post Body", "u"));}
+    var text = "", 
+        category= request.body.sentpostcategory,
+        id = request.body.id,
+        post_type = "user";
       
-    if (!request.body.sentpostcategory) {return response.send(msg("include", "Post Category", "u"));}
-      
-    if (!request.body.id) {return response.send(msg("include", "ID (user / community)", "u"));}
-      
-      
-    if (function_pack.html_check(request.body.sentposttitle) || function_pack.html_check(request.body.sentpostbody)) {return response.send(msg("custom", "Do not use html!", "u"));}
-    var text = "", category= request.body.sentpostcategory,id = request.body.id,post_type = "user";
-      
-    if (id !== me&&category==="user"){category="community";id=`null`}
+    if (id !== me&&category==="user"){category="community";id=`null`;}
     var i = 0;
     while (i < request.body.sentpostbody.length &&request.body.sentpostbody.includes("!n ")) {
       request.body.sentpostbody = request.body.sentpostbody.replace("!n ","<br>");
       i++;
     }
-    if (database[category][id].posts) {
-      if (database[category][id].posts.includes(request.body.sentposttitle.toLowerCase())) {return response.send(msg("post_exists", "", "u"));}
-    }
-    if (!database[category][id].posts) {database[category][id].posts = [];}
+
+    if (database[category][id].posts&&database[category][id].posts.includes(request.body.sentposttitle.toLowerCase())) return response.send(msg("postExists", null, "/u"));
+
+    if (!database[category][id].posts) database[category][id].posts = [];
+      
     var details={
       title: request.body.sentposttitle,
       body: request.body.sentpostbody,
       likes: [],
       comments: []
     }
-    if (category==="community"){details.sender = me;}
+    if (category==="community") details.username = me;
     database[category][id].posts.push(details);
     database.user[me].coins += 1;
     database.user[me].xp += 1;
     fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
-    return response.send(msg("post_created","Username",`${category[0]}`,`&username=${me}#${database[category][id].posts.length - 1}`));
+    return response.send(msg("postCreated","Username",`/${category[0]}`,`&username=${me}#${database[category][id].posts.length - 1}`));
   } else 
     
     
     if (method === "report") {
-    if (!request.body.sentposttitle) {return response.send(msg("include", "Post Value", "u"));}
-    if (!request.body.sentpostbody) {return response.send(msg("include", "Post Value", "u"));}
-    if (function_pack.html_check(request.body.sentposttitle) ||function_pack.html_check(request.body.sentpostbody)) {return response.send(msg("custom", "Do not use html!", "u"));}
+    if (!request.body.sentposttitle) return response.send(msg("include", "Post Value", "/u"));
+    if (!request.body.sentpostbody) return response.send(msg("include", "Post Value", "/u"));
+    if (functionPack.html_check(JSON.stringify(request.body))) 
+      return response.send(msg("custom", "Do not use html!", "/u"));
 
-    if (database.user[me].posts) {
-      if (database.user[me].posts.includes(request.body.sentposttitle.toLowerCase())) {
-        return response.send(msg("post_exists", "", "u"));
-      }
-    }
-    if (!database.user[me].posts) {
-      database.user[me].posts = [];
-    }
+
+    if (database.user[me].posts&&database.user[me].posts.includes(request.body.sentposttitle.toLowerCase())){return response.send(msg("postExists", "", "/u"));}
+      
+      
+    if (!database.user[me].posts) database.user[me].posts = [];
     database.user[me].posts.push({title: request.body.sentposttitle,body: request.body.sentpostbody,likes: [],comments: []});
     database.user[me].coins += 1;
     database.user[me].xp += 1;
     fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
-    return response.send(msg("post_created","Username",`u?username=${me}#${database.user[me].posts.length - 1}`,"redirect"));
+    return response.send(msg("postCreated","Username",`/u/${me}#${database.user[me].posts.length - 1}`));
   } else 
     
     
     if (method === "delete-post") {
-      var category = request.body.category, id = request.body.id;
-    if (!database[category][id].posts[request.body.sentnum]) {
-      return response.send(msg("post_does_not_exist", "", "u"));
-    }
+      var category = request.body.category, 
+          id = request.body.id;
+      
+    if (!database[category][id].posts[request.body.sentnum]) return response.send(msg("post_does_not_exist", "", "/u"));
     
     database[category][id].posts.splice(request.body.sentnum,1);
+      
     if (category === "user"){
-    if (!permission(1,me)&&id!==me){response.send(`${permission(1,me)} : ${id!==me}`)}
-    if (!logs.changes[id]) {logs.changes[id] = [];}
-    if (logs.changes[id]) {logs.changes[id].push(`Post #${request.body.sentnum} Deleted "${database[category][id].posts[request.body.sentnum]}"`);}
+      if (!permission(1,me)&&id!==me) {response.send(`${permission(1,me)} : ${id!==me}`);}
+      if (!logs.changes[id]) {logs.changes[id] = [];}
+      if (logs.changes[id])  {logs.changes[id].push(`Post #${request.body.sentnum} Deleted "${database[category][id].posts[request.body.sentnum]}"`);}
+      else if (!logs.changes[id]) {logs.changes[id] = [];}
     }
     database[category][id].coins -= 1;
     database[category][id].xp -= 1;
-    return response.send(msg("post_deleted","Username",`u?username=${id}#${database[category][id].posts.length - 1}`,"redirect"));
+    return response.send(msg("post_deleted","Username",`/u/${id}#${database[category][id].posts.length - 1}`));
   } else 
     
     
     if (method === "redeem") {
-    if (typeof config.codes[request.body.sentcode] == "undefined") {return response.send(msg("custom", "Invalid Code!", "dashboard"));}
-    if (database.user[me].codes.includes(request.body.sentcode)) {return response.send(msg("custom", "Code Exists!", "dashboard"));}
-    if (!logs.changes[me]) {logs.changes[me] = [];}
-    if (logs.changes[me]) {logs.changes[me].push(`Code Redeemed: "${request.body.sentcode}" for ${config.codes[request.body.sentcode]} ${currency} `);}
+    if (typeof config.codes[request.body.sentcode] == "undefined") return response.send(msg("custom", "Invalid Code!", "/dashboard"));
+    if (database.user[me].codes.includes(request.body.sentcode)) return response.send(msg("custom", "Code Exists!", "/dashboard"));
+    if (logs.changes[me]) logs.changes[me].push(`Code Redeemed: "${request.body.sentcode}" for ${config.codes[request.body.sentcode]} ${currency} `);
+    else if (!logs.changes[me]) logs.changes[me] = [];
+      
     database.user[me].codes.push(request.body.sentcode);
     database.user[me].coins += config.codes[request.body.sentcode];
-    return response.send(msg("custom", "Code Redeemed", `dashboard`));
+    return response.send(msg("custom", "Code Redeemed", "/dashboard"));
   } else 
     
     
-    if (method === "like") {
-    var type;
-    var check;
-    if (!database.user[me].posts) {response.send(msg("missing", "Post??!!", "u"));}
-    if (!request.body.sentid) {return response.send(msg("include", "Post Value", "u"));}
-    if (!request.body.type) {return response.send(msg("include", "Type", "u"));}
+  if (method === "like") {
+    var type, check;
+    if (!database.user[me].posts) {return response.send(msg("missing", "Post??!!", "/u"));}
+    if (!request.body.sentid) {return response.send(msg("include", "Post Value", "/u"));}
+    if (!request.body.type) {return response.send(msg("include", "Type", "/u"));}
+    
     else {type = request.body.type;}
+    
     if (type === "posts") {check = database.user[request.body.sentname].posts[request.body.sentid];}
     if (type === "thread") {check = database.community[request.body.sentname].posts[request.body.sentid];}
-    else {response.send(msg("custom", "Error??!!", "u"));}
+    
+    else response.send(msg("custom", "Error??!!", "/u"));
 
     if (!check.likes.includes(me)) {
       check.likes.push(me);
@@ -448,7 +466,7 @@ app.post("/edit", urlencodedParser, (request, response) => {
       return response.send(`<meta http-equiv="Refresh" content="0; url='/u?username=${me}&notification=${type}+UnLiked!'"/>`);
     }
     return response.send(
-      msg("custom",`${type}`,`u?username=${me}#${database.user[me].posts.length - 1}`,"redirect")
+      msg("custom",`${type}`,`/u/${me}#${database.user[me].posts.length - 1}`)
     );
   } else 
     
@@ -456,55 +474,44 @@ app.post("/edit", urlencodedParser, (request, response) => {
     if (method === "new-thread") {
     var community = request.body.sentcommunity;
       
-    if (!request.body.sentcommunity) {return response.send(msg("include", "Comment Value", "u"));}
-      
-    if (!request.body.sentposttitle) {return response.send(msg("include", "Post Value", "u"));}
-      
-    if (!request.body.sentpostbody) {return response.send(msg("include", "Post Value", "u"));}
-      
-    if (function_pack.html_check(request.body.sentposttitle) || function_pack.html_check(request.body.sentpostbody)) {return response.send(msg("custom", "Do not use html!", "u"));}
-
-    if (database.user[community].thread) {
-      if (database.user[community].thread.includes(request.body.sentposttitle.toLowerCase())) {
-        return response.send(msg("post_exists", "", "u"));
-      }
-    }
+    if (!request.body.sentcommunity) {return response.send(msg("include", "Comment Value", "/u"));}
+    if (!request.body.sentposttitle) {return response.send(msg("include", "Post Value", "/u"));}
+    if (!request.body.sentpostbody) {return response.send(msg("include", "Post Value", "/u"));}
+    if (functionPack.html_check(JSON.stringify(request.body))) {return response.send(msg("custom", "Do not use html!", "/u"));}
+    if (database.user[community].thread&&database.user[community].thread.includes(request.body.sentposttitle.toLowerCase())) {return response.send(msg("postExists", "", "/u"));}
     if (!database.user[community].thread) {database.user[community].thread = [];}
       
-    database.user[community].thread.push({sender: me,title: request.body.sentposttitle,body: request.body.sentpostbody,likes: [],comments: []});
+    database.user[community].thread.push({username: me,title: request.body.sentposttitle,body: request.body.sentpostbody,likes: [],comments: []});
       
     fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
       
-    return response.send(msg("post_created","Username",`c?search=${community}#${database.user[me].posts.length - 1}`,"redirect"));
+    return response.send(msg("postCreated","Username",`/c/${community}#${database.user[me].posts.length - 1}`));
   } else 
     
     
     if (method === "new-post-comment") {
-    if (!request.body.sentcomment) {return response.send(msg("include", "Comment Value", "u"));}
-    if (!request.body.commentid) {return response.send(msg("include", "Comment Id", "u"));}
-    if (database.user[me].posts &&database.user[me].posts[request.body.commentid].comments) {
-      if (database.user[me].posts[request.body.commentid].comments.includes(request.body.sentcomment.toLowerCase())) {return response.send(msg("post_exists", "", "u"));}
-    }
-    if (!database.user[me].posts) {database.user[me].posts = [];}
-    if (function_pack.html_check(request.body.sentcomment.toLowerCase())) {
-      return response.send("Bad!");
-    }
-    database.user[me].posts[request.body.commentid].comments.push({ sender: me, text: request.body.sentcomment });
+    if (!request.body.sentcomment) return response.send(msg("include", "Comment Value", "/u"));
+    if (!request.body.commentid) return response.send(msg("include", "Comment Id", "/u"));
+    if (database.user[me].posts &&database.user[me].posts[request.body.commentid].comments&&database.user[me].posts[request.body.commentid].comments.includes(request.body.sentcomment.toLowerCase())){return response.send(msg("postExists", null, "/u"));}
+    if (!database.user[me].posts) database.user[me].posts = [];
+    if (functionPack.html_check(request.body.sentcomment.toLowerCase())) return response.send(msg("custom","No HTML Plez"));
+      
+    database.user[me].posts[request.body.commentid].comments.push({ username: me, text: request.body.sentcomment });
     database.user[me].coins += 0.2;
     database.user[me].xp += 1;
     fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
-    return response.send(msg("post_created","Username",`u?username=${me}#${database.user[me].posts.length - 1}`,"redirect"));
+    return response.send(msg("postCreated","Username",`/u/${me}#${database.user[me].posts.length - 1}`));
   } 
   else 
     
     
     if (method === "new-community") {
-    if (typeof database.community[request.body.sentcommunity.toLowerCase()] !== "undefined") {
-      return response.send(msg("exists", "d", "u"));
-    }
-    if (!request.body.sentcommunity) {return response.send(msg("invalid", "Community", "register"));}
-    if (!request.body.sentdesc) {return response.send(msg("invalid", "Description", "register"));}
+    if (typeof database.community[request.body.sentcommunity.toLowerCase()] !== "undefined") {return response.send(msg("exists", null, "/u"));}
+    if (!request.body.sentcommunity) {return response.send(msg("invalid", "Community", "/register"));}
+    if (!request.body.sentdesc) {return response.send(msg("invalid", "Description", "/register"));}
+      
       community = request.body.sentcommunity.toLowerCase();
+      
     if (typeof database.community[community] === "undefined") {
       database.user[me].communities.push(request.body.sentcommunity.toLowerCase());
       database.community[request.body.sentcommunity.toLowerCase()] = {
@@ -520,7 +527,7 @@ app.post("/edit", urlencodedParser, (request, response) => {
       };
 
       fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
-      response.send(msg("custom", "", `c/${community}`));
+      response.send(msg("custom", "", `/c/${community}`));
     }
   } /*else if (method === "new-thread-comment") {
     if (!request.body.sentcommunity) {return response.send(msg("include", "Comment Value", "u"));}
@@ -542,7 +549,7 @@ app.post("/edit", urlencodedParser, (request, response) => {
     fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
     return response.send(msg("post_created","Username",`c?search=${community}#${database.thread[community].length - 1}`,"redirect"));
   }*/ else {
-    return response.send(msg("missing", "Method lol", "u"));
+    return response.send(msg("missing", "Method lol", "/u"));
   }
 });
 
@@ -550,15 +557,16 @@ app.get("/connect", urlencodedParser, (request, response) => {
   var method = request.query.method,
       user = request.query.user,
       me = request.cookies["saved-username"]||undefined;
-  if (me){me = me.toLowerCase();}else{return response.send(msg("custom", "Not Logged in", "u"));}
-  if (user) {user = user.toLowerCase();}else{return response.send(msg("missing", "user", "u"));}
-  if (!method) { return response.send(msg("missing", "Method", "u"));}
-  if (typeof database.user[me] === "undefined") {return response.send(msg("no_account", "Username", ""));}
-  if (!bcrypt.compareSync(request.cookies["saved-password"],database.user[me].password)) {return response.send(msg("incorrect", "Username", "dashboard"));}
-  if (method==="join" && typeof database.community[user] === "undefined") {return response.send(msg("custom", "ERROR", "c",`&search=${user}`));}
+  
+  if (me)me = me.toLowerCase();else return response.send(msg("custom", "Not Logged in", "/u"));
+  if (user) user = user.toLowerCase(); else return response.send(msg("missing", "user", "/u"));
+  if (!method) return response.send(msg("missing", "Method", "/u"));
+  if (typeof database.user[me] === "undefined") return response.send(msg("noAccount", "Username"));
+  if (!bcrypt.compareSync(request.cookies["saved-password"],database.user[me].password)) return response.send(msg("incorrect", "Username", "/dashboard"));
+  if (method==="join" && typeof database.community[user] === "undefined") {return response.send(msg("custom", "ERROR", `/c/${user}`));}
 
   if (method === "follow") {
-    if (me === user){return response.send(msg("custom","You cannot follow yourself!",""))}
+    if (me === user)return response.send(msg("custom","You cannot follow yourself!"))
     if (!database.user[me].following.includes(user)) {
       database.user[me].following.push(user);
       database.user[user].followers.push(me);
@@ -589,77 +597,60 @@ app.get("/connect", urlencodedParser, (request, response) => {
 });
 
 app.post("/login", urlencodedParser, (request, response) => {
-  if (!request.body.sentname || !request.body.sentpass) {return response.send(msg("include", "Username and Password", "u"));}
-  if (typeof database.user[request.body.sentname] == "undefined") {return response.send(msg("no_account", "", "u"));}
-  if (bcrypt.compareSync(request.body.sentpass,database.user[request.body.sentname.toLowerCase()].password)) {
-    if (request.cookies["saved-username"] && request.cookies["saved-password"]) {
-      return response.send(msg("logged_in", "", "u"));
-    } else {
-      response.cookie("saved-username", request.body.sentname.toLowerCase(), {maxAge: 1.296e9});
-      response.cookie("saved-password", request.body.sentpass, {maxAge: 1.296e9});
-      return response.send(msg("logged_in", "", "u", "redirect"));
+  var username = request.body.sentname,
+      password = request.body.sentpass
+  if (!username || !password) return response.send(msg("include", "Username and Password", request.path));
+  if (typeof database.user[username.toLowerCase()] == "undefined") return response.send(msg("noAccount", null, request.path));
+  if (bcrypt.compareSync(password,database.user[username.toLowerCase()].password)) {
+    if (request.cookies["saved-username"] && request.cookies["saved-password"]) {return response.send(msg("loggedIn", "", "/u")); }
+    else {
+      response.cookie("saved-username", username.toLowerCase(), {maxAge: 1.296e9});
+      response.cookie("saved-password", password, {maxAge: 1.296e9});
+      return response.send(msg("custom", "Successfuly logged in.", "/u"));
     }
-  } else {
-    return response.send(msg("incorrect", "Password", "u"));
-  }
+  } else return response.send(msg("incorrect", "Password", request.path));
 });
 
 app.get("/logout", urlencodedParser, (request, response) => {
-  if (!request.cookies["saved-username"] &&!request.cookies["saved-password"]) {
-    return response.send(msg("logged_not", "", "u", "redirect"));
-  } else {
+  if (!request.cookies["saved-username"] &&!request.cookies["saved-password"]) return response.send(msg("logged_not",null, "/u")); 
+  else {
     response.cookie("saved-username", request.cookies["saved-username"], {maxAge: 0});
     response.cookie("saved-password", request.cookies["saved-password"], {maxAge: 0});
-    return response.send(msg("logout", "", "u", "redirect"));
+    return response.send(msg("logout",null, "/u"));
   }
 });
 
 app.get("/auth/:id?", urlencodedParser, (request, response) => {
-  var username,password;
-  var id = request.params.id||request.query.id||undefined;
+  var username = request.cookies["saved-username"],
+      password = request.cookies["saved-password"];
+  var id = request.params.id.toLowerCase()||request.query.id||undefined;
   if (!id){return response.send("No input given")}
-  id = id.toLowerCase();
-  if (!request.cookies["saved-username"]||!request.cookies["saved-password"]){
-    return response.send("Not Logged In")
-  }
-    username = request.cookies["saved-username"];
-    password = request.cookies["saved-password"];
-  if (username !== id){
-    return response.send("Username Headers don't match.")
-  }
-  if(!bcrypt.compareSync(password,database.user[username].password)){
-    return response.send("Unsuccessful")
-  }
+  if (!request.cookies["saved-username"]||!request.cookies["saved-password"]) {return response.send("Not Logged In");}
+  if (username !== id) {return response.send("Username Headers don't match.");}
+  
+  if(!bcrypt.compareSync(password,database.user[username].password)) return response.send("Unsuccessful");
+  
   return response.send("Successful")
   
 });
 
-
 app.get("/discord/:id?/", urlencodedParser, (request, response) => {
-  var username,password;
-  var id = request.params.id||request.query.id||undefined;
-  id = id.replace(/\ /g,"#")
-  if (!id){return response.send("No input given")}
-  if (!request.cookies["saved-username"]||!request.cookies["saved-password"]){
-    return response.send("Not Logged In")
-  }
-    username = request.cookies["saved-username"];
-    password = request.cookies["saved-password"];
-  if(!bcrypt.compareSync(password,database.user[username].password)){
-    return response.send("Incorrect Password")
-  }
+  var username = request.cookies["saved-username"],
+      password = request.cookies["saved-password"];
+  var id = request.params.id.replace(/\ /g,"#")||request.query.id.replace(/\ /g,"#")||undefined;
+  
+  if (!id)return response.send("No input given");
+  if (!request.cookies["saved-username"]||!request.cookies["saved-password"]) return response.send("Not Logged In");
+  if(!bcrypt.compareSync(password,database.user[username].password)) return response.send("Incorrect Password");
   
   database.discord[username] = id;
-  return response.send(`Discord ID set to ${id}`)
-  
+  return response.send(`Discord ID set to ${id}`);
 });
-
 
 app.get("/u-text", urlencodedParser, (request, response) => {
   var username = request.query.search.toLowerCase();
-  if (typeof database.user[username] == "undefined") {
-    return response.send(msg("no_account", "", "u"));
-  }
+  if (typeof database.user[username] == "undefined") return response.send(msg("noAccount", null, "/u"));
+  
   var values = {
     "post_number":0,
     "post_list":"",
@@ -667,14 +658,11 @@ app.get("/u-text", urlencodedParser, (request, response) => {
     "comment_list":""
   }
 
-  
-  
-  
   while (values.post_number < database.user[username].posts.length){
     var num = values.post_number;values.comment_list="";
   while (values.comment_number < database.user[username].posts[num].comments.length){
-    var num2 = values.comment_number;var sender = database.user[username].posts[num].comments[num2].sender
-    if (!database.user[sender]){sender = "Deleted User"}
+    var num2 = values.comment_number;var sender = database.user[username].posts[num].comments[num2].username
+    if (!database.user[sender])sender = "Deleted User"
     values.comment_list += `<p>${sender}: ${database.user[username].posts[num].comments[num2].text}</p>
     `
     values.comment_number++
@@ -698,28 +686,16 @@ app.get("/u-text", urlencodedParser, (request, response) => {
 
 app.post("/register", urlencodedParser, (request, response) => {
   //console.log(request.body);
-  var avatar;
-  if (typeof database.user[request.body.sentname.toLowerCase()] !== "undefined") {
-    return response.send(msg("exists", "d", "u"));
-  }
-  if (request.body.sentname == null ||request.body.sentname == undefined ||!request.body.sentname) {
-    return response.send(msg("invalid", "Username", "register"));
-  }
-  if (request.body.sentpass == null ||request.body.sentpass == undefined ||!request.body.sentpass) {
-    return response.send(msg("invalid", "Password", "register"));
-  }
-  if (request.body.sentdesc == null ||request.body.sentdesc == undefined ||!request.body.sentdesc) {
-    return response.send(msg("invalid", "Description", "register"));
-  }
-  if (request.body.sentpass !== request.body.sentpassconfirm) {
-    return response.send(
-      msg("match", "password & confirm password", "register")
-    );
-  }
+  //var avatar;
+  if (typeof database.user[request.body.sentname.toLowerCase()] !== "undefined") return response.send(msg("exists", null, "/u"));
+  if (request.body.sentname == null ||request.body.sentname == undefined ||!request.body.sentname) return response.send(msg("invalid", "Username", "/register"))
+  if (request.body.sentpass == null ||request.body.sentpass == undefined ||!request.body.sentpass) return response.send(msg("invalid", "Password", "/register"));
+  if (request.body.sentdesc == null ||request.body.sentdesc == undefined ||!request.body.sentdesc) return response.send(msg("invalid", "Description", "/register"));
+  if (request.body.sentpass !== request.body.sentpassconfirm) return response.send(msg("match", "password & confirm password", "/register"));
   //if (request.body.sentname.includes("_")||request.body.sentname.includes("!")||request.body.sentname.includes("_"))
-  if (function_pack.a0(request.body.sentname) || function_pack.html_check(request.body.sentdesc)) {
-    return response.send(msg("custom", "Do not use custom characters or html!", "u"));
-  }
+  if (functionPack.a0(request.body.sentname) || functionPack.html_check(request.body.sentdesc))
+    return response.send(msg("custom", "Do not use custom characters or html!", "/u"));
+  
   if (typeof database.user[request.body.sentname.toLowerCase()] == "undefined") {
     response.cookie("saved-username", request.body.sentname.toLowerCase(), {maxAge: 1.296e9});
     response.cookie("saved-password", request.body.sentpass, {maxAge: 1.296e9});
@@ -740,13 +716,14 @@ app.post("/register", urlencodedParser, (request, response) => {
       communities: [],
       codes: [],
       posts:[],
-      /*Delete badges if needed*/ roles: [],
+      /*Delete badges if needed*/
+      roles: [],
       creation_date: Date.now()
     };
-    mail(request.body.sentemail,`Your account, ${request.body.sentname} on ${project_name}`,null,`A user with the name of ${request.body.sentname} on <a href="https://meown.tk">${project_name}</a> created an account by this email, Your login details are <br><li>Username: ${request.body.sentname}</li><li>Password: ${request.body.sentpass}</li><li>Description: ${request.body.sentdesc}</li>`).catch(console.error);
+    //mail(request.body.sentemail,`Your account, ${request.body.sentname} on ${project_name}`,null,`A user with the name of ${request.body.sentname} on <a href="https://meown.tk">${project_name}</a> created an account by this email, Your login details are <br><li>Username: ${request.body.sentname}</li><li>Password: ${request.body.sentpass}</li><li>Description: ${request.body.sentdesc}</li>`).catch(console.error);
     fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
     response.send(`<meta http-equiv="Refresh" content="0; url='/u?username=${request.body.sentname.toLowerCase()}&notification=Account+Created!'"/>`);
-    console.log(`Account created, Username: ${request.body.sentname.toLowerCase()}, Password: ${request.body.sentpass.toLowerCase()} , Description: ${request.body.sentdesc.toLowerCase()}`);
+    //console.log(`Account created, Username: ${request.body.sentname.toLowerCase()}, Password: ${request.body.sentpass.toLowerCase()} , Description: ${request.body.sentdesc.toLowerCase()}`);
   }
 });
 
@@ -799,17 +776,16 @@ app.post("/new-community", urlencodedParser, (request, response) => {
 console.log(hash)*/
 
 function info_data(x,values) {
-  var result;
+  var result=``;
   if (!values){values = {}}
-  values.description = `The newest, worst social media.`
-  if (values.category){
-    if (values.category === "user" && values.username){
-      if (database[values.category][values.username].description){values.description = database[values.category][values.username].description;}
-    }
-  }
+  values.description = `The newest, worst social media.`;
+  
+  if(values.category && values.category=="user"&&values.username&&database[values.category][values.username])
+  {values.description = database[values.category][values.username].description||"No Description";}
+
   result = `
-<title>${project_name} | ${function_pack.caps(x)}</title>
-<meta property="og:title" content="${project_name} | ${function_pack.caps(x)}" />
+<title>${project_name} | ${functionPack.caps(x)}</title>
+<meta property="og:title" content="${project_name} | ${functionPack.caps(x)}" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://meown.tk" />
 <meta property="og:image" content="https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png?v=1594354728664" />
@@ -825,21 +801,46 @@ function info_data(x,values) {
 <script>if ("serviceWorker" in navigator) {navigator.serviceWorker.register("/service-worker.js");}</script>
 
 `;
-  if (values){
-    if (values.hostname){
-      result+=`<link rel="canonical" href="https://${values.hostname}">`
-    }
-  }
+  if (values&&values.hostname){result+=`<link rel="canonical" href="https://${values.hostname}">`;}
   return result;
 }
+
+app.get("/me-wall/:search?/:length?/:spacing?/", urlencodedParser, (request, response) => {
+  var username = request.params.search||request.query.search||undefined,
+      length = request.params.length||request.query.length||400,
+      spacing = request.params.length||request.query.length||400;
+  
+  if (!username){return response.send("No input given")}
+  if(typeof database.user[username]==="undefined"){return response.send("User doesn\'t exist")}
+  
+  var description = database.user[username].description||"",
+      text = `${functionPack.caps(username)}: ${description}`;
+  
+  //var d= {text:"/&nbsp&nbsp\\&nbsp&nbsp_",length:length,spacing:spacing,url:`${request.hostname}/u/${username}`}
+  var values = {text:text||"ERROR", length:length, spacing:spacing, url:`${request.hostname}/u/${username}`}
+  return response.render("textwall.ejs", { values: values });
+  
+});
+
+app.get("/wallet/:id?", urlencodedParser, (request, response) => {
+  var id = request.params.id||request.query.id||undefined;
+  if (!id){return response.send("No input given");}
+  if (!isNaN(id))id=id.toString();
+  if(typeof database.wallet[id]==="undefined"){return response.send("Wallet doesn\'t exist");}
+  var wallet = database.wallet[id]
+  return response.send(`Owner: ${wallet.owner},<br>Admins: ${wallet.admin&&wallet.admin[0]&&wallet.admin||"None"},<br>Coins: ${wallet.amount||0}`);
+});
+
+
 app.get("/api/:method?/:search?", cors(), (request, response) => {
-  var search = request.params.search||request.query.search;
-  var method = request.params.method||request.query.method;
+  var search = request.params.search||request.query.search,
+      method = request.params.method||request.query.method;
+  
   if (!method) {response.json({ error: "method" });}
   if (method) {
     if (method === "user") {
-      if (!search) {response.json({ error: "name_/_id_/_variant" });}
-      if (typeof database.user[search] == "undefined") {response.json({ error: "user_from_database" });}
+      if (!search) return response.json({ error: "name_/_id_/_variant" });
+      if (typeof database.user[search] == "undefined"){return response.json({error: "id_from_database", "id":search});}
       var user = database.user[search];
       
       const cloneuser = Object.assign({}, user);
@@ -847,27 +848,35 @@ app.get("/api/:method?/:search?", cors(), (request, response) => {
       delete cloneuser.password;
       delete cloneuser.email;
       
-      if (request.query.includeposts!=="true"){delete cloneuser.posts}
+      if (request.query.includeposts!=="true")delete cloneuser.posts;
       return response.json({status:200,response:cloneuser});
-    } else 
+      } 
+    
+      else if (method === "users"){return response.json({status:200,result:Object.keys(database.user)});}
+    
+      else if (method === "communities"){return response.json({status:500,result:Object.keys(database.community)});}
+    
+      if (method === "community") {
+      if (!search) return response.json({ error: "name_/_id_/_variant" });
+      if (typeof database.community[search] == "undefined") return response.json({ error: "community_from_database", "id":search});
+      var community = database.community[search];
       
-      if (method === "user_list") {
-      return response.json({status:200,result:Object.keys(database.user)});
-    } else 
+      const clonecommunity = Object.assign({}, community);
       
-      if (method === "communities") {
-      return response.json({status:500,result:Object.keys(database.community)});
-    } else 
-      
-      if (method === "config") {
+      if (request.query.includeposts!=="true"){delete clonecommunity.posts;}
+      return response.json({status:200,response:clonecommunity});
+      } 
+    
+      else if (method === "config") {
       var data = JSON.parse(JSON.stringify(config))
       delete data.passcode;delete data.codes
       return response.json({status:200,result:data});
-    } else {
-      return response.json({status:500,error: "no_results" });
-    }
+      }
+    
+      else {return response.json({status:500,error: "no_results" });}
   }
 });
+
 /*
 function social(values) {
   if (!logs.views[values.id]) {
@@ -877,6 +886,7 @@ function social(values) {
   var Page = require('../modules/page');return new Page(values, database).value();
 }
 */
+
 function get_roles() {
   var roles = {};
   var i;
@@ -886,26 +896,23 @@ function get_roles() {
     user = Object.keys(database.user)[i]; //Get each user details
     for (i2 = 0; i2 < Object.keys(database.user[user].roles).length; i2++) {
       //Get each users roles
-      if (!roles[database.user[user].roles[i2]]) {
-        roles[database.user[user].roles[i2]] = [];
-      }
+      if (!roles[database.user[user].roles[i2]]){roles[database.user[user].roles[i2]] = [];}
       if (!roles[database.user[user].roles[i2]].includes(user)) {
         var usercap = user;
-        //var usercap = user.charAt(0).toUpperCase() + user.slice(1);
         roles[database.user[user].roles[i2]].push(usercap);
       }
     }
   }
   return roles;
 }
+
 app.get("/error", (request, response) => {
     var text = request.query.text,value = request.query.value,who = request.query.who,symbols=[];
-  if (!value){value = "huh?"}
-    if (who){text[0]=who+" "}
+    if (!value){value = "huh?";}
+    if (who){text[0]=who+" ";}
     var i;for (i = 0; i < value.length; i++) {
       var overlay="",emoji_letters = ["U","u","O","o","D","n"]
-      if (emoji_letters.includes(value.charAt(i)))
-      {overlay="🐈"}
+      if (emoji_letters.includes(value.charAt(i)))overlay="🐈";
       symbols.push({"symbol":value.charAt(i),"overlay":overlay})
     }
       response.render("error.ejs", {error:JSON.stringify({
@@ -923,24 +930,20 @@ app.get("/u/:search?", (request, response) => {
       username = request.params.search||request.query.search||me||null;
 
   
-  function banned(type,who){//I dunno lol
-    response.redirect(`/error?value=${type}&text=@${who} is ${type} Lol`)
-  }
-  if (!username) {//If not username
-          response.send(msg("no_account", null, "login"));
-  }/*End of if username*/
-  if (typeof database.user[username] === "undefined") {//If user exists in database
-    return response.send(msg("no_account", null, "u"));
-  }
-  if (database.user[username].roles.includes("banned")){banned("BANNED",username)}
-  if (database.user[username].roles.includes("suspended")){banned("SUSPENDED",username)}
+  function banned(type,who) {response.redirect(`/error?value=${type}&text=@${who} is ${type} Lol`)}
+  
+  if (!username) response.send(msg("noAccount", null, "/login")); //If not username
+  //if (typeof database.user[me] === "undefined") return response.send(msg("custom", "Not logged in","/"));
+  if (typeof database.user[username] === "undefined") return response.send(msg("noAccount", null, "/u")); //If user exists in database
+  if (database.user[username].roles.includes("banned")){banned("BANNED",username);}
+  if (database.user[username].roles.includes("suspended")){banned("SUSPENDED",username);}
   
   var values = {
     username: username,
     id: username,
     category: "user",
     background: request.cookies["saved-background"],
-    data_type: database.user,
+    //data_type: database.user,
     password: request.cookies["saved-password"],
     currency: currency,
     me: me,
@@ -953,9 +956,9 @@ app.get("/u/:search?", (request, response) => {
       loggedIn:"simple-hidden"
     }
   };
-  values.header=info_data(`${values.category}: `+function_pack.caps(values.username),{category:values.category,username:values.username});
+  values.header=info_data(`${values.category}: `+functionPack.caps(values.username)||values.username,{category:values.category,username:values.username});
   
-  if (!logs.views[values.id]) {logs.views[values.id] = 0;};
+  if (!logs.views[values.id]) logs.views[values.id] = 0;
   
   logs.views[values.id] += 1;
   
@@ -964,34 +967,36 @@ app.get("/u/:search?", (request, response) => {
   //response.send(get.u());
   var delete_passwords;
   //const data = Object.assign({}, database);
-  const data = JSON.parse(JSON.stringify(database));
+  const data = {
+    user:{
+      [username]:JSON.parse(JSON.stringify(database[values.category][username]))
+    }
+  }
   for (values.i = 0; values.i < Object.keys(data.user).length; values.i++) {
     delete_passwords = Object.keys(data.user)[values.i];
     delete data.user[delete_passwords]["password"];
   }
   response.render("page.ejs", { database: data, values: values });
 });
+
+
 function maintenance_check(){
   if (config.maintenance){
-    if (config.maintenance === true){
-      return {"status":true,"url":"/error?value=${type}&text=The server is undergoing maintenance"};
-    }else{
-      return {"status":false};
-    }
-  }else{
-    return {"status":false};
+    if (config.maintenance === true) {return {"status":true,"url":"/error?value=${type}&text=The server is undergoing maintenance"};}
+    else return {"status":false};
   }
+  else return {"status":false};
 }
+
 app.get("/c/:search?", (request, response) => {
-  if (maintenance_check().status){response.redirect()}
+  if (maintenance_check().status) {return response.redirect();}
   //var params = request.protocol + "://" + request.headers.host + request.originalUrl;
   //var username = params.slice(params.search("username=")+9,Infinity).toLowerCase();
   var community = request.params.search||request.query.search||"meown",
       me = request.cookies["saved-username"];
   //if (!me){me = "null"}
-  if (typeof database.community[community]  === "undefined") {
-    return response.send(msg("custom", "No community with this name", "c","&search=meown"));
-  }
+  if (typeof database.community[community]  === "undefined") {return response.send(msg("custom", "No community with this name", `/c/meown`));}
+  
   var values = {
     username: community,
     id: community,
@@ -1010,7 +1015,7 @@ app.get("/c/:search?", (request, response) => {
       logged_in: "simple-hidden"
     }
   };
-  values.header=info_data(`${values.category}: `+function_pack.caps(values.username));
+  values.header=info_data(`${values.category}: `+functionPack.caps(values.username));
   
   var Page = require('../modules/page');new Page(values, database).value();
   
@@ -1026,7 +1031,51 @@ app.get("/c/:search?", (request, response) => {
   response.render("page.ejs", { database: data, values: values });
 });
 
-app.get("/", function(request, response) {
+app.get("/com/:search?", (request, response) => {
+  if (maintenance_check().status) {response.redirect();}
+  //var params = request.protocol + "://" + request.headers.host + request.originalUrl;
+  //var username = params.slice(params.search("username=")+9,Infinity).toLowerCase();
+  var community = request.params.search||request.query.search||"meown",
+      me = request.cookies["saved-username"];
+  //if (!me){me = "null"}
+  if (typeof database.community[community]  === "undefined") 
+    return response.send(msg("custom", "No community with this name", `/c/meown`));
+  
+  var values = {
+    username: community,
+    id: community,
+    category: "community",
+    data_type: database.community,
+    password: request.cookies["saved-password"],
+    background: request.cookies["saved-background"],
+    currency: currency,
+    me: me,
+    time: time,
+    anti: anti,
+    hostname: request.hostname,
+    //info_data: info_data,
+    visible: {
+      post_bar: "simple-hidden",
+      logged_in: "simple-hidden"
+    }
+  };
+  values.header=info_data(`${values.category}: `+functionPack.caps(values.username));
+  
+  //var Page = require('../modules/page');new Page(values, database).value();
+  
+  //var get = new main(database, mini,username,null,currency,status,self_avatar,self_link,profile_menu,scripts,info_data,nav,nav_mobile,badge_list,follow_amount,follow_list,community_list,post_bar,post_list,side_bar);
+  //response.send(get.u());
+  var delete_passwords;
+  //const data = Object.assign({}, database);
+  const data = JSON.parse(JSON.stringify(database));
+  for (values.i = 0; values.i < Object.keys(data.user).length; values.i++) {
+    delete_passwords = Object.keys(data.user)[values.i];
+    delete data.user[delete_passwords]["password"];
+  }
+  response.render("community.ejs", { database: data, values: values });
+});
+
+app.get("/", (request, response) => {
   var me = request.cookies["saved-username"];
   var values = {
     username: "empty",
@@ -1054,9 +1103,10 @@ app.get("/", function(request, response) {
   };
   
   function changelog (number){
-    if (number==="last"){number === Object.keys(config.changelog).length-1}
-    if (number&&!isNaN(number)){return {name:function_pack.caps(Object.keys(config.changelog)[number]),values:config.changelog[Object.keys(config.changelog)[number]]}}
-    else{return {name:function_pack.caps(Object.keys(config.changelog)[Object.keys(config.changelog).length-1]),values:config.changelog[Object.keys(config.changelog)[Object.keys(config.changelog).length-1]]}}
+    if (number==="last") number === Object.keys(config.changelog).length-1;
+    if (number&&!isNaN(number))
+      {return {name:functionPack.caps(Object.keys(config.changelog)[number]),values:config.changelog[Object.keys(config.changelog)[number]]}}
+    else return {name:functionPack.caps(Object.keys(config.changelog)[Object.keys(config.changelog).length-1]),values:config.changelog[Object.keys(config.changelog)[Object.keys(config.changelog).length-1]]}
     
   }
   values.changelog=`<b>Changelogs:</b><br>${changelog("last").name}<br>`;
@@ -1064,9 +1114,8 @@ app.get("/", function(request, response) {
   changelog("last").values.forEach(add_log);
   
   function add_log(item,index){
-    console.log(index)
-    if (index <= 0){values.changelog+= `- ${item}<br>`}
-    else{values.changelog+= `- ${item}`}
+    if (index <= 0)values.changelog+= `- ${item}<br>`;
+    else values.changelog+= `- ${item}`;
   }
   
   
@@ -1077,15 +1126,15 @@ app.get("/", function(request, response) {
     
     var g=0;for (g = 0; g < Object.keys(get_roles()[role]).length; g++) {
     values.roles[role]+= `<a href="/u?search${get_roles()[role][g]}">${get_roles()[role][g]}</a>`
-    if (Object.keys(get_roles()[role]).length>0){values.roles[role]+=", "}
+    if (Object.keys(get_roles()[role]).length>0) values.roles[role]+=", ";
   }
-    values.roles[role]=function_pack.fix_end(values.roles[role]);
+    values.roles[role]=functionPack.fix_end(values.roles[role]);
   }
   //if (request.query.notification){scripts+=`alert('${request.query.notification}');`}
 
   if (me !== undefined) {
     if (typeof database.user[me] == "undefined") {
-      return response.send(msg("No account with this name!"));
+      return response.send(msg("custom","No account with this name!","/logout"));
     }
     values.self_avatar = database.user[me].avatar;
     values.username = request.cookies["saved-username"];
@@ -1098,29 +1147,119 @@ app.get("/", function(request, response) {
     values.self.preferred="Name: "+values.self.preferred}
   }
   }else{values.self = JSON.parse(JSON.stringify(database.user["null"]));}
-  response.render("slash.ejs", { values: values });
-});
-app.get("/salt/:value", (request, response) => {
-  var value = request.params.value,respond="";
-  if (!value){value="L"}
-  response.send(bcrypt.hashSync(value, bcrypt.genSaltSync(10)))
+  return response.render("slash.ejs", { values: values });
 });
 
-app.get("/follow-button/:search", (request, response) => {
-  var search = request.params.search,result,url,username = search.toLowerCase();
+app.get("/c/:search?", (request, response) => {
+  if (maintenance_check().status) response.redirect();
+  //var params = request.protocol + "://" + request.headers.host + request.originalUrl;
+  //var username = params.slice(params.search("username=")+9,Infinity).toLowerCase();
+  var community = request.params.search||request.query.search||"meown",
+      me = request.cookies["saved-username"];
+  //if (!me){me = "null"}
+  if (typeof database.community[community]  === "undefined") 
+    return response.send(msg("custom", "No community with this name", `/c/meown`));
+  
+  var values = {
+    username: community,
+    id: community,
+    category: "community",
+    data_type: database.community,
+    password: request.cookies["saved-password"],
+    background: request.cookies["saved-background"],
+    currency: currency,
+    me: me,
+    time: time,
+    anti: anti,
+    hostname: request.hostname,
+    //info_data: info_data,
+    visible: {
+      post_bar: "simple-hidden",
+      logged_in: "simple-hidden"
+    }
+  };
+  values.header=info_data(`${values.category}: `+functionPack.caps(values.username));
+  
+  var Page = require('../modules/page');new Page(values, database).value();
+  
+  //var get = new main(database, mini,username,null,currency,status,self_avatar,self_link,profile_menu,scripts,info_data,nav,nav_mobile,badge_list,follow_amount,follow_list,community_list,post_bar,post_list,side_bar);
+  //response.send(get.u());
+  var delete_passwords;
+  //const data = Object.assign({}, database);
+  const data = JSON.parse(JSON.stringify(database));
+  for (values.i = 0; values.i < Object.keys(data.user).length; values.i++) {
+    delete_passwords = Object.keys(data.user)[values.i];
+    delete data.user[delete_passwords]["password"];
+  }
+  response.render("page.ejs", { database: data, values: values });
+});
+
+app.get("/salt/:value?", (request, response) => {
+  var value = request.params.value,respond="";
+  if (!value) return response.send("No input value");
+  return response.send(bcrypt.hashSync(value, bcrypt.genSaltSync(10)))
+});
+
+app.get("/imgtest", (request, response) => {
+  return response.sendFile('http://placekitten.com/150/150')
+});
+
+app.get("/social/", (request, response) => {
+  var me = request.cookies["saved-username"]||"guest";
+
+  
+  function banned(type,who){//I dunno lol
+    response.redirect(`/error?value=${type}&text=@${who} is ${type} Lol`)
+  }
+  //if (!username) response.send(msg("noAccount", null, "/login")); //If not username
+  if (typeof database.user[me] === "undefined") return response.send(msg("custom", "Not logged in","/"));
+ 
+  
+  var values = {
+    category: "user",
+    background: request.cookies["saved-background"],
+    //data_type: database.user,
+    password: request.cookies["saved-password"],
+    currency: currency,
+    me: me,
+    id:me,
+    time: time,
+    anti: anti,
+    hostname: request.hostname,
+    //info_data: info_data,
+    visible: {
+      postBar:"simple-hidden",
+      loggedIn:"simple-hidden"
+    }
+  };
+  values.header=info_data(`Social Pages`);
+  
+  if (!logs.views[values.id]) logs.views[values.id] = 0;
+  
+  logs.views[values.id] += 1;
+  var delete_passwords;
+  const data = {
+    user:{
+      [me]:JSON.parse(JSON.stringify(database[values.category][me]))
+    }
+  }
+  for (values.i = 0; values.i < Object.keys(data.user).length; values.i++) {
+    delete_passwords = Object.keys(data.user)[values.i];
+    delete data.user[delete_passwords]["password"];
+  }
+  response.render("social.ejs", { database: data, values: values });
+});
+
+app.get("/follow-button/:search?", (request, response) => {
+  var search = request.params.search||"orago",
+      result,url,username = search.toLowerCase();
   if(!search){
-    if (request.query.search){search = request.query.search;}
-    else{search = config.owner;}
-    
+    if (request.query.search) search = request.query.search;
+    else search = config.owner;
   }
   if (typeof database.user[username]  !== "undefined"){
-    result = `Follow @${search}`;
-    url = `/connect?method=follow&user=${username}`
-  }
-  else{
-    result = `Invalid User`;
-    url = `u`
-  }
+    result = `Follow @${search}`; url = `/connect?method=follow&user=${username}`;}
+  else{result = `Invalid User`; url = `u`;}
   var button = `
   <button onclick="location.replace('${url}')" class="simple-meown-button" style="vertical-align:middle">
   <span>
@@ -1128,7 +1267,7 @@ app.get("/follow-button/:search", (request, response) => {
   </span>
   <link rel="stylesheet" href="https://beta.meown.tk/simple.css">
   </button>`
-  response.send(button)
+  return response.send(button)
 });
 
 function staff_check(username){
@@ -1146,38 +1285,81 @@ function permission(num,who){
 app.post("/command", urlencodedParser, (request, response) => {
 var command_values = request.body.command.split(" "),
     command = command_values[0],
-    target = command_values[1],
-    value = command_values[2];
+    target = command_values[1]||"",
+    value = command_values[2]||"";
+  if (functionPack.html_check(JSON.stringify(command_values))) return response.send(msg("custom",`Bro.. No Html.`,"/dashboard"));
+var username=request.cookies["saved-username"],password = request.cookies["saved-password"]||"Lol";
   
-var username=request.cookies["saved-username"],password = request.cookies["saved-password"];
   
-  if (!password){password="Lol";}
-  
-  if (!real_user(username,password)){response.send(msg("custom",`Invalid Username / Password`,"u"));}
+  if (!real_user(username,password)) return response.send(msg("custom",`Invalid Username / Password`,"/dashboard"));
   
 if (command==="ban"&&permission(1,username)){
-  if (!exists_user(target)||username===target){return response.send(msg("custom",`User Doesn't Exist`,"dashboard"));}
+  
+  if (!database.user[target]||username===target) return response.send(msg("custom",`User Doesn't Exist`,"/dashboard"));
+  
   database.user[target].roles.push("banned")
- return response.send(msg("custom",`@${target} is banned`,"dashboard"));
-}else
-if (command==="unban"&&permission(1,username)){
-  if (!exists_user(target)||username===target){return response.send(msg("custom",`User Doesn't Exist`,"dashboard"));}
   
-  if (database.user[target].roles.includes("banned")){database.user[target].roles = database.user[target].roles.filter((n) => {return n != "banned"});return response.send(msg("custom",`User Unbanned`,"dashboard"));}else
-    
-  if (database.user[target].roles.includes("suspended")){database.user[target].roles = database.user[target].roles.filter((n) => {return n != "suspended"});return response.send(msg("custom",`User UnSuspended`,"dashboard"));}else
-    
-  {return response.send(msg("custom",`User is not banned`,"dashboard"));}
+ return response.send(msg("custom",`@${target} is banned`,"/dashboard"));
   
- return response.send(msg("custom",`@${target} is banned`,"dashboard"));
-}else
-if (command==="add_coins"&&permission(1,username)){
-  if (!exists_user(target)){return response.send(msg("custom",`User Doesn't Exist`,"dashboard"));}
-  if (isNaN(value)){return response.send(msg("custom",`Not A number`,"dashboard"));}
+}
+  else if (command==="unban"&&permission(1,username)){
+  
+  if (!database.user[target]||username===target){return response.send(msg("custom",`User Doesn't Exist`,"/dashboard"));}
+  
+  if (database.user[target].roles.includes("banned")){
+    database.user[target].roles = database.user[target].roles.filter((n) => {return n != "banned"});
+    return response.send(msg("custom",`User Unbanned`,"/dashboard"));
+  }
+  
+  else if (database.user[target].roles.includes("suspended")){
+    database.user[target].roles = database.user[target].roles.filter((n) => {return n != "suspended"});
+    return response.send(msg("custom",`User UnSuspended`,"/dashboard"));
+  }
+  
+  else return response.send(msg("custom",`User is not banned`,"/dashboard"));
+  
+  return response.send(msg("custom",`@${target} is banned`,"/dashboard"));
+  }
+  
+else if (command==="add-coin"&&permission(1,username)){
+  if (!database.user[target]) return response.send(msg("custom",`User Doesn't Exist!`,"/dashboard"));
+  if (isNaN(value))return response.send(msg("custom",`Not A number`,"/dashboard"));
   database.user[target].coins += Number(value);
- return response.send(msg("custom",`Added ${value} coins to @${target}`,"u",`&?search=${target}`));
-}else
-{return response.send(msg("custom",`Invalid Command or Error`,"dashboard"));}
+ return response.send(msg("custom",`Added ${value} coins to @${target}`,`/u/${target}`));
+}
+  
+else if (command==="set-coin"&&permission(1,username)){
+  if (!database.user[target]) return response.send(msg("custom",`User Doesn't Exist!`,"/dashboard"));
+  if (isNaN(value))return response.send(msg("custom",`Not A number`,"/dashboard"));
+  database.user[target].coins = Number(value);
+ return response.send(msg("custom",`Set @${target}\'s coins to ${value}`,`/u/${target}`));
+}
+  
+else if (command==="delete-user"&&permission(1,username)){
+  if (!database.user[target]) return response.send(msg("custom",`User Doesn't Exist!`,"/dashboard"));
+  delete database.user[target];
+ return response.send(msg("custom",`@${target} is no more. (They have been deleted)`));
+}
+
+else if (command==="rename-user"&&permission(1,username)){
+  if (!database.user[target]) return response.send(msg("custom",`User Doesn't Exist!`,"/dashboard"));
+  if (database.user[value]) return response.send(msg("custom",`The New Username Already Exists.`,"/dashboard"));
+  if (functionPack.a0(value)) return response.send(msg("custom", "Do Not Use Custom Characters For A Username!", "/dashboard"));
+  database.user[value] = database.user[target];
+  delete database.user[target];
+ return response.send(msg("custom",`@${target} is now @${value}!`,`/u/${value}`));
+}
+
+else if (command==="create-user"&&permission(1,username)){
+  if (database.user[target]) return response.send(msg("custom",`User Already Exists!`,"/dashboard"));
+  if (functionPack.a0(target)) return response.send(msg("custom", "Do Not Use Custom Characters For A Username!", "/dashboard"));
+  database.user[target] = fake_user;
+  database.user[target].preferred = `[>_]-${target}`;
+  database.user[target].description = `Command Created User @${target}`;
+ return response.send(msg("custom",`@${target} is now @${value}!`,`/u/${target}`));
+}
+  
+else return response.send(msg("custom",`Invalid Command or Error`,"/dashboard"));
   
 });
 /*

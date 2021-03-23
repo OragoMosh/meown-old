@@ -19,20 +19,22 @@
   <br>
   <a class="simple-bar-item simple-hide-medium simple-hide-large simple-right simple-padding-large simple-hover-white simple-theme-d2 simple-round simple-mobile-button" ><i class="fa fa-bars"></i></a>
    
-   <a href="#" class="simple-bar-item simple-button simple-padding-large simple-theme-logo simple-round">
-    <i class="fa fa-home simple-margin-right"></i>Meown
-   </a>
-   <div onclick="location.replace('/u')" class="simple-bar-item simple-button simple-hide-small simple-right simple-padding-large simple-hover-white simple-dropdown-hover" title="My Account" >
-    <div id="Status" class="simple-round-large simple-theme-d2 simple-dropdown-content simple-bar-block" style="width:300px;right:0;top:78px;"></div>
-    <img src="<%- values.self_avatar %>" class="simple-circle" style="height:23px;width:23px" alt="Avatar">
+   
+  <a href="#" class="simple-bar-item simple-button simple-padding-large simple-theme-logo simple-round"><i class="fa fa-home simple-margin-right"></i>Meown</a>
+  
+  <div onclick="location.replace('/u')" class="simple-bar-item simple-button simple-hide-small simple-right simple-padding-large simple-hover-white simple-dropdown-hover" title="My Account" >
+<%- values.profile_menu %>
+    <img src="<%- values.self.avatar %>" class="simple-circle" style="height:23px;width:23px" alt="Avatar">
    </div>
+   
    <!-- Navbar on small screens -->
   <div class="simple-bar-block simple-theme-d2 simple-hide-large simple-hide-medium simple-large simple-mobile-options">
   <a>
   <form method="get" action="/u" style="display:inline-block;"><input type="text" name="search" class="simple-border simple-padding"  placeholder="Find User" style="width:100vw;"></input></form>
   <form method="get" action="/c" style="display:inline-block;"><input type="text" name="search" class="simple-border simple-padding"  placeholder="Find Community" style="width:100vw;"></input></form>
-  </a>
-  <span id="mobileStatus"></span>
+  <%- values.nav_mobile %></a>
+  <a href="../" class="simple-bar-item simple-button simple-padding-large">Chat Room</a>
+  <a href="/u" class="simple-bar-item simple-button simple-padding-large"><%- values.status %></a>
   </div>
    
  </div>
@@ -49,7 +51,8 @@
   
  <br>
   
-        <div class="simple-card simple-round simple-container simple-tint" style="display:grid;grid-gap:20px;grid-template-columns:auto auto auto auto;grid-auto-flow: row dense;">
+ <div style="display:grid;grid-gap: 20px;grid-template-columns: 1.5fr 0.5fr;">
+        <div class="simple-card simple-round simple-container simple-tint" style="display:grid;grid-template-columns:auto auto auto auto;grid-auto-flow: row dense;">
         <span>
           Meown is supposed to be a very simple social media with a very simple database structure capable of doing many things making it easier to expand!
         </span>
@@ -64,6 +67,11 @@
    
 
    </div>
+        <span class="simple-card simple-round simple-container simple-tint">
+          <img src="<%- values.self.avatar %>" class="simple-circle center" style="height:60px;width:60px" alt="Avatar">
+          <%- values.self.preferred %>
+   </span>
+ </div>
   
   <br>
    
@@ -95,31 +103,20 @@
   <p>Created by <a href="/u?search=orago" target="_blank">Orago</a></p>
 </footer>
 <script>
+// Accordion
+function myFunction(id) {
+  var x = document.getElementById(id);
+  if (x.className.indexOf("simple-show") == -1) {
+    x.className += " simple-show";
+    x.previousElementSibling.className += " simple-theme-d1";
+  } else { 
+    x.className = x.className.replace("simple-show", "");
+    x.previousElementSibling.className = 
+    x.previousElementSibling.className.replace(" simple-theme-d1", "");
+  }
+}
+
 // Used to toggle the menu on smaller screens when clicking on the menu button
-  
-  window.addEventListener("load", function () {
-var mobileStatus = document.getElementById("mobileStatus"),
-    status = document.getElementById("Status"),
-    me = getCookie("saved-username")||false;
-    if (me){
-      status.innerHTML+=`
-      <a href="/u" class="simple-bar-item simple-button ">My Page</a>
-      <a href="/dashboard" class="simple-bar-item simple-button ">Dashboard</a>
-      <form method="get" action="/logout"><button type="submit" class="simple-bar-item simple-button">Logout</button></form>`;
-      mobileStatus.innerHTML+=`
-      <a href="/u" class="simple-bar-item simple-button simple-padding-large">My Page</a>
-      <a href="/dashboard" class="simple-bar-item simple-button simple-padding-large">Dashboard</a>`;
-    }
-    else{
-      status.innerHTML+=`
-      <a href="/login" class="simple-bar-item simple-button">Login</a>
-      <a href="/register" class="simple-bar-item simple-button">Register</a>`;
-      mobileStatus.innerHTML+=`
-      <a href="/login" class="simple-bar-item simple-button simple-padding-large">Login</a>
-      <a href="/register" class="simple-bar-item simple-button simple-padding-large">Register</a>`;
-    }
-});
-  
 function openNav() {
   var x = document.getElementById("navDemo");
   if (x.className.indexOf("simple-show") == -1) {
@@ -128,20 +125,6 @@ function openNav() {
     x.className = x.className.replace(" simple-show", "");
   }
 }
-  
-function getCookie(cname) {
-  var name = cname + "=";
-  var decodedCookie = decodeURIComponent(document.cookie);
-  var ca = decodedCookie.split(';');
-  for(var i = 0; i < ca.length; i++) {
-    var c = ca[i];
-    while (c.charAt(0) == ' ') {
-      c = c.substring(1);
-    }
-    if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
-  }
-  return "";
-}
 </script>
 
 </body>
@@ -149,3 +132,6 @@ function getCookie(cname) {
 <div id="assets"></div>
 
 <!--Loads the extra files that aren't written in the document.-->
+
+
+
