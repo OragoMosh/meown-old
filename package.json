@@ -1,6 +1,6 @@
 {
   "name": "Meown",
-  "version": "1.07.0",
+  "version": "1.10.2",
   "description": "Join mulitiple rooms and chat based on socket.io",
   "author": "Orago",
   "private": true,

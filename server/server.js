@@ -372,8 +372,8 @@ app.post("/edit", urlencodedParser, (request, response) => {
     }
     if (category==="community") {details.username = me;}
     database[category][id].posts.push(details);
-    database.user[me].coins += 1;
-    database.user[me].xp += 1;
+    //database.user[me].coins += 1;
+    //database.user[me].xp += 1;
     fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
     return response.send(msg("postCreated","Username",`/${category[0]}`,`&username=${me}#${database[category][id].posts.length - 1}`));
   } else 

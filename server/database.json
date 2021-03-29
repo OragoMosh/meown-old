@@ -421,8 +421,8 @@
       "password": "$2a$10$PQWWp1q9z1uSlNAweLgFk.9PsgXa.AGhdk.5q4kwHfHEPe3pSL0ta",
       "email": "idislikepeels@gmail.com",
       "preferred": "Actz",
-      "coins": 1,
-      "xp": 1,
+      "coins": 2,
+      "xp": 2,
       "background": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
       "banner": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
       "description": "ur mom gay",
@@ -435,6 +435,12 @@
         {
           "title": "Why orago is the best dev in za world 😳",
           "body": "he do epic codor thing 😳😳😳",
+          "likes": [],
+          "comments": []
+        },
+        {
+          "title": "White and light blue",
+          "body": "{\"0\":\"black\",\"1\":\"#dbf6ff\",\"2\":\"#ffffff\",\"3\":\"#becbd2\",\"4\":\"#9eb1bb\",\"5\":\"#dbf6ff\",\"6\":\"#57707d\",\"7\":\"#ffffff\",\"8\":\"#000000\",\"9\":\"#3a4b53\",\"10\":\"#191a1a\",\"11\":\"#ffffff\",\"12\":\"#bdeeff\",\"13\":\"#000000\",\"14\":\"#000000\",\"15\":\"#ff5252\"}",
           "likes": [],
           "comments": []
         }
