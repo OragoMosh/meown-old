@@ -79,6 +79,13 @@ var fake_user = {
       "following":[],
       "xp": 0
     };
+/*
+function save_database() {
+  fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
+  console.log(`Saving Database on bot server!`);
+  setTimeout(save_database(), 180000);
+}
+*/
 
 setInterval(function(){ 
   fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
@@ -183,6 +190,8 @@ app.get("/manifest", (request, response) => {
   ]
   
 }
+
+
   return response.json(manifest)
 });
 
@@ -243,7 +252,10 @@ app.get("/dashboard", (request, response) => {
   var me = request.cookies["saved-username"],
       password = request.cookies["saved-password"];
   if (!me) return response.send(msg("notLogged", "Username", "/u"));
-  
+  /*if (real_user(me,password) === true) {
+    return response.send(msg("incorrect", "Username", "u"));
+  }*/
+
   var values = {
     database: database,username: me,currency: currency,
     followers: database.user[me].followers,recent_followers: "",follows: database.user[me].following,recent_follows: "",
@@ -276,6 +288,7 @@ if (database.user[me].roles.includes("developer")||database.user[me].roles.inclu
       }
     }
   } else {values.recent_follows = "None";}
+  
   if (values.followers !== "") {
     values.last = functionPack.max(values.followers.length,3);
     for (values.i = 0; values.i < values.last; values.i++) {
@@ -293,6 +306,7 @@ if (database.user[me].roles.includes("developer")||database.user[me].roles.inclu
       
     }
   } else values.recent_followers = "None";
+  
   if (logs.views[me]) values.views = logs.views[me];
   else values.views = 0;
   var new_el = functionPack.new_el;
@@ -300,21 +314,26 @@ if (database.user[me].roles.includes("developer")||database.user[me].roles.inclu
     if (!values.text) {values.text="";}
     if (!values.when) {values.when="";}
     if (!values.text) {values.text="";}
-    return new_el({"element":"tr",type:"double",value:
-    new_el({"element":"td",type:"double",value:new_el({"element":"i",type:"double",class:`fa fa-${values.icon} simple-text-blue simple-large`})})+
-    new_el({"element":"td",type:"double",value:values.text})+new_el({"element":"i",type:"double",value:values.when})
-    })
+return new_el({"element":"tr",type:"double",value:
+new_el({"element":"td",type:"double",value:new_el({"element":"i",type:"double",class:`fa fa-${values.icon} simple-text-blue simple-large`})})+
+new_el({"element":"td",type:"double",value:values.text})+new_el({"element":"i",type:"double",value:values.when})
+
+})
   }
   response.render("dashboard.ejs", { database: database, values: values });
 });
 
 app.post("/edit", urlencodedParser, (request, response) => {
-  var method = request.body.method,
-      me = request.cookies["saved-username"];
+  var method = request.body.method;
   
-  if (!method){return response.send(msg("missing", "Method", "/u"));}
-  if (me == undefined ||!me){return response.send(msg("include", "Username", "/u"));}
-  if (typeof database.user[me] == "undefined"){return response.send(msg("noAccount", "Username"));}
+  var me = request.cookies["saved-username"];
+  
+  if (!method) return response.send(msg("missing", "Method", "/u"));
+  
+  if (me == undefined ||!me) return response.send(msg("include", "Username", "/u"));
+  
+  if (typeof database.user[me] == "undefined") return response.send(msg("noAccount", "Username"));
+  
   if (!bcrypt.compareSync(request.cookies["saved-password"],database.user[me].password)) return response.send(msg("incorrect", "Username", "/dashboard"));
   
   
@@ -324,23 +343,23 @@ app.post("/edit", urlencodedParser, (request, response) => {
       database.user[me].password = request.body.sentnewpass;
       text_add += `New Password: ${request.body.sentnewpass}`;
     }
-    if (request.body.sentnewdesc){
-      database.user[me].description = request.body.sentnewdesc;
-    }
-    if (request.body.sentnewavatar){
-      database.user[me].avatar = request.body.sentnewavatar;
-    }
+    if (request.body.sentnewdesc) database.user[me].description = request.body.sentnewdesc;
+    
+    if (request.body.sentnewavatar) database.user[me].avatar = request.body.sentnewavatar;
+    
     if (database.user[me].roles.includes("developer") ||database.user[me].roles.includes("moderator")) {
-      if (request.body.sentnewbackground){
-        database.user[me].background =request.body.sentnewbackground;
-      }
-      if (request.body.sentnewbanner){
-        database.user[me].banner =request.body.sentnewbanner;
-      }
+      
+      if (request.body.sentnewbackground) database.user[me].background =request.body.sentnewbackground;
+      
+      if (request.body.sentnewbanner) database.user[me].banner =request.body.sentnewbanner;
+      
     }
+    
     fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
+
     return response.send(msg("edited", "Username", "/u"));
   } else 
+    
     
     if (method === "new-post") {
     if (!request.body.sentposttitle) return response.send(msg("include", "Post Title", "/u"));
@@ -355,22 +374,23 @@ app.post("/edit", urlencodedParser, (request, response) => {
         post_type = "user";
       
     if (id !== me&&category==="user"){category="community";id=`null`;}
-    for (let i = 0; i < request.body.sentpostbody.length &&request.body.sentpostbody.includes("!n "); i++) {
+    var i = 0;
+    while (i < request.body.sentpostbody.length &&request.body.sentpostbody.includes("!n ")) {
       request.body.sentpostbody = request.body.sentpostbody.replace("!n ","<br>");
+      i++;
     }
-    if (database[category][id].posts&&database[category][id].posts.includes(request.body.sentposttitle.toLowerCase())){
-      return response.send(msg("postExists", null, "/u"));
-    }
-    if (!database[category][id].posts){
-      database[category][id].posts = [];
-    }
+
+    if (database[category][id].posts&&database[category][id].posts.includes(request.body.sentposttitle.toLowerCase())) return response.send(msg("postExists", null, "/u"));
+
+    if (!database[category][id].posts) database[category][id].posts = [];
+      
     var details={
       title: request.body.sentposttitle,
       body: request.body.sentpostbody,
       likes: [],
       comments: []
     }
-    if (category==="community") {details.username = me;}
+    if (category==="community") details.username = me;
     database[category][id].posts.push(details);
     database.user[me].coins += 1;
     database.user[me].xp += 1;
@@ -380,11 +400,16 @@ app.post("/edit", urlencodedParser, (request, response) => {
     
     
     if (method === "report") {
-    if (!request.body.sentposttitle){return response.send(msg("include", "Post Value", "/u"));}
-    if (!request.body.sentpostbody){return response.send(msg("include", "Post Value", "/u"));}
-    if (functionPack.html_check(JSON.stringify(request.body))){return response.send(msg("custom", "Do not use html!", "/u"));}
+    if (!request.body.sentposttitle) return response.send(msg("include", "Post Value", "/u"));
+    if (!request.body.sentpostbody) return response.send(msg("include", "Post Value", "/u"));
+    if (functionPack.html_check(JSON.stringify(request.body))) 
+      return response.send(msg("custom", "Do not use html!", "/u"));
+
+
     if (database.user[me].posts&&database.user[me].posts.includes(request.body.sentposttitle.toLowerCase())){return response.send(msg("postExists", "", "/u"));}
-    if (!database.user[me].posts){database.user[me].posts = [];}
+      
+      
+    if (!database.user[me].posts) database.user[me].posts = [];
     database.user[me].posts.push({title: request.body.sentposttitle,body: request.body.sentpostbody,likes: [],comments: []});
     database.user[me].coins += 1;
     database.user[me].xp += 1;
@@ -396,29 +421,19 @@ app.post("/edit", urlencodedParser, (request, response) => {
     if (method === "delete-post") {
       var category = request.body.category, 
           id = request.body.id;
-      var deleted_post = {
-        "user":{
-          "title": "DELETED POST",
-          "body": "This post has been deleted by the author or someone with permissions to delete it.",
-          "likes": [],"comments": []
-        },
-         "community":{
-          "title": "DELETED POST",
-          "body": "This post has been deleted by the author or someone with permissions to delete it.",
-          "likes": [],"comments": [],
-          "sender": "meown"
-        }
-      }
+      
     if (!database[category][id].posts[request.body.sentnum]) return response.send(msg("post_does_not_exist", "", "/u"));
     
     database[category][id].posts.splice(request.body.sentnum,1);
       
     if (category === "user"){
       if (!permission(1,me)&&id!==me) {response.send(`${permission(1,me)} : ${id!==me}`);}
-      if (!logs.changes[id]){logs.changes[id] = [];}
-      if (logs.changes[id]){logs.changes[id].push(`Post #${request.body.sentnum} Deleted "${database[category][id].posts[request.body.sentnum]}"`);}
+      if (!logs.changes[id]) {logs.changes[id] = [];}
+      if (logs.changes[id])  {logs.changes[id].push(`Post #${request.body.sentnum} Deleted "${database[category][id].posts[request.body.sentnum]}"`);}
       else if (!logs.changes[id]) {logs.changes[id] = [];}
     }
+    database[category][id].coins -= 1;
+    database[category][id].xp -= 1;
     return response.send(msg("post_deleted","Username",`/u/${id}#${database[category][id].posts.length - 1}`));
   } else 
     
@@ -434,11 +449,56 @@ app.post("/edit", urlencodedParser, (request, response) => {
     return response.send(msg("custom", "Code Redeemed", "/dashboard"));
   } else 
     
+    
+  if (method === "like") {
+    var type, check;
+    if (!database.user[me].posts) {return response.send(msg("missing", "Post??!!", "/u"));}
+    if (!request.body.sentid) {return response.send(msg("include", "Post Value", "/u"));}
+    if (!request.body.type) {return response.send(msg("include", "Type", "/u"));}
+    
+    else {type = request.body.type;}
+    
+    if (type === "posts") {check = database.user[request.body.sentname].posts[request.body.sentid];}
+    if (type === "thread") {check = database.community[request.body.sentname].posts[request.body.sentid];}
+    
+    else response.send(msg("custom", "Error??!!", "/u"));
+
+    if (!check.likes.includes(me)) {
+      check.likes.push(me);
+      return response.send(`<meta http-equiv="Refresh" content="0; url='/u?username=${me}&notification=${type}+Liked!'"/>`);
+    } else {
+      check.likes = check.likes.filter(item => item !== me);
+      return response.send(`<meta http-equiv="Refresh" content="0; url='/u?username=${me}&notification=${type}+UnLiked!'"/>`);
+    }
+    return response.send(
+      msg("custom",`${type}`,`/u/${me}#${database.user[me].posts.length - 1}`)
+    );
+  } else 
+    
+    
+    if (method === "new-thread") {
+    var community = request.body.sentcommunity;
+      
+    if (!request.body.sentcommunity) {return response.send(msg("include", "Comment Value", "/u"));}
+    if (!request.body.sentposttitle) {return response.send(msg("include", "Post Value", "/u"));}
+    if (!request.body.sentpostbody) {return response.send(msg("include", "Post Value", "/u"));}
+    if (functionPack.html_check(JSON.stringify(request.body))) {return response.send(msg("custom", "Do not use html!", "/u"));}
+    if (database.user[community].thread&&database.user[community].thread.includes(request.body.sentposttitle.toLowerCase())) {return response.send(msg("postExists", "", "/u"));}
+    if (!database.user[community].thread) {database.user[community].thread = [];}
+      
+    database.user[community].thread.push({username: me,title: request.body.sentposttitle,body: request.body.sentpostbody,likes: [],comments: []});
+      
+    fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
+      
+    return response.send(msg("postCreated","Username",`/c/${community}#${database.user[me].posts.length - 1}`));
+  } else 
+    
+    
     if (method === "new-post-comment") {
-    if (!request.body.sentcomment){return response.send(msg("include", "Comment Value", "/u"));}
-    if (!request.body.commentid){return response.send(msg("include", "Comment Id", "/u"));}
+    if (!request.body.sentcomment) return response.send(msg("include", "Comment Value", "/u"));
+    if (!request.body.commentid) return response.send(msg("include", "Comment Id", "/u"));
     if (database.user[me].posts &&database.user[me].posts[request.body.commentid].comments&&database.user[me].posts[request.body.commentid].comments.includes(request.body.sentcomment.toLowerCase())){return response.send(msg("postExists", null, "/u"));}
-    if (!database.user[me].posts){database.user[me].posts = [];}
+    if (!database.user[me].posts) database.user[me].posts = [];
     if (functionPack.html_check(request.body.sentcomment.toLowerCase())) return response.send(msg("custom","No HTML Plez"));
       
     database.user[me].posts[request.body.commentid].comments.push({ username: me, text: request.body.sentcomment });
@@ -455,7 +515,7 @@ app.post("/edit", urlencodedParser, (request, response) => {
     if (!request.body.sentcommunity) {return response.send(msg("invalid", "Community", "/register"));}
     if (!request.body.sentdesc) {return response.send(msg("invalid", "Description", "/register"));}
       
-      var community = request.body.sentcommunity.toLowerCase();
+      community = request.body.sentcommunity.toLowerCase();
       
     if (typeof database.community[community] === "undefined") {
       database.user[me].communities.push(request.body.sentcommunity.toLowerCase());
@@ -474,7 +534,26 @@ app.post("/edit", urlencodedParser, (request, response) => {
       fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
       response.send(msg("custom", "", `/c/${community}`));
     }
-  }  else {
+  } /*else if (method === "new-thread-comment") {
+    if (!request.body.sentcommunity) {return response.send(msg("include", "Comment Value", "u"));}
+    var community = request.body.sentcommunity;
+    if (!request.body.sentcomment) {return response.send(msg("include", "Comment Value", "u"));}
+    if (!request.body.commentid) {return response.send(msg("include", "Comment Id", "u"));}
+    if (database.community[community].thread &&database.community[community].thread[request.body.commentid].comments) {
+      if (database.community[community].thread[request.body.commentid].comments.includes(request.body.sentcomment.toLowerCase())) {
+        return response.send(msg("post_exists", "", "u"));
+      }
+    }
+    if (!database.community[community].thread) {database.community[community].thread = [];}
+    if ((request.body.sentcomment.toLowerCase().includes("<") && request.body.sentcomment.toLowerCase().includes(">")) ||(request.body.sentcomment.toLowerCase().includes("<") && request.body.sentpost.toLowerCase().includes("/"))) {
+      return response.send("Bad!");
+    }
+    database.community[community].thread[request.body.commentid].comments.push({sender: me,text: request.body.sentcomment});
+    database.user[me].coins += 0.2;
+    database.user[me].xp += 1;
+    fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
+    return response.send(msg("post_created","Username",`c?search=${community}#${database.thread[community].length - 1}`,"redirect"));
+  }*/ else {
     return response.send(msg("missing", "Method lol", "/u"));
   }
 });
@@ -560,6 +639,19 @@ app.get("/auth/:id?", urlencodedParser, (request, response) => {
   
 });
 
+app.get("/discord/:id?/", urlencodedParser, (request, response) => {
+  var username = request.cookies["saved-username"],
+      password = request.cookies["saved-password"];
+  var id = request.params.id.replace(/\ /g,"#")||request.query.id.replace(/\ /g,"#")||undefined;
+  
+  if (!id)return response.send("No input given");
+  if (!request.cookies["saved-username"]||!request.cookies["saved-password"]) return response.send("Not Logged In");
+  if(!bcrypt.compareSync(password,database.user[username].password)) return response.send("Incorrect Password");
+  
+  database.discord[username] = id;
+  return response.send(`Discord ID set to ${id}`);
+});
+
 app.get("/u-text", urlencodedParser, (request, response) => {
   var username = request.query.search.toLowerCase();
   if (typeof database.user[username] == "undefined") return response.send(msg("noAccount", null, "/u"));
@@ -598,11 +690,14 @@ app.get("/u-text", urlencodedParser, (request, response) => {
 });
 
 app.post("/register", urlencodedParser, (request, response) => {
+  //console.log(request.body);
+  //var avatar;
   if (typeof database.user[request.body.sentname.toLowerCase()] !== "undefined") return response.send(msg("exists", null, "/u"));
   if (request.body.sentname == null ||request.body.sentname == undefined ||!request.body.sentname) return response.send(msg("invalid", "Username", "/register"))
   if (request.body.sentpass == null ||request.body.sentpass == undefined ||!request.body.sentpass) return response.send(msg("invalid", "Password", "/register"));
   if (request.body.sentdesc == null ||request.body.sentdesc == undefined ||!request.body.sentdesc) return response.send(msg("invalid", "Description", "/register"));
   if (request.body.sentpass !== request.body.sentpassconfirm) return response.send(msg("match", "password & confirm password", "/register"));
+  //if (request.body.sentname.includes("_")||request.body.sentname.includes("!")||request.body.sentname.includes("_"))
   if (functionPack.a0(request.body.sentname) || functionPack.html_check(request.body.sentdesc))
     return response.send(msg("custom", "Do not use custom characters or html!", "/u"));
   
@@ -615,7 +710,6 @@ app.post("/register", urlencodedParser, (request, response) => {
     database.user[request.body.sentname.toLowerCase()] = {
       password: hash,
       email: request.body.sentemail,
-      preferred: request.body.sentname,
       coins: 0,
       xp: 0,
       background: "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
@@ -627,14 +721,64 @@ app.post("/register", urlencodedParser, (request, response) => {
       communities: [],
       codes: [],
       posts:[],
+      /*Delete badges if needed*/
       roles: [],
       creation_date: Date.now()
     };
     //mail(request.body.sentemail,`Your account, ${request.body.sentname} on ${project_name}`,null,`A user with the name of ${request.body.sentname} on <a href="https://meown.tk">${project_name}</a> created an account by this email, Your login details are <br><li>Username: ${request.body.sentname}</li><li>Password: ${request.body.sentpass}</li><li>Description: ${request.body.sentdesc}</li>`).catch(console.error);
     fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
     response.send(`<meta http-equiv="Refresh" content="0; url='/u?username=${request.body.sentname.toLowerCase()}&notification=Account+Created!'"/>`);
+    //console.log(`Account created, Username: ${request.body.sentname.toLowerCase()}, Password: ${request.body.sentpass.toLowerCase()} , Description: ${request.body.sentdesc.toLowerCase()}`);
   }
 });
+
+/*
+app.post("/new-community", urlencodedParser, (request, response) => {
+  var avatar;
+  if (typeof database.community[request.body.sentcommunity.toLowerCase()] !=="undefined") {
+    return response.send(msg("exists", "d", "u"));
+  }
+  if (request.body.sentcommunity == null ||request.body.sentcommunity == undefined ||!request.body.sentname) {
+    return response.send(msg("invalid", "Username", "register"));
+  }
+  if (request.body.sentdesc == null ||request.body.sentdesc == undefined ||!request.body.sentdesc) {
+    return response.send(msg("invalid", "Description", "register"));
+  }
+  if (function_pack.a0(request.body.sentcommunity) || function_pack.html_check(request.body.sentdesc)) {
+    return response.send(msg("custom", "Do not use custom characters or html!", "u"));
+  }
+  if (typeof database.user[request.body.sentname.toLowerCase()] == "undefined") {
+    response.cookie("saved-username", request.body.sentname.toLowerCase(), {maxAge: 1.296e9});
+    response.cookie("saved-password", request.body.sentpass, {maxAge: 1.296e9});
+    database.emails.push(request.body.sentname.toLowerCase());
+    var salt = bcrypt.genSaltSync(10);
+    var hash = bcrypt.hashSync(request.body.sentpass, salt);
+    database.community[request.body.sentname.toLowerCase()] = {
+      password: hash,
+      email: request.body.sentemail,
+      coins: 50,
+      xp: 0,
+      preferred: request.body.sentname,
+      background: "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
+      banner: "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
+      description: request.body.sentdesc.toLowerCase(),
+      color: "#000000",
+      avatar: "https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png",
+      following: [],
+      followers: [],
+      members: [],
+      creation_date: Date.now()
+    };
+    mail(request.body.sentemail,`Your account, ${request.body.sentname} on ${project_name}`,null,`A user with the name of ${request.body.sentname} on <a href="https://meown.tk">${project_name}</a> created an account by this email, Your login details are <br><li>Username: ${request.body.sentname}</li><li>Password: ${request.body.sentpass}</li><li>Description: ${request.body.sentdesc}</li>`).catch(console.error);
+    fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
+    response.send(`<meta http-equiv="Refresh" content="0; url='/u?username=${request.body.sentname.toLowerCase()}&notification=Account+Created!'"/>`);
+    console.log(`Account created, Username: ${request.body.sentname.toLowerCase()}, Password: ${request.body.sentpass.toLowerCase()} , Description: ${request.body.sentdesc.toLowerCase()}`);
+  }
+});*/
+//console.log(bcrypt.hashSync("123123123aouabepic", bcrypt.genSaltSync(10)))
+/*var salt = bcrypt.genSaltSync(10);
+  var hash = bcrypt.hashSync("2004secret", salt);
+console.log(hash)*/
 
 function info_data(x,values) {
   var result=``;
@@ -662,11 +806,11 @@ function info_data(x,values) {
 <script>
   if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("/service-worker.js");
-      /*navigator.registerProtocolHandler(
+      navigator.registerProtocolHandler(
     "web+meown",
     "https://meown.ml/custom/%s",
     "Meown"
-  );*/
+  );
   }
 </script>
 
@@ -686,6 +830,7 @@ app.get("/me-wall/:search?/:length?/:spacing?/", urlencodedParser, (request, res
   var description = database.user[username].description||"",
       text = `${functionPack.caps(username)}: ${description}`;
   
+  //var d= {text:"/&nbsp&nbsp\\&nbsp&nbsp_",length:length,spacing:spacing,url:`${request.hostname}/u/${username}`}
   var values = {text:text||"ERROR", length:length, spacing:spacing, url:`${request.hostname}/u/${username}`}
   return response.render("textwall.ejs", { values: values });
   
@@ -721,25 +866,9 @@ app.get("/api/:method?/:search?", cors(), (request, response) => {
       return response.json({status:200,[res]:cloneuser});
     } 
     
-    else if (method === "users"){
-      var id=Object.keys(database.user);
-      var vals = {
-        communities:id,
-        size:id.length,
-        roles:getRoles()
-      }
-      
-      return response.json({status:200,[res]:vals||"error"});
-    }
+    else if (method === "users"){return response.json({status:200,[res]:Object.keys(database.user)||"error"});}
     
-    else if (method === "communities"){
-      var id=Object.keys(database.community),
-          vals = {
-        communities:id,
-        size:id.length
-      }
-      return response.json({status:500,[res]:vals||"error"});
-    }
+    else if (method === "communities"){return response.json({status:500,[res]:Object.keys(database.community)||"error"});}
     
     if (method === "community") {
       if (!search) return response.json({ error: "name/id/variant" });
@@ -769,40 +898,50 @@ app.get("/api/:method?/:search?", cors(), (request, response) => {
   }
 });
 
-function getRoles(users) {
-  var roles = {},
-      user,
-      users = users||database.user;
-  for (var i = 0; i < Object.keys(users).length; i++) {
-    user = Object.keys(users)[i]; //Get each user details
-    for (var i2 = 0; i2 < Object.keys(users[user].roles).length; i2++) {
+/*
+function social(values) {
+  if (!logs.views[values.id]) {
+      logs.views[values.id] = 0;
+    }
+    logs.views[values.id] += 1;
+  var Page = require('../modules/page');return new Page(values, database).value();
+}
+*/
+
+function get_roles() {
+  var roles = {};
+  var i;
+  var i2;
+  var user;
+  for (i = 0; i < Object.keys(database.user).length; i++) {
+    user = Object.keys(database.user)[i]; //Get each user details
+    for (i2 = 0; i2 < Object.keys(database.user[user].roles).length; i2++) {
       //Get each users roles
-      if (!roles[users[user].roles[i2]]){roles[users[user].roles[i2]] = [];}
-      if (!roles[users[user].roles[i2]].includes(user)) {
-        roles[users[user].roles[i2]].push(user);
+      if (!roles[database.user[user].roles[i2]]){roles[database.user[user].roles[i2]] = [];}
+      if (!roles[database.user[user].roles[i2]].includes(user)) {
+        var usercap = user;
+        roles[database.user[user].roles[i2]].push(usercap);
       }
     }
   }
   return roles;
 }
 
-app.get("/error/:text?/:value?", (request, response) => {
-    var text = request.query.text||request.params.text||"huh?",
-        value = request.query.value||request.params.value||"Well how'd we get here?",
-        who = request.query.who,
-        symbols=[];
-    if (who){value[0]=who+" ";}
-    var i;for (i = 0; i < text.length; i++) {
+app.get("/error", (request, response) => {
+    var text = request.query.text,value = request.query.value,who = request.query.who,symbols=[];
+    if (!value){value = "huh?";}
+    if (who){text[0]=who+" ";}
+    var i;for (i = 0; i < value.length; i++) {
       var overlay="",emoji_letters = ["U","u","O","o","D","n"]
-      if (emoji_letters.includes(text.charAt(i)))overlay="🐈";
-      symbols.push({"symbol":text.charAt(i),"overlay":overlay})
+      if (emoji_letters.includes(value.charAt(i)))overlay="🐈";
+      symbols.push({"symbol":value.charAt(i),"overlay":overlay})
     }
       response.render("error.ejs", {error:JSON.stringify({
     "code":symbols,
     "buttons":[{"url":"window.history.back();","text":"Back"},{"url":"location.replace('/');","text":"Homepage"}
                /*,{"url":"location.replace('/u');","text":"My Page"}*/],
-    "text":value,
-    "type":text
+    "text":text,
+    "type":value
   })
   });
 });
@@ -815,7 +954,7 @@ app.get("/u/:search?", (request, response) => {
   function banned(type,who) {response.redirect(`/error?value=${type}&text=@${who} is ${type} Lol`)}
   
   if (!username) response.send(msg("noAccount", null, "/login")); //If not username
-  
+  //if (typeof database.user[me] === "undefined") return response.send(msg("custom", "Not logged in","/"));
   if (typeof database.user[username] === "undefined") return response.send(msg("noAccount", null, "/u")); //If user exists in database
   if (database.user[username].roles.includes("banned")){banned("BANNED",username);}
   if (database.user[username].roles.includes("suspended")){banned("SUSPENDED",username);}
@@ -845,9 +984,10 @@ app.get("/u/:search?", (request, response) => {
   logs.views[values.id] += 1;
   
   var Page = require('../modules/page');new Page(values, database).value();
-  
+  //var get = new main(database, mini,username,null,currency,status,self_avatar,self_link,profile_menu,scripts,info_data,nav,nav_mobile,badge_list,follow_amount,follow_list,community_list,post_bar,post_list,side_bar);
+  //response.send(get.u());
   var delete_passwords;
-  
+  //const data = Object.assign({}, database);
   const data = {
     user:{
       [username]:JSON.parse(JSON.stringify(database[values.category][username]))
@@ -871,10 +1011,11 @@ function maintenance_check(){
 
 app.get("/c/:search?", (request, response) => {
   if (maintenance_check().status) {return response.redirect();}
-  
+  //var params = request.protocol + "://" + request.headers.host + request.originalUrl;
+  //var username = params.slice(params.search("username=")+9,Infinity).toLowerCase();
   var community = request.params.search||request.query.search||"meown",
       me = request.cookies["saved-username"];
-  
+  //if (!me){me = "null"}
   if (typeof database.community[community]  === "undefined") {return response.send(msg("custom", "No community with this name", `/c/meown`));}
   
   var values = {
@@ -899,8 +1040,10 @@ app.get("/c/:search?", (request, response) => {
   
   var Page = require('../modules/page');new Page(values, database).value();
   
+  //var get = new main(database, mini,username,null,currency,status,self_avatar,self_link,profile_menu,scripts,info_data,nav,nav_mobile,badge_list,follow_amount,follow_list,community_list,post_bar,post_list,side_bar);
+  //response.send(get.u());
   var delete_passwords;
-  
+  //const data = Object.assign({}, database);
   const data = JSON.parse(JSON.stringify(database));
   for (values.i = 0; values.i < Object.keys(data.user).length; values.i++) {
     delete_passwords = Object.keys(data.user)[values.i];
@@ -911,10 +1054,11 @@ app.get("/c/:search?", (request, response) => {
 
 app.get("/com/:search?", (request, response) => {
   if (maintenance_check().status) {response.redirect();}
-  
+  //var params = request.protocol + "://" + request.headers.host + request.originalUrl;
+  //var username = params.slice(params.search("username=")+9,Infinity).toLowerCase();
   var community = request.params.search||request.query.search||"meown",
       me = request.cookies["saved-username"];
-  
+  //if (!me){me = "null"}
   if (typeof database.community[community]  === "undefined") 
     return response.send(msg("custom", "No community with this name", `/c/meown`));
   
@@ -938,8 +1082,12 @@ app.get("/com/:search?", (request, response) => {
   };
   values.header=info_data(`${values.category}: `+functionPack.caps(values.username));
   
-  var delete_passwords;
+  //var Page = require('../modules/page');new Page(values, database).value();
   
+  //var get = new main(database, mini,username,null,currency,status,self_avatar,self_link,profile_menu,scripts,info_data,nav,nav_mobile,badge_list,follow_amount,follow_list,community_list,post_bar,post_list,side_bar);
+  //response.send(get.u());
+  var delete_passwords;
+  //const data = Object.assign({}, database);
   const data = JSON.parse(JSON.stringify(database));
   for (values.i = 0; values.i < Object.keys(data.user).length; values.i++) {
     delete_passwords = Object.keys(data.user)[values.i];
@@ -952,7 +1100,7 @@ app.get("/", (request, response) => {
   var me = request.cookies["saved-username"];
   var values = {
     username: "empty",
-    roles: getRoles(),
+    roles: get_roles(),
     anti: anti,
     users: Object.keys(database.user),
     communities:Object.keys(database.community),
@@ -967,6 +1115,9 @@ app.get("/", (request, response) => {
     self_avatar:
       "https://cdn.glitch.com/288a0b72-7e13-4dd2-bc7a-3cc2f4db2aab%2Fuser-slash.svg",
     self_link: "/u#login",
+    nav: `<form method="get" action="/u" style="display:inline-block;"><input type="text" name="username" class="simple-border simple-padding" style="width:20vw;" placeholder="Find User"></input>
+              <button type="submit" class="simple-button simple-theme"><i class="fa fa-search"></i> Search</button></form>`,
+    nav_mobile: "",
     infoData: info_data,
     visible: {},
     changelog:""
@@ -974,17 +1125,19 @@ app.get("/", (request, response) => {
 
   
   
-  for (let i = 0; i < Object.keys(getRoles()).length; i++) {
+  var i=0;for (i = 0; i < Object.keys(get_roles()).length; i++) {
     var role;
     role = Object.keys(values.roles)[i];
     values.roles[role] = ""
-    var g=0;for (g = 0; g < Object.keys(getRoles()[role]).length; g++) {
-    values.roles[role]+= `<a href="/u?search${getRoles()[role][g]}">${getRoles()[role][g]}</a>`
-    if (Object.keys(getRoles()[role]).length>0) values.roles[role]+=", ";
+    
+    var g=0;for (g = 0; g < Object.keys(get_roles()[role]).length; g++) {
+    values.roles[role]+= `<a href="/u?search${get_roles()[role][g]}">${get_roles()[role][g]}</a>`
+    if (Object.keys(get_roles()[role]).length>0) values.roles[role]+=", ";
   }
     values.roles[role]=functionPack.fix_end(values.roles[role]);
   }
-  
+  //if (request.query.notification){scripts+=`alert('${request.query.notification}');`}
+
   if (me !== undefined) {
     if (typeof database.user[me] == "undefined") {
       return response.send(msg("custom","No account with this name!","/logout"));
@@ -994,13 +1147,57 @@ app.get("/", (request, response) => {
     values.status = `Logged in as: ${me.toUpperCase()}`;
     values.self = JSON.parse(JSON.stringify(database.user[me]));
   if (values.self){
-    if (values.self.password){
-      delete values.self.password;
-      delete values.self.posts;
-      values.self.preferred="Name: "+values.self.preferred}
-    }
+  if (values.self.password){
+    delete values.self.password;
+    delete values.self.posts;
+    values.self.preferred="Name: "+values.self.preferred}
+  }
   }else{values.self = JSON.parse(JSON.stringify(database.user["null"]));}
   return response.render("slash.ejs", { values: values });
+});
+
+app.get("/c/:search?", (request, response) => {
+  if (maintenance_check().status) response.redirect();
+  //var params = request.protocol + "://" + request.headers.host + request.originalUrl;
+  //var username = params.slice(params.search("username=")+9,Infinity).toLowerCase();
+  var community = request.params.search||request.query.search||"meown",
+      me = request.cookies["saved-username"];
+  //if (!me){me = "null"}
+  if (typeof database.community[community]  === "undefined") 
+    return response.send(msg("custom", "No community with this name", `/c/meown`));
+  
+  var values = {
+    username: community,
+    id: community,
+    category: "community",
+    data_type: database.community,
+    password: request.cookies["saved-password"],
+    background: request.cookies["saved-background"],
+    currency: currency,
+    me: me,
+    time: time,
+    anti: anti,
+    hostname: request.hostname,
+    //info_data: info_data,
+    visible: {
+      post_bar: "simple-hidden",
+      logged_in: "simple-hidden"
+    }
+  };
+  values.header=info_data(`${values.category}: `+functionPack.caps(values.username));
+  
+  var Page = require('../modules/page');new Page(values, database).value();
+  
+  //var get = new main(database, mini,username,null,currency,status,self_avatar,self_link,profile_menu,scripts,info_data,nav,nav_mobile,badge_list,follow_amount,follow_list,community_list,post_bar,post_list,side_bar);
+  //response.send(get.u());
+  var delete_passwords;
+  //const data = Object.assign({}, database);
+  const data = JSON.parse(JSON.stringify(database));
+  for (values.i = 0; values.i < Object.keys(data.user).length; values.i++) {
+    delete_passwords = Object.keys(data.user)[values.i];
+    delete data.user[delete_passwords]["password"];
+  }
+  response.render("page.ejs", { database: data, values: values });
 });
 
 app.get("/salt/:value?", (request, response) => {
@@ -1008,52 +1205,23 @@ app.get("/salt/:value?", (request, response) => {
   if (!value) return response.send("No input value");
   return response.send(bcrypt.hashSync(value, bcrypt.genSaltSync(10)))
 });
-app.get("/changelogs/:page?", (request, response) => {
-  var page = request.params.page||request.query.page||"last",
-      result = `
-  <html>
-  <a id="changelogs">0</a>
-  </html>
-          <script>
-  async function MeownApi(input){
-  var options=options||""
-  var response = await fetch(\`/api/\${input}\`).then(l => l.json()).then(l => l.response)
-  return response;
-  }
-  function caps(text){return text.charAt(0).toUpperCase() + text.slice(1);}
-  
-          window.addEventListener("load", async function () {
 
-                var changelogs = await MeownApi("changelogs").then((values)=>{return values}),result=\`<b>Changelogs:</b><br>\${changelog("${page}").name}<br>\`;
-  function changelog (number){
-    number==="${page}"?number === Object.keys(changelogs).length-1:number=number;
-    if (number&&!isNaN(number)){return {name:caps(Object.keys(changelogs)[number]),values:changelogs[Object.keys(changelogs)[number]]}}
-    else return {name:caps(Object.keys(changelogs)[Object.keys(changelogs).length-1]),values:changelogs[Object.keys(changelogs)[Object.keys(changelogs).length-1]]};
-  }
-  changelog("${page}").values.forEach(add_log);
-  function add_log(item,index){
-    if (index >= 0) {result+= \`- \${item}<br>\`;}
-    else {result+= \`- \${item}\`;}
-  }
-  document.getElementById("changelogs").innerHTML=result;
-  })();
-          </script> 
-`
-  return response.send(result);
-});
 
 app.get("/about/", (request, response) => {
   var me = request.cookies["saved-username"]||"guest";
 
+  
   function banned(type,who){//I dunno lol
     response.redirect(`/error?value=${type}&text=@${who} is ${type} Lol`)
   }
-  
+  //if (!username) response.send(msg("noAccount", null, "/login")); //If not username
   if (typeof database.user[me] === "undefined") return response.send(msg("custom", "Not logged in","/"));
  
+  
   var values = {
     category: "user",
     background: request.cookies["saved-background"],
+    //data_type: database.user,
     password: request.cookies["saved-password"],
     currency: currency,
     me: me,
@@ -1061,6 +1229,7 @@ app.get("/about/", (request, response) => {
     time: time,
     anti: anti,
     hostname: request.hostname,
+    //info_data: info_data,
     visible: {
       postBar:"simple-hidden",
       loggedIn:"simple-hidden"
@@ -1104,18 +1273,10 @@ app.get("/follow-button/:search?", (request, response) => {
 });
 
 function staff_check(username){
-  if (getRoles().owner.includes(username)){
-    return config.role_info["owner"].permission;
-  } 
-  else if (getRoles().developer.includes(username)){
-    return config.role_info["developer"].permission;
-  }
-  else if (getRoles().moderator.includes(username)){
-    return config.role_info["moderator"].permission;
-  } 
-  else if (getRoles().helper.includes(username)){
-    return config.role_info["helper"].permission;
-  }
+  if (get_roles().owner.includes(username)){return config.role_info["owner"].permission} else
+  if (get_roles().developer.includes(username)){return config.role_info["developer"].permission} else
+  if (get_roles().moderator.includes(username)){return config.role_info["moderator"].permission} else 
+  if (get_roles().helper.includes(username)){return config.role_info["helper"].permission}
 }
 
 function permission(num,who){
@@ -1128,34 +1289,39 @@ var command_values = request.body.command.split(" "),
     command = command_values[0],
     target = command_values[1]||"",
     value = command_values[2]||"";
-  
   if (functionPack.html_check(JSON.stringify(command_values))) return response.send(msg("custom",`Bro.. No Html.`,"/dashboard"));
+var username=request.cookies["saved-username"],password = request.cookies["saved-password"]||"Lol";
   
-var username=request.cookies["saved-username"],
-    password = request.cookies["saved-password"]||"Lol";
   
-if (!real_user(username,password)) return response.send(msg("custom",`Invalid Username / Password`,"/dashboard"));
+  if (!real_user(username,password)) return response.send(msg("custom",`Invalid Username / Password`,"/dashboard"));
   
 if (command==="ban"&&permission(1,username)){
+  
   if (!database.user[target]||username===target) return response.send(msg("custom",`User Doesn't Exist`,"/dashboard"));
+  
   database.user[target].roles.push("banned")
+  
  return response.send(msg("custom",`@${target} is banned`,"/dashboard"));
+  
 }
-else if (command==="unban"&&permission(1,username)){
-  if (!database.user[target]||username===target){
-    return response.send(msg("custom",`User Doesn't Exist`,"/dashboard"));
-  }
+  else if (command==="unban"&&permission(1,username)){
+  
+  if (!database.user[target]||username===target){return response.send(msg("custom",`User Doesn't Exist`,"/dashboard"));}
+  
   if (database.user[target].roles.includes("banned")){
     database.user[target].roles = database.user[target].roles.filter((n) => {return n != "banned"});
     return response.send(msg("custom",`User Unbanned`,"/dashboard"));
   }
+  
   else if (database.user[target].roles.includes("suspended")){
     database.user[target].roles = database.user[target].roles.filter((n) => {return n != "suspended"});
     return response.send(msg("custom",`User UnSuspended`,"/dashboard"));
   }
+  
   else return response.send(msg("custom",`User is not banned`,"/dashboard"));
+  
   return response.send(msg("custom",`@${target} is banned`,"/dashboard"));
-}
+  }
   
 else if (command==="add-coin"&&permission(1,username)){
   if (!database.user[target]) return response.send(msg("custom",`User Doesn't Exist!`,"/dashboard"));
@@ -1185,15 +1351,7 @@ else if (command==="rename-user"&&permission(1,username)){
   delete database.user[target];
  return response.send(msg("custom",`@${target} is now @${value}!`,`/u/${value}`));
 }
-  
-else if (command==="set-nick"&&permission(1,username)){
-  if (!database.user[target]) return response.send(msg("custom",`User Doesn't Exist!`,"/dashboard"));
-  if (database.user[value]) return response.send(msg("custom",`The New Username Already Exists.`,"/dashboard"));
-  if (functionPack.a0(value)) return response.send(msg("custom", "Do Not Use Custom Characters For A Username!", "/dashboard"));
-  database.user[target].preferred = value;
- return response.send(msg("custom",`@${target}'s Nickname' is now @${value}!`,`/u/${value}`));
-}
-  
+
 else if (command==="create-user"&&permission(1,username)){
   if (database.user[target]) return response.send(msg("custom",`User Already Exists!`,"/dashboard"));
   if (functionPack.a0(target)) return response.send(msg("custom", "Do Not Use Custom Characters For A Username!", "/dashboard"));
@@ -1203,9 +1361,14 @@ else if (command==="create-user"&&permission(1,username)){
  return response.send(msg("custom",`@${target} is now @${value}!`,`/u/${target}`));
 }
   
-else {return response.send(msg("custom",`Invalid Command or Error`,"/dashboard"));}
+else return response.send(msg("custom",`Invalid Command or Error`,"/dashboard"));
+  
 });
-
+/*
+app.get("/console", (request, response) => {
+  return response.render("terms");
+});
+*/
 app.get('*', function(request, response){
 response.redirect("/error?value=4⬡4&text=This%20page%20does%20not%20exist,%20maybe%20head%20back?")
   });

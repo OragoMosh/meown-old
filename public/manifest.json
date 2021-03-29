@@ -4,7 +4,7 @@
   "background_color": "#cb3837",
   "theme_color": "#9a1d1d",
   "description": "A social media that can..",
-  "display": "fullscreen",
+  "display": "standalone",
   "categories": ["social","media","meown"],
   "name": "Meown",
   "short_name": "Meown",
@@ -38,6 +38,13 @@
       "short_name": "Dashboard",
       "description": "Edit your profile here!",
       "url": "/dashboard",
+      "icons": [{ "src": "https://raw.githubusercontent.com/Orago/mittens/master/assets/images/boxie-x192-big.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "About",
+      "short_name": "About",
+      "description": "Everything about meown! (or atleast so far)",
+      "url": "/about",
       "icons": [{ "src": "https://raw.githubusercontent.com/Orago/mittens/master/assets/images/boxie-x192-big.png", "sizes": "192x192" }]
     }
   ]

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<canvas id="myCanvas" width="16" height="16" style="border:1px solid #d3d3d3;">
+Your browser does not support the HTML5 canvas tag.</canvas>
+6<br>
+<input type="color" value="#ff0000" class="colors"> Color
+<p id="logs" style="overflow:auto;height:150px;"></p>
+<script>
+var c = document.getElementById("myCanvas");
+var ctx = c.getContext("2d");
+var body = document.getElementsByTagName("BODY");
+var pos = {x:0,y:0};
+var color = document.getElementsByClassName("colors")[0].value;
+var settings = {
+  autoPaint:false
+}
+body[0].addEventListener("keydown", controller);
+function controller(event) {
+  log(`${JSON.stringify(pos)}`);
+  color =  document.getElementsByClassName("colors")[0].value;
+  switch (event.keyCode) {
+  
+  case 13:
+  	draw(pos.x,pos.y);
+  break;
+  case 76:
+      settings.autoPaint==true?settings.autoPaint=false:settings.autoPaint=true;
+  	log(`Toggled Auto Paint to ${settings.autoPaint==true?"ON":"OFF"}`);
+  break;
+  case 38://Up Arrow Key
+  	if(pos.y<=0)return;
+    move("y",-1);
+  break;
+  case 40://Up Arrow Key
+  	if(pos.y>=16)return;
+      move("y",1);
+  break;
+  case 37://Left Arrow Key
+  	if(pos.x<=0)return;
+    move("x",-1);
+  break;
+   case 39://Right Arrow Key
+  	if(pos.x>=16)return;
+    move("x",1);
+  break;
+  }
+}
+  function move(type,value){
+    if (isNaN(Number(value)))value=1;
+    type=type||"x";
+    pos[type]+=value
+    if (settings.autoPaint==true){draw(pos.x,pos.y)}
+  }
+function log(value){
+var logs = document.getElementById("logs"),
+    br = document.createElement("br");
+logs.prepend(br)
+logs.prepend(value);
+}
+function draw(x,y){
+if(isNaN(Number(x))){x=0;}
+if(isNaN(Number(y))){y=0;}
+console.log(`Drawing at ${x}, ${y}`)
+//Basic Black Background
+ctx.beginPath();
+ctx.rect(x,y,1,1);//Outline
+ctx.fillStyle = color;
+ctx.fill();
+}
+</script> 
+
+</body>
+</html>
+<style>
+canvas{
+width:30vw;
+height:30vw;
+}
+</style>

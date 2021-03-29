@@ -39,7 +39,7 @@ class all_values {
     varlist({
         variable:values,
         list:[
-          "post_list","comment_number","comment_list","role_number","follow_number",
+          "post_list","comment_number","comment_list","role_number","follow_number","follow_list",
           "community_number","community_list","like_number","like_list","status",
           "post_bar","comment_bar","profile_menu","side_bar","scripts",
           "nav","nav_mobile","i","details"
@@ -76,31 +76,33 @@ vals.list.forEach(item => {vals.variable[item]=vals.value||""})
     var vals = {
       color:def,
       symbol:"",
-      name:username
+      name:username,
+      preferred: database[category][username].preferred
     };
-    if (!database.user[username]){return;}
-    vals.color = def;
+    if (!database.user[username]){return vals;}
     if (!category)category==="community";
     if (category === "user"){
-    var r;
-      for (r = 0; r < Object.keys(config.role_info).length; r++) {
+      for (var r = 0; r < Object.keys(config.role_info).length; r++) {
+        
       var roleData = Object.keys(config.role_info)[r];
     if(database.user[username].roles.includes(roleData))
     {
-      if (config.role_info[roleData].color){vals.color = config.role_info[roleData].color;}
+      if (category=="user"&&config.role_info[roleData].color){vals.color = config.role_info[roleData].color;}
       
       if (config.role_info[roleData].symbol){
         vals.symbol = config.role_info[roleData].symbol;
         vals.name = `${username} ${config.role_info[roleData].symbol}`;
+        vals.preferred = `${database.user[username].preferred} ${config.role_info[roleData].symbol}`;
       }
-      else vals.name = username;
+      else {vals.name = username;
+            vals.preferred = database.user[username].preferred;
+           }
       
       r=r+Object.keys(config.role_info).length;
     }
-    else vals.color = def;
       }
     }
-      else vals.color = def;
+      console.log(vals)
       return vals;
     }
   if (values.me !== undefined) {
@@ -125,7 +127,7 @@ vals.list.forEach(item => {vals.variable[item]=vals.value||""})
         else values.visible.postBar = `simple-hide`;
         if (values.me && values.me !== values.id && values.id !== "guest" &&values.id !== "null") {
     
-    var join_type, connect_type,myroles = '';
+    var join_type, connect_type;
     if (values.category === "user") {
       join_type = "following";
       connect_type = "follow";
@@ -171,10 +173,13 @@ vals.list.forEach(item => {vals.variable[item]=vals.value||""})
         var myroles = '';
     if (values.category === "user") {
       values.myroles = [];
-      database["user"][values.id].roles.forEach(my_roles);
+      if (database[values.category][values.id].roles.length>0){
+      database[values.category][values.id].roles.forEach(my_roles);
       function my_roles(role,index) {
         if (Object.keys(config.role_info).includes(role)) {values.myroles+= `${config.role_info[role].name}, `;}
       };
+      }
+      else values.myroles = "None"
       values.myroles = function_pack.fix_end(values.myroles)
     }
 
@@ -240,7 +245,7 @@ vals.list.forEach(item => {vals.variable[item]=vals.value||""})
         <hr class="simple-clear">
         <p>${database[values.category][values.id][post_type][values.post_number].body}</p>
         <hr class="simple-clear">
-        <button onclick="javascript:toggleClass(document.getElementById(comments_${values.post_number}),'simple-show');" class="simple-button simple-block simple-theme-l1 simple-theme-text-2 simple-left-align"><i class="fa fa-shield fa-fw simple-margin-right"></i> Comments</button>
+        <button onclick="javascript:toggleClass(document.getElementById('comments_${values.post_number}'),'simple-show');" class="simple-button simple-block simple-theme-l1 simple-theme-text-2 simple-left-align"><i class="fa fa-shield fa-fw simple-margin-right"></i> Comments</button>
           <div id="comments_${values.post_number}" class="simple-hide simple-container">
             <p>${values.comment_list}${values.comment_bar}</p>
           </div>
@@ -272,11 +277,11 @@ vals.list.forEach(item => {vals.variable[item]=vals.value||""})
     }
   }
   if (values.category === "community") {values.panelname = database[values.category][values.id].preferred;}
-  else {values.panelname = function_pack.caps(getRole(values.id,values.category).name);}
+  else {values.panelname = function_pack.caps(getRole(values.id,values.category).preferred);}
   values.details = `
-  <h4 class="simple-center" style="color:${getRole(values.id,values.category).color}">${values.panelname}</h4>
+  <h4 class="simple-center" style="color:${getRole(values.id,values.category).color||"black"}">${values.panelname}</h4>
   <p class="simple-center">
-  <img src="${database[values.category][values.id].avatar}" class="simple-circle" style="height:106px;width:106px;border: 2px solid ${getRole(values.id,values.category).color};" alt="User Avatar">
+  <img src="${database[values.category][values.id].avatar}" class="simple-circle" style="height:106px;width:106px;border: 2px solid ${getRole(values.id,values.category).color||"black"};" alt="User Avatar">
   </p>
   <hr>
   `;

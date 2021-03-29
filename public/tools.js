@@ -1,6 +1,6 @@
 window.addEventListener("load", function () {
   color_load();
-  if (document.getElementsByTagName("BODY"))check_https();
+  if (document.getElementsByTagName("BODY"))checkHttps();
   loaded();
 })
 
@@ -16,10 +16,10 @@ colors = {"1":"#a6a6a6","2":"#dfe5e8","3":"#becbd2","4":"#9eb1bb","5":"#3f4040",
          "11":"#141414","12":"#3b3e3f","13":"#000000","14":"#707070","15":"#ff5252"}
 }
 
-var color_list = document.getElementsByClassName("colors");
-var color_length =  Object.keys(colors).length+1;
-var r = document.querySelector(':root');
-var rs = getComputedStyle(r);
+var color_list = document.getElementsByClassName("colors"),
+    color_length =  Object.keys(colors).length+1;
+var r = document.querySelector(':root'),
+    rs = getComputedStyle(r);
 
 var colors = {}
 
@@ -37,7 +37,6 @@ var c = colors[i]
 color.value = c;
   i++
   }
-  
 }
 
 function color_save() {
@@ -78,7 +77,6 @@ loaded_colors = JSON.parse(localStorage.getItem('color-palette'));
 if (color)color.value = loaded_colors[i];
 r.style.setProperty(`--${i}`, loaded_colors[i]);
 }
-
   i++
   }
 }
@@ -88,23 +86,41 @@ function speak(speakingLang,voiceID){
   var synth = window.speechSynthesis,
       utter = new SpeechSynthesisUtterance("hey"),
       voices = synth.getVoices();
-  
   if(!voiceID||!isNaN(Number(voiceID))){voiceID=0;}
-  
   utter.voice = voices[voiceID];
   utter.text = speakingLang;
   synth.speak(utter);
 }
 
+async function infoData(x,values) {
+  var result=``;
+  //var projectName = await fetch(`/api/config`).then(l => l.json()).then(l => l.response).then(function(response){return response.name})
+  if (!values){values = {}}
+  values.description = `The newest, worst social media.`;
+  alert("1")
+  result = `
+<title>${await fetch(`/api/config`).then(l => l.json()).then(l => l.response).then(function(response){return response.name})} | ${x}</title>
+<meta property="og:title" content="${await fetch(`/api/config`).then(l => l.json()).then(l => l.response).then(function(response){return response.name})} | ${x}" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://meown.tk" />
+<meta property="og:image" content="https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png?v=1594354728664" />
+<meta property="og:description" content="${values.description}" />
+<meta name="theme-color" content="#cb3837">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" href="https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie32bfull.png">
+<link id="favicon" rel="icon" href="https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie32bfull.png" type="image/x-icon">
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="manifest" href="/manifest.json">
+<script>if ("serviceWorker" in navigator) {navigator.serviceWorker.register("/service-worker.js");}</script>
 
-
-
-   function change_theme(x){
-     var date = new Date();
-  date.setTime(date.getTime() + (30*24*60*60*1000));
-  document.cookie = "saved-background =" + x + ";" + "expires=" + date.toGMTString() + ";path=/";
-  location.reload();
-   }
+`;
+  alert("hmu")
+  if (values&&values.hostname){result+=`<link rel="canonical" href="https://${values.hostname}">`;}
+  return result;
+  
+}
 
 var SpeechRecognition = SpeechRecognition || window.webkitSpeechRecognition,
     recognition = new SpeechRecognition();
@@ -289,7 +305,11 @@ function toggleClass(element,className) {
   temp.className += ` ${className}`:
   temp.className = temp.className.replace(` ${className}`, "");
 }
-    window.onbeforeunload = confirmExit;
+
+
+
+    /*window.onbeforeunload = confirmExit;
     function confirmExit() {
         return "You have attempted to leave this page. Are you sure?";
     }
+    */

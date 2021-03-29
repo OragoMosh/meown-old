@@ -172,16 +172,13 @@
 <script>
   function max(input,max,result){if (!max)max = 10;result = max;if (input < max)result = input;return result;}
   
-  async function fetchCommunity(id){
-  var response = await fetch(`/api/community/${id}?includeposts=true`).then(l => l.json()).then(l => l.response)
+  async function fetchApi(category,id,options){
+    options=options||""
+  var response = await fetch(`/api/${category}/${id}/${options}`).then(l => l.json()).then(l => l.response)
   return response;
   }
-  async function fetchUser(id){
-  var response = await fetch(`/api/user/${id}?includeposts=true`).then(l => l.json()).then(l => l.response)
-  return response;
-  };
   
-fetchCommunity(`<%- values.id %>`).then(data => {
+fetchApi("community",`<%- values.id %>`,"?includeposts=true").then(data => {
       var postList = document.getElementById("postList"),
           posts = data.posts,
           postsLength = data.posts.length-1;
@@ -195,7 +192,7 @@ fetchCommunity(`<%- values.id %>`).then(data => {
       
       var postTemplate = `
       <div class="simple-theme-l5 simple-theme-border simple-theme-text-1 simple-container simple-card simple-round simple-margin" id="post-3"><br>
-        <img src="${await fetchUser(values.username).then(function(response){return response.avatar})}" alt="User_Avatar" class="simple-circle" style="width:90px;height:90px"> 
+        <img src="${await fetchApi("user",values.username,"?includeposts=true").then(function(response){return response.avatar})}" alt="User_Avatar" class="simple-circle" style="width:90px;height:90px"> 
         <button class="simple-right simple-opacity" onclick="menu({type:&quot;post&quot;,id:&quot;orago&quot;,number:&quot;7&quot;,category:&quot;user&quot;,likes:&quot;0&quot;});"><i class="fa fa-bars"></i></button>
         <span class="simple-right simple-opacity"><i class="fa fa-heart"></i>:${values.likes}</span>&nbsp;
         <span class="simple-right simple-opacity">#${index}</span>
