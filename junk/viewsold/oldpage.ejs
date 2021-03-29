@@ -202,13 +202,6 @@ Copy URL <i class="fa fa-link"></i>
   }
   }
 }
-  function toggleClass(element,className) {
-  var temp = element;
-  temp.className.indexOf(className) == -1?
-  temp.className += ` ${className}`:
-  temp.className = temp.className.replace(` ${className}`, "");
-}
-  
 function accordion(id) {
   var x = document.getElementById(id);
   if (x.className.indexOf("simple-show") == -1) {
@@ -246,6 +239,7 @@ setTimeout(function(){ new_date() }, 1300);
   }
 }
 </script>-->
+<!--
   <div id="chat_all">
 <script src="/socket.io/socket.io.js"></script>
 <script src="/js/main.js" defer></script>
@@ -276,6 +270,7 @@ function openForm() {chat.style.display = "block";chat.setAttribute("opened", tr
 function closeForm() {chat.style.display = "none";chat.setAttribute("opened", false);}
 </script>
 </div>
+-->
 <div id="popup" class="simple-modal simple-animate-opacity">
   <div class="simple-modal-content" style="padding:32px">
     <div class="simple-container simple-white">

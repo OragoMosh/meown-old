@@ -2,11 +2,10 @@
 <html lang="en">
 <head id="header">
 <%- values.infoData(`Homepage!`) %>
-<meta charset="UTF-8">
 <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Open+Sans'>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<script src="/tools.js" defer></script>
-<link rel="stylesheet" href="/tools.css">
+<link href="tools.css" rel="stylesheet" >
+<script src="tools.js"></script>
 <link rel="stylesheet" href="/simple.css">
 <link rel="stylesheet" href="/css/meown.css">
 <link rel="stylesheet" href="/simple-theme.css">
@@ -50,27 +49,18 @@
   
  <br>
   
-        <div class="simple-card simple-round simple-container simple-tint">
-        <p>
-          Meown is supposed to be a very simple social media with a quite simple database structure capable of doing many things making it easier to expand!
-        </p>
-        <p>
-          Feel free to<a class="simple-button simple-theme simple-round" href="u#register">Join now !</a>
-          and be one of the <a id="userCount">0</a>
-          <script>
-          window.addEventListener("load", async function () {document.getElementById("userCount").innerHTML=await MeownApi("users").then((res)=>{return res.size;})});
-          </script> 
-          peeps to try Meown.
-        </p>
+        <div class="simple-card simple-round simple-container simple-tint" style="display:grid;grid-gap:20px;grid-template-columns:auto auto auto auto;grid-auto-flow: row dense;">
+        <span>
+          Meown is supposed to be a very simple social media with a very simple database structure capable of doing many things making it easier to expand!
+        </span>
+        <span>
+          <a class="simple-button simple-theme simple-round" href="u#register">Join now !</a>
+          and be one of the <%- values.users.length %> peeps to try Meown.
+        </span>
           
-        <p>
-          There is currently 
-          <a id="communiyCount">0</a>
-          <script>
-          window.addEventListener("load", async function () {document.getElementById("communiyCount").innerHTML=await MeownApi("communities").then((res)=>{return res.size;})});
-          </script>
-          Communties, So why wait when you can be a part of one!
-        </p>
+        <span>
+          There is currently <%- Object.keys(values.communities).length %> Communties, So why wait when you can be a part of one!
+        </span>
    
 
    </div>
@@ -80,68 +70,40 @@
   <div class="simple-card simple-round simple-container simple-tint" id="changelogs">
     
  </div>
-          <script>
-          window.addEventListener("load", async function () {
-                var changelogs = await MeownApi("changelogs").then((values)=>{return values}),result=`<b>Changelogs:</b><br>${changelog("last").name}<br>`;
-  function changelog (number){
-    number==="last"?number === Object.keys(changelogs).length-1:number=number;
-    if (number&&!isNaN(number)){return {name:caps(Object.keys(changelogs)[number]),values:changelogs[Object.keys(changelogs)[number]]}}
-    else return {name:caps(Object.keys(changelogs)[Object.keys(changelogs).length-1]),values:changelogs[Object.keys(changelogs)[Object.keys(changelogs).length-1]]};
-  }
-  changelog("last").values.forEach(add_log);
-  function add_log(item,index){
-    if (index >= 0) {result+= `- ${item}<br>`;}
-    else {result+= `- ${item}`;}
-  }
-  document.getElementById("changelogs").innerHTML=result;});
-          </script> 
-  
   <br>
-<div class=" simple-card simple-round simple-container simple-tint" id="roles">
-
+<div class=" simple-card simple-round simple-container simple-tint">
+  <p class="left">
+  | Owner: <%- values.roles.owner %> |
+  <br>
+  | Developers: <%- values.roles.developer %> |
+  <br>
+  | Moderators: <%- values.roles.moderator %> |
+  <br>
+  | Helpers: <%- values.roles.helper %> |
+  <br>
+  | Verified Creators: <%- values.roles.verified %> |
+  <br>
+  | Beta Testers: <%- values.roles.beta %> |
+  </p>
 </div>
-  <script>
-    window.addEventListener("load", async function () {
-      var roles = await MeownApi("users").then((res)=>{return res.roles}),
-          resultRoles=[];
-      
-
-
-      
-      document.getElementById("roles").innerHTML=`
-        <p class="left">
-        | Owner: ${roles.owner} |
-        <br>
-        | Developers: ${roles.developer||"None"}
-        <br>
-        | Moderators: ${roles.moderator||"None"}
-        <br>
-        | Helpers: ${roles.helper||"None"}
-        <br>
-        | Verified Creators: ${roles.verified||"None"}
-        <br>
-        | Beta Testers: ${roles.verified||"None"}
-        </p>
-      `;
-    })
-  </script>
 <!-- End Page Container -->
 </div>
   
 <br>
 
 <footer class="simple-container simple-theme-d5">
-  <p>Created by <a href="/u/orago" target="_blank">Orago</a></p>
+  <p>Created by <a href="/u?search=orago" target="_blank">Orago</a></p>
 </footer>
 <script>
   function caps(text){return text.charAt(0).toUpperCase() + text.slice(1);}
   
 // Used to toggle the menu on smaller screens when clicking on the menu button
-  async function MeownApi(input){
-  var options=options||""
+    async function MeownApi(input){
+    var options=options||""
   var response = await fetch(`/api/${input}`).then(l => l.json()).then(l => l.response)
   return response;
   }
+  
   window.addEventListener("load", function () {
 var mobileStatus = document.getElementById("mobileStatus"),
     status = document.getElementById("Status"),
@@ -169,13 +131,31 @@ var mobileStatus = document.getElementById("mobileStatus"),
     mobileStatus.innerHTML+=`<a onclick="window.close();" class="simple-bar-item simple-button simple-padding-large">Close</a>
     <a href="web+meown://eeHello%20Treehouse" class="simple-bar-item simple-button simple-padding-large">Tweet 'Hello Treehouse'</a>`;
     
+  (async function(){
+    var changelogs = await MeownApi("changelogs");//database.changelog;
+    var result;
+  function changelog (number){
+    if (number==="last") number === Object.keys(changelogs).length-1;
+    if (number&&!isNaN(number))
+      {return {name:caps(Object.keys(changelogs)[number]),values:changelogs[Object.keys(changelogs)[number]]}}
+    else return {name:caps(Object.keys(changelogs)[Object.keys(changelogs).length-1]),values:changelogs[Object.keys(changelogs)[Object.keys(changelogs).length-1]]}
     
+  }
+  result=`<b>Changelogs:</b><br>${changelog("last").name}<br>`;
+  
+  changelog("last").values.forEach(add_log);
+  
+  function add_log(item,index){
+    if (index <= 0){
+      result+= `- ${item}<br>`;
+    }
+    else{
+      result+= `- ${item}`;
+    }
+  }
+    document.getElementById("changelogs").innerHTML=result;
+})();
 });
-  
-  
-  
-function fix_end(x) {var i=0;for (i = 0; i < x.length; i++) {if (x.endsWith(",") || x.endsWith(" ")) {x = x.slice(0, -1);fix_end(x);}else return x;}}
-  
   
 function openNav() {
   var x = document.getElementById("navDemo");

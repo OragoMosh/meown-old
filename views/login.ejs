@@ -3,6 +3,8 @@
 <head>
 	<link rel="stylesheet" href="style.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link href="/tools.css" rel="stylesheet" >
+  <script src="/tools.js" defer></script>
 	<title>Meown | <%- values.title %></title>
 </head>
 <body>
@@ -23,6 +25,7 @@
 			</div>
 		</div>
 	</div>
+
 </body>
 </html>
 <style>
@@ -91,7 +94,8 @@ form {
 	text-align: center;
 }
 
-input {
+
+  input {
 	background-color: #eee;
 	border: none;
 	padding: 12px 15px;
@@ -99,6 +103,7 @@ input {
 	width: 100%;
 }
 
+  
 .container {
 	background-color: #fff;
 	border-radius: 10px;
@@ -180,3 +185,4 @@ input {
 	width: 40px;
 }
 </style>
+<div id="assets"></div><!--Loads the extra files that aren't written in the document.-->

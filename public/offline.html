@@ -11,11 +11,11 @@
 
 <link rel="stylesheet" href="/css/error.css" />
 <h1 aria-label="Internal Server Error" id="error_numbers"></h1>
-<p>Offline</p><br>
+<p>Anyone there?</p><br>
 <span id="error_buttons"></span>
 <script>
 const text = document.createElement("a");
-var error = <%- error %>;
+var error = {"code":[{"symbol":"O","overlay":"🐈"},{"symbol":"f","overlay":""},{"symbol":"f","overlay":""},{"symbol":"l","overlay":""},{"symbol":"i","overlay":""},{"symbol":"n","overlay":"🐈"},{"symbol":"e","overlay":""}],"buttons":[{"url":"window.history.back();","text":"Back"},{"url":"location.replace('/');","text":"Homepage"}],"text":"Anyone there?","type":"Offline"};
 var symbols="";
 
 var i;for (i = 0; i < error.code.length; i++) {

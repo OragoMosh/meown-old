@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-<head id="header" title="User: <%- values.username %>">
+<head id="header" title="Social Page">
 <%- values.header %>
 <meta charset="UTF-8">
 <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Open+Sans'>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">-->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.1.7/css/fork-awesome.min.css">
 <link href="/tools.css" rel="stylesheet" >
 <script src="/tools.js"></script>
 <link rel="stylesheet" href="/simple.css">
@@ -24,14 +25,13 @@
    
   <a href="/" class="simple-bar-item simple-button simple-padding-large simple-theme-logo simple-round"><i class="fa fa-home simple-margin-right"></i>Meown</a>
   <a class="simple-hide-small">
-<form method="get" action="/u" style="display:inline-block;"><input type="text" name="search" class="simple-theme-l5 simple-border simple-padding" placeholder="Find User" style="width:20vw;"></input></form>
-<form method="get" action="/c" style="display:inline-block;"><input type="text" name="search" class="simple-theme-l5 simple-border simple-padding" placeholder="Find Community" style="width:20vw;"></input></form>
+
 <%- values.nav %></a>
   <div onclick="location.replace('/u')" class="simple-bar-item simple-button simple-hide-small simple-right simple-padding-large simple-hover-white simple-dropdown-hover" title="My Account" >
     <div class="simple-round-large simple-theme-d2 simple-dropdown-content simple-bar-block" style="width:300px;right:0;top:78px;">
     <%- values.profile_menu %>
     </div>
-    <img src="<%- values.self_avatar %>" class="simple-circle" style="height:23px;width:23px" alt="Avatar">
+    <img src="<%- database[values.category][values.me].avatar %>" class="simple-circle" style="height:23px;width:23px" alt="Avatar">
    </div>
    
    <!-- Navbar on small screens -->
@@ -57,14 +57,35 @@
     <div class="simple-col m3 simple-theme-text-1">
       <!-- Profile -->
       <!--<div class="simple-card simple-round simple-white">-->
-      <div class="simple-theme-l5 simple-card simple-round" style="background-size: 100% 100%;background-image:url('<%- database[values.category][values.id].background %>');">
-      <div class="simple-container"><br> 
-      <div class="simple-card simple-round" style="background-image: linear-gradient(45deg, rgba(255,255,255,0.3), rgba(255,255,255,0.3) )">
-        <div class="simple-container">
-         <%- values.details %>
+      <div class="simple-theme-l5 simple-card simple-round" style="background-size: 100% 100%;background-image:url('https://cdn.glitch.com/0322d62f-81b5-4f06-9b33-557687636cec%2Fsmokehousechillin.gif');">
+        <div class="simple-container"><br> 
+          <div class="simple-card simple-round" style="background-image: linear-gradient(45deg, rgba(255,255,255,0.3), rgba(255,255,255,0.3) )">
+            <div class="simple-container">
+              <h4 class="simple-center">Meown Social</h4>
+              <p class="simple-center">
+              <img src="<%- database[values.category][values.id].avatar %>" class="simple-circle" style="height:106px;width:106px;border: 2px solid black;"alt="User Avatar">
+              </p>
+              <hr>
+              <p>
+                <i class="simple-theme-text-2 fa fa-youtube-play fa-fw simple-margin-right" style="transform: scale(2, 2);color:red;"></i>
+                <a href="https://www.youtube.com/channel/UCbVQOO0xb57ja74eLJQJ3Kg" class="simple-theme-text-1">Youtube</a>
+              </p>
+              <p>
+                <i class="simple-theme-text-2 fa fa-discord-alt fa-fw simple-margin-right" style="transform: scale(2, 2);color:#7289da;"></i>
+                <a href="https://discord.gg/zzthRpu" class="simple-theme-text-1">Discord</a>
+              </p>
+              <p>
+                <i class="simple-theme-text-2 fa fa-shield fa-fw simple-margin-right" style="transform: scale(2, 2);color:#F5C400;"></i>
+                <a href="https://guilded.gg/meown" class="simple-theme-text-1">Guilded</a>
+              </p>
+              <p>
+                <i class="simple-theme-text-2 fa fa-reddit fa-fw simple-margin-right" style="transform: scale(2, 2);color:#FF5700;"></i>
+                <a href="https://reddit.com/r/meown" class="simple-theme-text-1">Reddit</a>
+              </p>
+              
+            </div>
+          </div>
         </div>
-      </div>
-      </div>
       <br>
       </div>
       <br>
@@ -100,26 +121,57 @@
     
     <!-- Middle Column -->
     <div class="simple-col m7 simple-theme-text-1">
-      <div class="simple-theme-l5 simple-container simple-card simple-round simple-margin" style="background-size: 100% 100%;background-image: url('<%- database[values.category][values.username].banner%>');">
+      <div class="simple-theme-l5 simple-container simple-card simple-round simple-margin" style="background-size: 100% 100%;background-image: url('<%- database[values.category][values.id].banner%>');">
 <div class="simple-container simple-card simple-round simple-margin" style="background-image: linear-gradient(45deg, rgba(255,255,255,0.3), rgba(255,255,255,0.3) );">
-        <h4>[About me]</h4><br>
-        <p><%- database[values.category][values.id].description %></p>
+        <h4>[Feel Free to join or follow the developer on these social media's.]</h4><br>
+        <p>Finally someone is using this website.</p>
         </div>
       </div>
-      
-    <form method="post" action="/edit" class="<%- values.visible.postBar %>" style="display:inline-block;width:100%">
-<div class="simple-row-padding"><div class="simple-col m12"><div class="simple-theme-l5 simple-card simple-round"><div class="simple-container simple-padding">
-  <h6 class="simple-opacity">New Post</h6>
-  <input type="hidden" name="method" value="new-post">
-  <input type="hidden" name="id" value="<%- values.id %>">
-  <input type="hidden" name="sentpostcategory" value="<%- values.category %>">
-  <input type="text" name="sentposttitle" class="simple-border simple-padding" placeholder="Post Title" required></input>
-  <input type="text" name="sentpostbody" class="simple-border simple-padding" placeholder="Post Body" required></input><br>
-  <button type="submit" class="simple-button simple-theme"><i class="fa fa-pencil"></i> Send</button>
-</div></div></div></div>
-</form>
+
   
-    <%- values.post_list %>
+    <div class="simple-theme-l5 simple-theme-border simple-theme-text-1 simple-container simple-card simple-round simple-margin" id="post-1"><br>
+        <button class="simple-right simple-opacity" onclick="menu({type:'post',id:'Meown',number:'1'});"><i class="fa fa-bars"></i></button>
+        <br><b style="font-size: 2em;color:#e3c522;">&nbsp;Meown: </b>
+        <a style="font-size: 1.5em;">Discord Invite</a><br>
+        <hr class="simple-clear">
+        <p>
+        <iframe src="https://discord.com/widget?id=396838715894530068&theme=dark" width="350" height="500" allowtransparency="true" frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>
+        </p>
+        </div>
+      
+      
+      
+      
+        <div class="simple-theme-l5 simple-theme-border simple-theme-text-1 simple-container simple-card simple-round simple-margin" id="post-2"><br>
+        <button class="simple-right simple-opacity" onclick="menu({type:'post',id:'Meown',number:'2'});"><i class="fa fa-bars"></i></button>
+        <br><b style="font-size: 2em;color:#e3c522;">&nbsp;Meown: </b>
+        <a style="font-size: 1.5em;">Guilded Invite</a><br>
+        <hr class="simple-clear">
+        <p>
+        <iframe src="https://www.guilded.gg/canvas_index.html?route=%2Fcanvas%2Fembed%2Fteamcard%2FgRG0m4Wl" width="268" height="380" frameborder="0" scrolling="no"></iframe>
+        </p>
+        </div>
+      
+        <div class="simple-theme-l5 simple-theme-border simple-theme-text-1 simple-container simple-card simple-round simple-margin" id="post-3"><br>
+        <button class="simple-right simple-opacity" onclick="menu({type:'post',id:'Meown',number:'3'});"><i class="fa fa-bars"></i></button>
+        <br><b style="font-size: 2em;color:#e3c522;">&nbsp;Meown: </b>
+        <a style="font-size: 1.5em;">Reddit Invite</a><br>
+        <hr class="simple-clear">
+        <p>
+          <blockquote class="reddit-card"><a href="https://www.reddit.com/r/meown/comments/lvu0yg/welcome_to_meown/">Welcome to Meown!</a> from <a href="http://www.reddit.com/r/meown">r/meown</a></blockquote><script async src="//embed.redditmedia.com/widgets/platform.js" charset="UTF-8"></script>
+        </p>
+        </div>
+    
+        <div class="simple-theme-l5 simple-theme-border simple-theme-text-1 simple-container simple-card simple-round simple-margin" id="post-3"><br>
+        <button class="simple-right simple-opacity" onclick="menu({type:'post',id:'Meown',number:'3'});"><i class="fa fa-bars"></i></button>
+        <br><b style="font-size: 2em;color:#e3c522;">&nbsp;Meown: </b>
+        <a style="font-size: 1.5em;">Trello</a><br>
+        <hr class="simple-clear">
+        <p>
+        <blockquote class="trello-card"><a href="https://trello.com/c/jVfXvv3U/33-meown-social-media">Meown Social media</a></blockquote><script src="https://p.trellocdn.com/embed.min.js"></script>
+        </p>
+        </div>
+      
     <!-- End Middle Column -->
     </div>
     
@@ -173,15 +225,7 @@ function menu(values){
   if (values && values.type === "post"){
   popup.main.style.display='block';
   popup.title.innerText=`@${values.id}, Post #${values.number}`;
-  popup.body.innerHTML=`<form method="post" action="/edit" style="display:inline-block;">
-<input type="hidden" name="method" value="delete-post">
-<input type="hidden" name="id" value="${values.id}">
-<input type="hidden" name="sentnum" value="${values.number}">
-<input type="hidden" name="category" value="${values.category}">
-<button type="submit">
-Delete Post
-</button>
-</form>
+  popup.body.innerHTML=`
 <button onclick="
 copy('https://${location.hostname}/u/${values.id}#post-${values.number};');
 notification('Link Copied!');">
@@ -202,13 +246,6 @@ Copy URL <i class="fa fa-link"></i>
   }
   }
 }
-  function toggleClass(element,className) {
-  var temp = element;
-  temp.className.indexOf(className) == -1?
-  temp.className += ` ${className}`:
-  temp.className = temp.className.replace(` ${className}`, "");
-}
-  
 function accordion(id) {
   var x = document.getElementById(id);
   if (x.className.indexOf("simple-show") == -1) {
@@ -239,43 +276,7 @@ document.getElementById("time").innerHTML = `<p>Time:</p>${time}`;
 setTimeout(function(){ new_date() }, 1300);
 }
 </script>
-<!--<script onload = "check_https()">
-  function check_https(){
-  if (location.protocol.toString() === "http:"){
-    location.replace(`https://${location.hostname}${location.pathname}`);
-  }
-}
-</script>-->
-  <div id="chat_all">
-<script src="/socket.io/socket.io.js"></script>
-<script src="/js/main.js" defer></script>
-  <script>try{Typekit.load({ async: true });}catch(e){}</script>
-  <script src="https://apis.google.com/js/platform.js" async defer></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/base/jquery-ui.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
-  <link href="/css/simple-extra.css" rel="stylesheet" >
-<button class="simple-open-button" onclick="openForm()">Chat</button>
 
-<div class="simple-chat" id="chat">
-  <div class="simple-form-container">
-    <h1>Chat</h1>
-	<ul id="messages" style="overflow:auto;height:150px;"></ul>
-    <label for="msg"><b>Message</b></label>
-    <ul class="room-list"></ul>
-    <input id="input" placeholder="Say something...">
-    <button onclick="sendMessage();" class="simple-btn">Send</button>
-    <button type="button" class="simple-btn simple-cancel" onclick="closeForm()">Close</button>
-  </div>
-</div>
-<script>
-var values = {}
-var chat = document.getElementById("chat");
-function openForm() {chat.style.display = "block";chat.setAttribute("opened", true); }
-function closeForm() {chat.style.display = "none";chat.setAttribute("opened", false);}
-</script>
-</div>
 <div id="popup" class="simple-modal simple-animate-opacity">
   <div class="simple-modal-content" style="padding:32px">
     <div class="simple-container simple-white">

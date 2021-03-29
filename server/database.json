@@ -18,10 +18,28 @@
       "roles": [],
       "xp": 0
     },
+    "Deleted User": {
+      "password": "$2a$10$w.OQABq6zrfUGl9t4gWK2O0ItUyhTMPV1CDGFxG05zYrF3FjuYZYK",
+      "email": "",
+      "coins": 0,
+      "preferred": "Guest account",
+      "background": "https://convertingcolors.com/plain-2C2F33.svg",
+      "banner": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
+      "description": "lol",
+      "avatar": "https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png",
+      "creation_date": "1603731256000",
+      "posts": [],
+      "codes": [],
+      "following": [],
+      "followers": [],
+      "communities": [],
+      "roles": [],
+      "xp": 0
+    },
     "orago": {
       "password": "$2a$10$PkOfVFZJ/WD96Dx8xCJIieOPe.jntmJ06zaOY5N.vTZP59GorJxnS",
       "email": "",
-      "coins": 132.2,
+      "coins": 137.39999999999998,
       "preferred": "Orago",
       "background": "https://cdn.discordapp.com/attachments/660390332772646922/795417339079294986/background.png",
       "banner": "https://cdn.glitch.com/288a0b72-7e13-4dd2-bc7a-3cc2f4db2aab%2Fvapormountain.jpg?v=1606422724403",
@@ -52,7 +70,12 @@
           "likes": [
             "orago"
           ],
-          "comments": []
+          "comments": [
+            {
+              "username": "orago",
+              "text": "e"
+            }
+          ]
         },
         {
           "title": "V0.03, Comments and details!",
@@ -127,6 +150,12 @@
             "orago"
           ],
           "comments": []
+        },
+        {
+          "title": "Test",
+          "body": "https://www.w3schools.com/code/tryit.asp?filename=GOVKXNEYERGL",
+          "likes": [],
+          "comments": []
         }
       ],
       "codes": [
@@ -154,14 +183,19 @@
         "cat",
         "changelogs",
         "themes",
-        "mittzpost"
+        "mittzpost",
+        "hub"
       ],
       "roles": [
         "owner",
         "developer",
         "verified"
       ],
-      "xp": 20
+      "xp": 26,
+      "audio": {
+        "url": "https://github.com/Orago/assets/blob/main/_Free_%20Joey%20Badass%20_%20Kendrick%20Lamar%20Type%20Beat%20-%20_Dead%20Dreams_%20(Prod.%20Sarcastic%20Sounds)%20-%202018.mp3?raw=true",
+        "volume": 0.3
+      }
     },
     "null": {
       "password": "$2a$10$AW/zWW12xkDi.CanAS4n0uw7ZiFI69PYxSjIFhQCOgoGsS5J87XG.",
@@ -242,25 +276,6 @@
       ],
       "creation_date": 1607273501821
     },
-    "yay": {
-      "password": "$2a$10$GspM/SRu8daN13AEQNPUNOFcJcK6WypC4TWA9z/5b7WVEIk0b6ZXW",
-      "email": "y@y",
-      "coins": 50,
-      "xp": 0,
-      "preferred": "yay",
-      "background": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
-      "banner": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
-      "description": "yay",
-      "avatar": "https://raw.githubusercontent.com/Ashwinvalento/cartoon-avatar/master/lib/images/female/63.png",
-      "following": [],
-      "followers": [],
-      "communities": [],
-      "codes": [],
-      "roles": [
-        "banned"
-      ],
-      "creation_date": 1607482956250
-    },
     "tendallabagell": {
       "password": "$2a$10$vepLbFBfRUSrfviqCYP82eNz23Uswh5qmYpdlOevu7nNaG9hsYWOm",
       "email": "allwaysapornlover@email.com",
@@ -314,25 +329,8 @@
       ],
       "creation_date": 1609753066800
     },
-    "peachy": {
-      "password": "$2a$10$wmSgzhKXc75P/0RqiPqnzeUbyDk0Im9bI1KdVtjkha.1t3K5iEU/u",
-      "email": "minkyuupark22@gmail.com",
-      "coins": 50,
-      "xp": 0,
-      "background": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
-      "banner": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
-      "description": "gay",
-      "avatar": "https://raw.githubusercontent.com/Ashwinvalento/cartoon-avatar/master/lib/images/male/65.png",
-      "following": [],
-      "followers": [],
-      "communities": [],
-      "codes": [],
-      "posts": [],
-      "roles": [],
-      "creation_date": 1610411458110
-    },
     "tumstone": {
-      "password": "$2a$10$Bip8TIzZxxpHuPoBvefcA.cPr1dvT5zKODJF53e26w7YM4ovp1Bsu",
+      "password": "$2a$10$eLFBfBr6oE1n9HBgwYrwBuEGXLmFRWl4DOFNPnb2qtu4iXVEQ52iO",
       "email": "Theoldtombstone@gmail.com",
       "coins": 50,
       "xp": 0,
@@ -351,6 +349,7 @@
     "rick": {
       "password": "$2a$10$nYwM/BqpmMdll4l88yokgeBBGdMruABcz4B7.vwfjXA/7BREQwnBO",
       "email": "never@goona.giveyou.up",
+      "preferred": "Rick Astley (Unofficial)",
       "coins": 50,
       "xp": 0,
       "background": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
@@ -364,10 +363,90 @@
       "posts": [],
       "roles": [],
       "audio": {
-        "url": "https://cdn.discordapp.com/attachments/800546678821617664/803334413869645884/soundcloud.mp3",
+        "url": "https://www.soundboard.com/handler/DownLoadTrack.ashx?cliptitle=Never+Gonna+Give+You+Up-+Original&filename=mz/Mzg1ODMxNTIzMzg1ODM3_JzthsfvUY24.MP3",
         "volume": 0.3
       },
       "creation_date": 1611600171921
+    },
+    "will": {
+      "password": "$2a$10$0mqfkGvvY3KTpLP4vR3A4.quWFQmiNMKFziQscIFV9HymKt.XUnqS",
+      "email": "william12312341@gmail.com",
+      "coins": 0,
+      "xp": 0,
+      "preferred": "Willy",
+      "background": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
+      "banner": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
+      "description": "hi im will and im will ",
+      "avatar": "https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png",
+      "following": [],
+      "followers": [],
+      "communities": [],
+      "codes": [],
+      "posts": [],
+      "roles": [],
+      "creation_date": 1614135592291
+    },
+    "sus": {
+      "password": "$2a$10$t/eEJBXGo6M.pC/s/zID.u55HMH9Ys.5thPAOfyRui4Mbrz7Jcq5q",
+      "email": "moshlingcat2004@gmail.com",
+      "preferred": "AMOGUS",
+      "coins": 2,
+      "xp": 2,
+      "background": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
+      "banner": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
+      "description": "sus indeed",
+      "avatar": "https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png",
+      "following": [],
+      "followers": [],
+      "communities": [],
+      "codes": [],
+      "posts": [
+        {
+          "title": "wow ",
+          "body": "sus ",
+          "likes": [],
+          "comments": []
+        },
+        {
+          "title": "amogus",
+          "body": "impstr",
+          "likes": [],
+          "comments": []
+        }
+      ],
+      "roles": [],
+      "creation_date": 1615394845209
+    },
+    "actz": {
+      "password": "$2a$10$PQWWp1q9z1uSlNAweLgFk.9PsgXa.AGhdk.5q4kwHfHEPe3pSL0ta",
+      "email": "idislikepeels@gmail.com",
+      "preferred": "Actz",
+      "coins": 2,
+      "xp": 2,
+      "background": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
+      "banner": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
+      "description": "ur mom gay",
+      "avatar": "https://cdn.discordapp.com/attachments/689670471641202698/825782024962572298/ezgif.com-gif-maker_8.gif",
+      "following": [],
+      "followers": [],
+      "communities": [],
+      "codes": [],
+      "posts": [
+        {
+          "title": "Why orago is the best dev in za world 😳",
+          "body": "he do epic codor thing 😳😳😳",
+          "likes": [],
+          "comments": []
+        },
+        {
+          "title": "White and light blue",
+          "body": "{\"0\":\"black\",\"1\":\"#dbf6ff\",\"2\":\"#ffffff\",\"3\":\"#becbd2\",\"4\":\"#9eb1bb\",\"5\":\"#dbf6ff\",\"6\":\"#57707d\",\"7\":\"#ffffff\",\"8\":\"#000000\",\"9\":\"#3a4b53\",\"10\":\"#191a1a\",\"11\":\"#ffffff\",\"12\":\"#bdeeff\",\"13\":\"#000000\",\"14\":\"#000000\",\"15\":\"#ff5252\"}",
+          "likes": [],
+          "comments": []
+        }
+      ],
+      "roles": [],
+      "creation_date": 1616948364281
     }
   },
   "community": {
@@ -378,18 +457,6 @@
       "banner": "https://cdn.glitch.com/0322d62f-81b5-4f06-9b33-557687636cec%2F9e5ddb3fd1ba8dd983bb9569b35f8103.jpg",
       "description": "Welcome to the Meown Official Subforum",
       "avatar": "https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png",
-      "thread": [
-        {
-          "title": "Lol",
-          "body": "WOrks?",
-          "sender": "orago",
-          "likes": [
-            "orago",
-            "meown"
-          ],
-          "comments": []
-        }
-      ],
       "members": [
         "orago",
         "null",
@@ -410,6 +477,27 @@
           "likes": [],
           "comments": [],
           "sender": "test"
+        },
+        {
+          "title": "hello",
+          "body": "e",
+          "likes": [],
+          "comments": [],
+          "username": "orago"
+        },
+        {
+          "title": "hey",
+          "body": "hi!",
+          "likes": [],
+          "comments": [],
+          "username": "orago"
+        },
+        {
+          "title": "test1",
+          "body": "test2",
+          "likes": [],
+          "comments": [],
+          "username": "orago"
         }
       ]
     },
@@ -430,7 +518,6 @@
       "background": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
       "banner": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
       "description": "hi",
-      "color": "#000000",
       "members": [],
       "avatar": "https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png",
       "creation_date": 1610719625092,
@@ -457,14 +544,16 @@
     },
     "themes": {
       "owner": "orago",
-      "preferred": "Themes",
-      "background": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
-      "banner": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
-      "description": "lookin good",
-      "color": "#000000",
-      "members": [],
+      "preferred": "Meown Official",
+      "background": "https://cdn.glitch.com/0322d62f-81b5-4f06-9b33-557687636cec%2Fsmokehousechillin.gif",
+      "banner": "https://cdn.glitch.com/0322d62f-81b5-4f06-9b33-557687636cec%2F9e5ddb3fd1ba8dd983bb9569b35f8103.jpg",
+      "description": "Welcome to the Meown Official Subforum",
       "avatar": "https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png",
-      "creation_date": 1611324327523,
+      "members": [
+        "orago",
+        "null",
+        "test"
+      ],
       "posts": [
         {
           "title": "Black Theme",
@@ -479,6 +568,13 @@
           "likes": [],
           "comments": [],
           "sender": "orago"
+        },
+        {
+          "title": "Red theme",
+          "body": "{\"1\": \"#FAC1C0\",\"2\": \"#F5B0AF\",\"3\": \"#EFA09F\",\"4\": \"#EA8F8E\",\"5\": \"#E47F7D\",\"6\": \"#DF6E6D\",\"7\": \"#D95E5C\",\"8\": \"#D44D4B\",\"9\": \"#CE3D3B\",\"10\": \"#C92C2A\",\"11\": \"#C92C2A\",\"12\": \"#E47F7D\",\"13\": \"#607d8b\",\"14\": \"#607d8b\",\"15\": \"#607d8b\"}",
+          "likes": [],
+          "comments": [],
+          "username": "orago"
         }
       ]
     },
@@ -492,21 +588,77 @@
       "members": [],
       "avatar": "https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png",
       "creation_date": 1612797844595
+    },
+    "hub": {
+      "owner": "orago",
+      "preferred": "hub",
+      "background": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
+      "banner": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
+      "description": "official meown server for anyone to use",
+      "color": "#000000",
+      "members": [],
+      "avatar": "https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png",
+      "creation_date": 1614136047686
     }
   },
-  "deposit": [
-    {
+  "wallet": {
+    "orago": {
       "owner": "orago",
-      "link": "meown",
+      "admin": [
+        "meown"
+      ],
       "amount": 0
     }
-  ],
+  },
   "emails": [
     "d@c.c",
     "t@s.t",
     "minkyuupark22@gmail.com",
     "theoldtombstone@gmail.com",
-    "never@goona.giveyou.up"
+    "never@goona.giveyou.up",
+    "william12312341@gmail.com",
+    "oragoking@gmail.com",
+    "orago.king@gmail.com",
+    "moshlingcat2004@gmail.com",
+    "idislikepeels@gmail.com"
   ],
-  "discord": {}
+  "changelog": {
+    "V0.01 Beginning": [
+      "Where it all began or atleast hadn't been documented."
+    ],
+    "V0.02 Curious And Feeling Loved": [
+      "Added the ability to comment on other's posts",
+      "Added liking posts."
+    ],
+    "V0.04 Safety First!": [
+      "<a href=\"/u/aouab\">@aouab</a> and <a href=\"/u/orago\">I (@Orago)</a> added hashing which helps make the website super secure!"
+    ],
+    "V0.06 Sub-forums / Groups": [
+      "Working on making sub-forums / categories.",
+      "This may not be permanent but I am hoping for the best."
+    ],
+    "V0.07 Communities and Threads!": [
+      "Sub Forums renamed to communities",
+      "added threads which are basically posts for communities."
+    ],
+    "v0.075 Speech Synthesis and Audio Recognition": [
+      "I am in the process of creating audio recognition and speech synthesis so that meown can be used with voice commands similar to google assistant and reply back.",
+      " this is highly developmental and may not work on old browsers."
+    ],
+    "v0.08 New theme and possibly upcoming themes!": [
+      "Meown is now fully customizable meaning that you can change every single color including text.",
+      "Along with this you can import and export themes to text to share with your friends."
+    ],
+    "v0.09 Roles and permissions": [
+      "Added roles and colors for the roles to show status and priority of certain users.",
+      "Soon permissions will rely on what roles you have so there can be things such as moderators and staff to keep meown safe."
+    ],
+    "v0.10 Patches, Bugs, and Minimization of Code": [
+      "Fixed Profile menu's not popping up or showing.",
+      "Fixed mobile app capability.",
+      "Updated Url from Meown.TK, to Meown.ML and re-enabled Https://",
+      "Patched a bug where you could dupe coins.",
+      "Data will now be loading from the Meown Api rather than from Meown servers itself to save on server stress."
+    ]
+  }
 }

@@ -31,7 +31,7 @@
     <div class="simple-round-large simple-theme-d2 simple-dropdown-content simple-bar-block" style="width:300px;right:0;top:78px;">
     <%- values.profile_menu %>
     </div>
-    <img src="<%- values.self_avatar %>" class="simple-circle" style="height:23px;width:23px" alt="Avatar">
+    <img src="<%- database[values.category][values.id].avatar %>" class="simple-circle" style="height:23px;width:23px" alt="Avatar">
    </div>
    
    <!-- Navbar on small screens -->
@@ -61,7 +61,11 @@
       <div class="simple-container"><br> 
       <div class="simple-card simple-round" style="background-image: linear-gradient(45deg, rgba(255,255,255,0.3), rgba(255,255,255,0.3) )">
         <div class="simple-container">
-         <%- values.details %>
+           <h4 class="simple-center" ><%- values.id %></h4>
+  <p class="simple-center">
+  <img src="<%- database[values.category][values.id].avatar %>" class="simple-circle" style="height:106px;width:106px;border: 2px solid black;" alt="User Avatar">
+  </p>
+  <hr>
         </div>
       </div>
       </div>
@@ -120,6 +124,9 @@
 </form>
   
     <%- values.post_list %>
+    <div id="postList">
+      
+    </div>
     <!-- End Middle Column -->
     </div>
     
@@ -163,6 +170,40 @@
 <br>
 <input id="cb" type="text" hidden>
 <script>
+  function max(input,max,result){if (!max)max = 10;result = max;if (input < max)result = input;return result;}
+  
+  async function fetchApi(category,id,options){
+    options=options||""
+  var response = await fetch(`/api/${category}/${id}/${options}`).then(l => l.json()).then(l => l.response)
+  return response;
+  }
+  
+fetchApi("community",`<%- values.id %>`,"?includeposts=true").then(data => {
+      var postList = document.getElementById("postList"),
+          posts = data.posts,
+          postsLength = data.posts.length-1;
+    while (postsLength > posts.length-max(posts.length+1,5)) {
+      addPost(data.posts[postsLength],[postsLength]);
+      postsLength--;
+    }
+});
+  
+    async function addPost(values,index){
+      
+      var postTemplate = `
+      <div class="simple-theme-l5 simple-theme-border simple-theme-text-1 simple-container simple-card simple-round simple-margin" id="post-3"><br>
+        <img src="${await fetchApi("user",values.username,"?includeposts=true").then(function(response){return response.avatar})}" alt="User_Avatar" class="simple-circle" style="width:90px;height:90px"> 
+        <button class="simple-right simple-opacity" onclick="menu({type:&quot;post&quot;,id:&quot;orago&quot;,number:&quot;7&quot;,category:&quot;user&quot;,likes:&quot;0&quot;});"><i class="fa fa-bars"></i></button>
+        <span class="simple-right simple-opacity"><i class="fa fa-heart"></i>:${values.likes}</span>&nbsp;
+        <span class="simple-right simple-opacity">#${index}</span>
+        <br><b style="font-size: 2em;color:#e3c522;">&nbsp;${values.username||"unknown"}: </b>
+        <a style="font-size: 1.5em;">${values.title}</a><br>
+        <hr class="simple-clear">
+        <p>${values.body}</p>
+      </div>
+      `
+      postList.innerHTML+=postTemplate;
+    }
 // Accordion
 function menu(values){
   var popup = {
@@ -202,13 +243,6 @@ Copy URL <i class="fa fa-link"></i>
   }
   }
 }
-  function toggleClass(element,className) {
-  var temp = element;
-  temp.className.indexOf(className) == -1?
-  temp.className += ` ${className}`:
-  temp.className = temp.className.replace(` ${className}`, "");
-}
-  
 function accordion(id) {
   var x = document.getElementById(id);
   if (x.className.indexOf("simple-show") == -1) {
@@ -246,6 +280,7 @@ setTimeout(function(){ new_date() }, 1300);
   }
 }
 </script>-->
+<!--
   <div id="chat_all">
 <script src="/socket.io/socket.io.js"></script>
 <script src="/js/main.js" defer></script>
@@ -276,6 +311,7 @@ function openForm() {chat.style.display = "block";chat.setAttribute("opened", tr
 function closeForm() {chat.style.display = "none";chat.setAttribute("opened", false);}
 </script>
 </div>
+-->
 <div id="popup" class="simple-modal simple-animate-opacity">
   <div class="simple-modal-content" style="padding:32px">
     <div class="simple-container simple-white">
