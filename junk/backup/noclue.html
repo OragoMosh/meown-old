@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<span>
+<canvas id="canvas" width="16" height="16" style="float:left;">
+Your browser does not support the HTML5 canvas tag.</canvas>
+  <span class="grid-container" id="grid"></span>
+</span>
+  <br>
+<input type="color" value="#ff0000" class="colors"> Color
+<p id="logs" style="overflow:auto;height:150px;"></p>
+<script>
+var c = document.getElementById("canvas");
+var ctx = c.getContext("2d");
+var body = document.getElementsByTagName("BODY");
+var pos = {x:0,y:0};
+var color = document.getElementsByClassName("colors")[0].value;
+var settings = {
+  autoPaint:false
+}
+var size = 16;
+
+//Basic Black Background
+ctx.beginPath();
+ctx.rect(0,0,16,16);//Outline
+ctx.fillStyle = "black";
+ctx.fill();
+
+//Basic White Box
+ctx.beginPath();
+ctx.rect(3,8,10,6);//Outline
+ctx.fillStyle = "white";
+ctx.fill();
+
+//Basic Box Lids
+ctx.beginPath();
+
+ctx.fillStyle = "white";
+ctx.fill();
+
+//Color In Box and lids
+ctx.beginPath();
+ctx.rect(3,8,10,6);//Outline
+ctx.rect(2,7,1,1);//Left Lid
+ctx.rect(13,7,1,1);//Right Lid
+ctx.fillStyle = "#ceb462";
+ctx.fill();
+
+//Color In Box's Stripes
+ctx.beginPath();
+ctx.rect(3,8,1,6);//Left Side Stripe
+ctx.rect(3,10,5,1);//Middle Stripe
+ctx.rect(3,12,8,1);//Middle Stripe
+ctx.rect(3,14,10,1);//Bottom Stripe
+ctx.fillStyle = "#ab9656";
+ctx.fill();
+
+
+
+//Color In Head "GREY"
+ctx.beginPath();
+ctx.rect(4,2,2,2);//Left Ear
+ctx.rect(10,2,2,2);//Right Ear
+ctx.rect(6,3,4,1);//ForeHead
+ctx.rect(3,4,10,3);//Middle of the head
+ctx.rect(4,7,8,1);//Very Bottom of head
+ctx.fillStyle = "#595959";
+ctx.fill();
+
+//Color In Head "LIGHT-GREY"
+ctx.beginPath();
+ctx.rect(5,3,1,1);//Left Ear
+ctx.rect(10,3,1,1);//Right Ear
+ctx.rect(4,4,8,3);//Middle of the head
+ctx.rect(5,7,6,1);//Very Bottom of head
+ctx.fillStyle = "#ffffff";
+ctx.fill();
+
+//Color In EYES "DARK-GREY"
+ctx.beginPath();
+ctx.rect(6,5,1,1);//Left Eye
+ctx.rect(9,5,1,1);//Right Eye
+ctx.fillStyle = "#383838";
+ctx.fill();
+  
+body[0].addEventListener("keydown", controller);
+function controller(event) {
+  log(`${JSON.stringify(pos)}`);
+  color =  document.getElementsByClassName("colors")[0].value;
+  switch (event.keyCode) {
+  
+  case 13:
+  	draw(pos.x,pos.y);
+  break;
+  case 84:
+  	c.drawImage(this, 0, 0, 379, 1000);
+  break;
+  case 76:
+      settings.autoPaint==true?settings.autoPaint=false:settings.autoPaint=true;
+  	log(`Toggled Auto Paint to ${settings.autoPaint==true?"ON":"OFF"}`);
+  break;
+  case 38://Up Arrow Key
+  	if(pos.y<=0)return;
+    move("y",-1);
+  break;
+  case 40://Up Arrow Key
+  	if(pos.y>=16)return;
+      move("y",1);
+  break;
+  case 37://Left Arrow Key
+  	if(pos.x<=0)return;
+    move("x",-1);
+  break;
+   case 39://Right Arrow Key
+  	if(pos.x>=16)return;
+    move("x",1);
+  break;
+  }
+}
+  function move(type,value){
+    if (isNaN(Number(value)))value=1;
+    type=type||"x";
+    pos[type]+=value
+    if (settings.autoPaint==true){draw(pos.x,pos.y)}
+  }
+function log(value){
+var logs = document.getElementById("logs"),
+    br = document.createElement("br");
+logs.prepend(br)
+logs.prepend(value);
+}
+function draw(x,y){
+if(isNaN(Number(x))){x=0;}
+if(isNaN(Number(y))){y=0;}
+console.log(`Drawing at ${x}, ${y}`)
+colorGrid(x,y,color)
+ctx.beginPath();
+ctx.rect(x,y,1,1);//Square
+ctx.fillStyle = color;
+ctx.fill();
+}
+
+	var length = 16, 
+    	displayResult = "",
+        gridLength = Math.pow(length,2),
+        gridResult = [];
+        
+function colorGrid(x,y,color){
+    if (x>length||x<0)return;
+    if (y>length||y<0)return;
+    x=x>=0?x:0;
+    y=y>=0?y:0;
+    color=color||"black";
+    var id = x+(y*16);
+    document.getElementsByClassName("grid-item")[id].style.background = color
+ }
+    
+window.addEventListener("load", function () {
+    for (var i=0;i<length;i++){
+    displayResult+="auto ";
+    }
+    
+    document.getElementById("grid").style.gridTemplateColumns = displayResult;
+    document.getElementById("grid").style.gridTemplateRows = displayResult;
+    
+    for (var i=0;i<gridLength;i++){
+    var temp = document.createElement("div");
+    var text = document.createElement("span");
+    text.setAttribute("class", "hidden");
+    text.innerText = "I";
+    
+    temp.setAttribute("class", "grid-item");
+    temp.setAttribute("number", i);
+    temp.setAttribute("onclick", `gridDraw(this.getAttribute("number"))`);
+    temp.append(text);
+    
+    gridResult.push(temp);
+    }
+    gridResult.forEach(function(value){
+    document.getElementById("grid").append(value)
+    })
+  });
+  
+  function gridDraw(number){
+  
+  var result = num2grid(number,16);
+  //alert(`${JSON.stringify(result)} : ${number}`)
+  draw(result.x,result.y);
+  }
+  
+function num2grid(number,size){
+var x=0,
+	y=0;
+    
+while (number>0){
+if (number>size){
+y++;
+number-=size;
+}
+else if (number>=0){
+x++;number-=1;}
+}
+
+return {"x":x,"y":y};
+}
+
+ctx.imageSmoothingEnabled = true;;
+        canvas.resizeAndExport = function(width, height){
+  // create a new canvas
+  var c = document.createElement('canvas');
+  // set its width&height to the required ones
+  
+  c.width = width;
+  c.height = height;
+  // draw our canvas to the new one
+  c.getContext('2d').drawImage(this, 0,0,this.width, this.height, 0,0,width, height);
+  // return the resized canvas dataURL
+  return c.toDataURL();
+  }
+
+// draw a simple rectangle for the example
+// create an image that will get our resized export as src
+var img = new Image();
+
+img.src = canvas.resizeAndExport(300, 300);
+document.body.appendChild(img);
+</script> 
+
+</body>
+</html>
+<style>
+canvas{
+width:512px;
+height:512px;
+/*
+    image-rendering: optimizeSpeed;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: -o-crisp-edges;
+  image-rendering: pixelated;
+  -ms-interpolation-mode: nearest-neighbor;
+  */
+}
+.grid-container {
+    width: 290px;
+    height: 290px;
+  display: grid;
+  grid-template-columns: auto;
+  background-color: #2196F3;
+  padding: 0.2vw;
+}
+.grid-item {
+  background-color: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(0, 0, 0, 0.8);
+  font-size: 3px;
+  text-align: center;
+}
+.hidden{visibility:hidden;}
+</style>

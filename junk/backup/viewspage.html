@@ -1,0 +1,36 @@
+<button onclick="javascript:toggleClass(document.getElementById('Demo1'),'simple-show');" class="simple-theme-l1 simple-theme-text-2 simple-button simple-block simple-left-align">
+  <i class="fa fa-shield fa-fw simple-margin-right"></i>
+  Roles
+</button>
+<div id="Demo1" class="simple-hide simple-container">
+  <p id="myroles">${values.myroles}</p>
+</div>
+<button onclick="javascript:toggleClass(document.getElementById('Demo2'),'simple-show');" class="simple-theme-l1 simple-theme-text-2 simple-button simple-block simple-left-align">
+  <i class="fa fa-heart fa-fw simple-margin-right"></i>
+  Follows
+</button>
+<div id="Demo2" class="simple-hide simple-container">
+  <p id="followers">Followers: ${values.follow_amount}</p>
+  <p id="following">Following: ${values.follow_list} </p>
+  <p id="communities">Communities: ${values.community_list} </p>
+</div>
+
+
+<script>
+  (async function(){
+ var user = await MeownApi(`user/${id}`).then(res => {return res;});
+ var config = await MeownApi(`config`).then(res => {return res;});
+      var userRoles = user.roles;
+      values.myroles = [];
+      if (userRoles.length>0){
+        userRoles.forEach(my_roles);
+        function my_roles(role,index) {
+          if (Object.keys(config.role_info).includes(role)) {values.myroles+= `${config.role_info[role].name}, `;}
+        };
+      }
+      else {values.myroles = "None";}
+      document.getElementById("myroles").innerHTML = fixEnd(values.myroles);
+  })();
+</script>
+
+

@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head id="header">
-<%- values.infoData(`Homepage!`) %>
 <meta charset="UTF-8">
 <meta name="keywords" content="Social media, meown, meown.ml, meown.tk" />
 <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Open+Sans'>
@@ -11,6 +10,8 @@
 <link href="/assets/css/simple.css" rel="stylesheet">
 <link href="/assets/css/meown.css" rel="stylesheet">
 <link href="/assets/css/simple-theme.css" rel="stylesheet">
+  
+  
   <script data-ad-client="ca-pub-9294595868006747" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 </head>
 <style>html, body, h1, h2, h3, h4, h5 {font-family: "Open Sans", sans-serif}</style>
@@ -83,14 +84,14 @@
   <div class="simple-row">
     <!-- Left Column -->
     <div class="simple-col m3 simple-theme-text-1">
-      <div class="simple-theme-l5 simple-card simple-round simple-theme-border">
-        <div style="margin: 0 auto; width:90%">
-          <a class="twitter-timeline" style="display:inline-block;" data-height="500" href="https://twitter.com/OragoMosh?ref_src=twsrc%5Etfw">Tweets by OragoMosh</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+      <!-- Interests --> 
+      <div class="simple-theme-l5 simple-theme-border simple-card simple-round simple-hide-small">
+        <div class="simple-container">
+          <p>Users: </p>
+          <ul id="users"></ul>
         </div>
       </div>
-      
       <br>
-      
       <!-- Alert Box -->
       <div class="simple-theme-l4 simple-container simple-display-container simple-round simple-theme-border simple-margin-bottom simple-hide-small">
         <span onclick="this.parentElement.style.display='none'" class="simple-button simple-display-topright simple-round" style="filter: brightness(90%);">
@@ -107,90 +108,23 @@
     <div class="simple-col m7 simple-theme-text-1">
       
       <div class="simple-theme-l5 simple-theme-border simple-card simple-round simple-container simple-margin">
-        <p class="crenzo center simple-center simple-theme-text-1 simple-text-large">Welcome to Meown!</p>
+        <p class="crenzo center simple-center simple-theme-text-1 simple-text-large">Meown ChatRooms!</p>
       </div>
       
       <div class="simple-theme-l5 simple-theme-border simple-card simple-round simple-container simple-margin">
-        <p>
-          Meown is supposed to be a very simple social media with a quite simple database structure capable of doing many things making it easier to expand!
-        </p>
-        <p>
-          Feel free to <a class="simple-button simple-theme simple-round" href="u#register">Join now !</a>
-          and be one of the 
-          <a id="userCount">
-          0
-          <script>window.addEventListener("load", async function () {document.getElementById("userCount").innerHTML=await MeownApi("users").then((res)=>{return res.size;})});</script> 
-          </a>
-          
-          peeps to try Meown.
-        </p>
-          
-        <p>
-          There is currently 
-          <a id="communiyCount">
-          0
-          <script>window.addEventListener("load", async function () {document.getElementById("communiyCount").innerHTML=await MeownApi("communities").then((res)=>{return res.size;})});</script>
-          </a>
-          
-          Communties, So why wait when you can be a part of one!
-        </p>
+       <ul id="messages" style="overflow:auto;height:300px;"></ul>
       </div>
       
-<div class="simple-theme-l5 simple-theme-border simple-card simple-round simple-container simple-margin" id="changelogs">Not Loaded</div>
-<script>
-  window.addEventListener( "load", async function () {
-    var changelogs = await MeownApi( "changelogs" ).then( ( values )=>{ return values } ),
-        result = `<b>Changelogs:</b><br>${ changelog( "last" ).name }<br>`;
-    
-  function changelog (number){
-    number==="last"?number === Object.keys( changelogs ).length-1:number=number;
-    if ( number &&! isNaN( number ) ){
-      return {
-        name: caps( Object.keys( changelogs )[ number ]),
-        values: changelogs[ Object.keys( changelogs )[ number ] ]
-      }
-    }
-    else return {
-      name: caps( Object.keys( changelogs )[ Object.keys( changelogs ).length-1 ] ),
-      values: changelogs[ Object.keys( changelogs )[ Object.keys( changelogs ).length-1 ] ]
-    };
-  }
-  changelog( "last" ).values.forEach(add_log);
-  function add_log(item,index){
-    if ( index >= 0 ){
-      result+= `- ${item}<br>`;
-    }
-    else {
-      result+= `- ${item}`;
-    }
-  }
-  document.getElementById( "changelogs" ).innerHTML = result; 
-  });
-</script> 
-<div class="simple-theme-l5 simple-theme-border simple-card simple-round simple-container simple-margin" id="roles">
-
-</div>
-  <script>
-    window.addEventListener("load", async function () {
-      var roles = await MeownApi("users").then((res)=>{return res.roles}),
-          resultRoles=[];
-      document.getElementById("roles").innerHTML=`
-        <p class="left">
-        | Owner: ${roles.owner} |
-        <br>
-        | Developers: ${ roles.developer || "None" } |
-        <br>
-        | Moderators: ${ roles.moderator || "None" } |
-        <br>
-        | Helpers: ${ roles.helper || "None" } |
-        <br>
-        | Verified Creators: ${ roles.verified || "None" } |
-        <br>
-        | Beta Testers: ${ roles.verified || "None" } |
-        </p>
-      `;
-    })
-  </script>
+      <div id="sendPost" class="simple-theme-l5 simple-theme-border simple-card simple-round simple-container simple-margin">
+        <h6 class="simple-opacity">New Message</h6>
+        <input type="text" name="sentpostbody" id="input" class="simple-theme-input simple-theme-border simple-padding" placeholder="Say something..." required><br>
+        <button class="simple-button simple-theme-button" onclick="sendMessage();"><i class="fa fa-pencil"></i> Send</button>
+      </div>
+      
+      <div class="simple-theme-l5 simple-theme-border simple-card simple-round simple-container simple-margin">
+       <ul class="room-list"></ul>
+      </div>
+      
       
       <div class="simple-theme-l5 simple-theme-border simple-card simple-round simple-container simple-margin">
   <ul class="simple-theme-text-1">
@@ -231,12 +165,6 @@
       <div class="simple-theme-l5 simple-theme-border simple-card simple-round simple-padding-32 simple-center">
         <p><i class="fa fa-bug simple-xxlarge" onclick="menu({title:'Reporting Bugs has not been added yet',body:'Sorry about that :p'})"></i><br>Report bugs</p>
       </div>
-      
-      <br>
-      
-      <div class="simple-theme-l5 simple-theme-border simple-card simple-round simple-padding-32 simple-center">
-
-      </div>
     <!-- End Right Column -->
     </div>
   <!-- End Grid -->
@@ -274,7 +202,7 @@ function postMenu(values){
   </button>
   ${values.likes?`<form method="post" action="/edit" style="display:inline-block;"> <input type="hidden" name="method" value="like"> <input type="hidden" name="type" value="posts"> <input type="hidden" name="sentname" value="${values.id}"> <input type="hidden" name="sentid" value="${values.number}"><button type="submit" onclick="notification("<3!")">Likes: <i class="fa fa-heart" ></i>${values?.likes?.length?values.likes:0||0}</button></form>`:""}`});
 } 
-  
+
 function menu(values){
   values = values || {};
   
@@ -325,6 +253,47 @@ function getCookie(cname) {
     </div>
   </div>
 </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/assets/js/main.js" defer></script>
+  <script>try{Typekit.load({ async: true });}catch(e){}</script>
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/base/jquery-ui.css">
+  <link href="/assets/css/simple-extra.css" rel="stylesheet" >
+
+<!--
+<div id="chat_all">
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/assets/js/main.js" defer></script>
+  <script>try{Typekit.load({ async: true });}catch(e){}</script>
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/base/jquery-ui.css">
+  <link href="/assets/css/simple-extra.css" rel="stylesheet" >
+  <button class="simple-open-button" onclick="openForm()">Chat</button>
+  <div class="simple-chat" id="chat">
+    <div class="simple-form-container">
+      <h1>Chat</h1>
+      <label for="msg"><b>Message</b></label>
+      <ul class="room-list"></ul>
+      <input id="input" placeholder="Say something...">
+      <button onclick="sendMessage();" class="simple-btn">Send</button>
+    </div>
+  </div>
+  <script>
+  var values = {}
+  var chat = document.getElementById("chat");
+  function openForm() {chat.style.display = "block";chat.setAttribute("opened", true); }
+  function closeForm() {chat.style.display = "none";chat.setAttribute("opened", false);}
+  </script>
+</div>
+-->
+
 <div id="assets"></div>
 
 <!--Loads the extra files that aren't written in the document.-->

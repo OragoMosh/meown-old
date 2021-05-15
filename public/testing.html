@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>JavaScript Arrays</h2>
+
+<p id="demo"></p>
+
+<script>
+var niq = [3,10];
+var array = ["one","two","chee","fore","beehive","sux","sevem","aeit","nime","tem","eleben","twelf","firteem","fortneem","two","chee","fore","beehive","sux","sevem","aeit","nime","tem","eleben","twelf","firteem","fortneem","two","chee","fore","beehive","sux","sevem","aeit","nime","tem","eleben","twelf","firteem","fortneem","two","chee","fore","beehive","sux","sevem","aeit","nime","tem","eleben","twelf","firteem","fortneem","two","chee","fore","beehive","sux","sevem","aeit","nime","tem","eleben","twelf","firteem","fortneem","two","chee","fore","beehive","sux","sevem","aeit","nime","tem","eleben","twelf","firteem","fortneem"];
+var result = "start <br>";
+
+/*
+for (var i = 0; array.length > i; i++){
+//var num = Math.floor(Math.random() * 2);
+result+= `${array[i]}<br>` ;
+if ((i/5).toString().indexOf(".") == -1){
+result+= `THIS IS A ADVERTISEMENT! <br>`;
+}
+
+
+}
+*/
+function forEvery(index,length,evaluate){
+if ( ( index / length ).toString().indexOf( ".") == -1){
+eval( evaluate )
+}
+}
+
+for (var i = 0; array.length > i; i++){
+forEvery(6,3,`result+= ${array[2]}`);
+}
+document.getElementById("demo").innerHTML = result;
+</script>
+
+</body>
+</html>
+

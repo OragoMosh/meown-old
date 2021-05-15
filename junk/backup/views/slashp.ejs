@@ -3,7 +3,6 @@
 <head id="header">
 <%- values.infoData(`Homepage!`) %>
 <meta charset="UTF-8">
-<meta name="keywords" content="Social media, meown, meown.ml, meown.tk" />
 <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Open+Sans'>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <script src="/assets/js/tools.js" defer></script>
@@ -11,7 +10,6 @@
 <link href="/assets/css/simple.css" rel="stylesheet">
 <link href="/assets/css/meown.css" rel="stylesheet">
 <link href="/assets/css/simple-theme.css" rel="stylesheet">
-  <script data-ad-client="ca-pub-9294595868006747" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 </head>
 <style>html, body, h1, h2, h3, h4, h5 {font-family: "Open Sans", sans-serif}</style>
 <body class="simple-theme-background">
@@ -81,36 +79,26 @@
 <div class="simple-container simple-content" style="max-width:1400px;margin-top:80px">    
   <!-- The Grid -->
   <div class="simple-row">
-    <!-- Left Column -->
+        <!-- Left Column -->
     <div class="simple-col m3 simple-theme-text-1">
-      <div class="simple-theme-l5 simple-card simple-round simple-theme-border">
-        <div style="margin: 0 auto; width:90%">
-          <a class="twitter-timeline" style="display:inline-block;" data-height="500" href="https://twitter.com/OragoMosh?ref_src=twsrc%5Etfw">Tweets by OragoMosh</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+            <!-- Interests --> 
+      <div class="simple-theme-l5 simple-theme-border simple-card simple-round simple-hide-small">
+        <div class="simple-container">
+          <p>Interests</p>
+          <p></p>
         </div>
+      </div>
+    </div>
+    <!-- Middle Column -->
+    <div class="simple-col m7 simple-theme-text-1">
+      
+      <div class="simple-theme-l5 simple-theme-border simple-card simple-round simple-container">
+        <p class="crenzo center simple-center simple-theme-text-1 simple-text-large">Welcome to Meown!</p>
       </div>
       
       <br>
       
-      <!-- Alert Box -->
-      <div class="simple-theme-l4 simple-container simple-display-container simple-round simple-theme-border simple-margin-bottom simple-hide-small">
-        <span onclick="this.parentElement.style.display='none'" class="simple-button simple-display-topright simple-round" style="filter: brightness(90%);">
-          <i class="fa fa-remove"></i>
-        </span>
-        <p><strong>Hello!</strong></p>
-        <p>This is a notification box which currently has no use :p</p>
-      </div>
-    
-    <!-- End Left Column -->
-    </div>
-    
-    <!-- Middle Column -->
-    <div class="simple-col m7 simple-theme-text-1">
-      
-      <div class="simple-theme-l5 simple-theme-border simple-card simple-round simple-container simple-margin">
-        <p class="crenzo center simple-center simple-theme-text-1 simple-text-large">Welcome to Meown!</p>
-      </div>
-      
-      <div class="simple-theme-l5 simple-theme-border simple-card simple-round simple-container simple-margin">
+      <div class="simple-theme-l5 simple-theme-border simple-card simple-round simple-container">
         <p>
           Meown is supposed to be a very simple social media with a quite simple database structure capable of doing many things making it easier to expand!
         </p>
@@ -136,7 +124,21 @@
         </p>
       </div>
       
-<div class="simple-theme-l5 simple-theme-border simple-card simple-round simple-container simple-margin" id="changelogs">Not Loaded</div>
+      <br>
+      
+  <div class="simple-theme-l5 simple-theme-border simple-card simple-round simple-container"><iframe src="/land-of-boxies" title="description" class="simple-center" style="display:block;border:none;width:30vw;height:60vh;margin-left: auto;margin-right: auto;" id="landOfBoxies"></iframe>
+  <script>
+    document.getElementById( "landOfBoxies" ).addEventListener( "load" , ev => {
+      const new_style_element = document.createElement( "style" );
+      new_style_element.textContent = "body {background-color:transparent;}"
+      ev.target.contentDocument.head.appendChild( new_style_element );
+    });
+  </script>
+  </div>
+      
+     <br>
+      
+<div class="simple-theme-l5 simple-theme-border simple-card simple-round simple-container" id="changelogs">Not Loaded</div>
 <script>
   window.addEventListener( "load", async function () {
     var changelogs = await MeownApi( "changelogs" ).then( ( values )=>{ return values } ),
@@ -167,7 +169,8 @@
   document.getElementById( "changelogs" ).innerHTML = result; 
   });
 </script> 
-<div class="simple-theme-l5 simple-theme-border simple-card simple-round simple-container simple-margin" id="roles">
+        <br>
+<div class="simple-theme-l5 simple-theme-border simple-card simple-round simple-container" id="roles">
 
 </div>
   <script>
@@ -192,7 +195,9 @@
     })
   </script>
       
-      <div class="simple-theme-l5 simple-theme-border simple-card simple-round simple-container simple-margin">
+  <br>
+      
+      <div class="simple-theme-l5 simple-theme-border simple-card simple-round simple-container">
   <ul class="simple-theme-text-1">
     <li><a href="/about" target="_blank">About Meown</a></li>
     <li><a href="#" target="_blank">Contact Me (Not added)</a></li>
@@ -233,17 +238,13 @@
       </div>
       
       <br>
-      
-      <div class="simple-theme-l5 simple-theme-border simple-card simple-round simple-padding-32 simple-center">
-
-      </div>
+      <br>
     <!-- End Right Column -->
     </div>
   <!-- End Grid -->
   </div>
 <!-- End Page Container -->
 </div>
-<br>
   
 <script>
   function caps(text){return text.charAt(0).toUpperCase() + text.slice(1);}
@@ -255,40 +256,30 @@
   return r;
   }
   
+  /*
+  async function MeownApi(i){
+  // var i is for Input
+  // var o is for Options
+  // var r is for Response
+  var o=o||"";
+  var r=await fetch(`/api/${i}`).then(l => l.json()).then(l => l.response)
+  return r;
+  }
+  */
+  /*(async function(){
+      async function MeownApi(input){
+  var options=options||""
+  var response = await fetch(`https://meown.ml/api/${input}`).then(l => l.json()).then(l => l.response)
+  return response;
+  }
+    await MeownApi("users").then((res)=>{return alert(res);})
+  })();
+  */
+
+  
   
   
 function fix_end(x) {var i=0;for (i = 0; i < x.length; i++) {if (x.endsWith(",") || x.endsWith(" ")) {x = x.slice(0, -1);fix_end(x);}else return x;}}
-  
-function postMenu(values){
-  //console.log(values)
-  menu({'title':`@${values.id}, Post #${values.index}`,'body':`
-  <form method="post" action="/edit" style="display:inline-block;">
-  <input type="hidden" name="method" value="delete-post"> 
-  <input type="hidden" name="id" value="${values.id}"> 
-  <input type="hidden" name="sentnum" value="${values.index}"> 
-  <input type="hidden" name="category" value="${category||"user"}">
-  <button type="submit">Delete Post</button>
-  </form>
-  <button onclick="copy("https://${location.hostname}/u/${values.id||"unknown"}#post-${values.index};");notification("Link Copied!");">Copy URL <i class="fa fa-link">
-  </i>&nbsp;
-  </button>
-  ${values.likes?`<form method="post" action="/edit" style="display:inline-block;"> <input type="hidden" name="method" value="like"> <input type="hidden" name="type" value="posts"> <input type="hidden" name="sentname" value="${values.id}"> <input type="hidden" name="sentid" value="${values.number}"><button type="submit" onclick="notification("<3!")">Likes: <i class="fa fa-heart" ></i>${values?.likes?.length?values.likes:0||0}</button></form>`:""}`});
-} 
-  
-function menu(values){
-  values = values || {};
-  
-  var overlay = {
-    main:document.getElementById('overlay'),
-    title:document.getElementById('overlayTitle'),
-    body:document.getElementById('overlayBody')
-  }
-  overlay.main.style.display='block';
-  overlay.title.innerHTML=values.title||"";
-  overlay.body.innerHTML=values.body||"";
-}
-  
-  
   
 function openNav() {
   var x = document.getElementById("navDemo");
@@ -316,12 +307,12 @@ function getCookie(cname) {
 
 </body>
 </html> 
-<div id="overlay" class="simple-modal simple-animate-opacity">
+<div id="popup" class="simple-modal simple-animate-opacity">
   <div class="simple-modal-content simple-round simple-card simple-theme-l5 simple-theme-border simple-theme-text-1" style="padding:32px">
     <div class="simple-container">
-      <i onclick="document.getElementById('overlay').style.display='none'" class="fa fa-remove simple-xlarge simple-button simple-transparent simple-right simple-xlarge"></i>
-      <h2 class="simple-wide" id="overlayTitle">Null Title</h2>
-      <p id="overlayBody">Null Body</p>
+      <i onclick="document.getElementById('popup').style.display='none'" class="fa fa-remove simple-xlarge simple-button simple-transparent simple-right simple-xlarge"></i>
+      <h2 class="simple-wide" id="popupTitle">Null Title</h2>
+      <p id="popupBody">Null Body</p>
     </div>
   </div>
 </div>

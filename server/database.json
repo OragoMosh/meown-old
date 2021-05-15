@@ -43,7 +43,7 @@
       "preferred": "Orago",
       "background": "https://cdn.discordapp.com/attachments/660390332772646922/795417339079294986/background.png",
       "banner": "https://cdn.glitch.com/288a0b72-7e13-4dd2-bc7a-3cc2f4db2aab%2Fvapormountain.jpg?v=1606422724403",
-      "avatar": "https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fwaffles.png",
+      "avatar": "https://cdn.discordapp.com/attachments/660390332772646922/842875802788954122/b1c6d3613b2bfbeaaacf154f49de00df.jpg",
       "description": "Hello My name is Orago, I am a game & web developer also Creator of Meown!",
       "creation_date": "-62106700000000",
       "posts": [
@@ -118,18 +118,6 @@
           ]
         },
         {
-          "title": "V0.07 Communities and Threads!",
-          "body": "It's official. Communities are finally coming + working and can currently only be created verified by moderators and developers but there will soon be a verification system. Threads will be similar to posts but anyone in a certain community can create them.",
-          "likes": [],
-          "comments": []
-        },
-        {
-          "title": "v0.075 Speech Synthesis and Audio Recognition",
-          "body": "I am in the process of creating audio recognition and speech synthesis so that meown can be used with voice commands similar to google assistant and reply back, this is highly developmental and may not work on old browsers",
-          "likes": [],
-          "comments": []
-        },
-        {
           "title": "v0.08 New theme and possibly upcoming themes!",
           "body": "Normally Meown would be a blue color but it is currently orange-ish red, I am hoping that it will be possible to add custom themes, along with a few other bits but if you would like to see what Meown used to look like here is a before and after <br> Before: <img onclick='window.open(this.src), `_blank`' src='https://cdn.glitch.com/0322d62f-81b5-4f06-9b33-557687636cec%2FScreenshot%202020-12-08%20at%205.10.28%20PM.png' alt='Theme Before' width='50%' height='50%'><br> After: <img onclick='window.open(this.src), `_blank`' src='https://cdn.glitch.com/0322d62f-81b5-4f06-9b33-557687636cec%2FScreenshot%202020-12-08%20at%205.10.36%20PM.png' alt='Theme After' width='50%' height='50%'>",
           "likes": [
@@ -156,6 +144,48 @@
           "body": "https://www.w3schools.com/code/tryit.asp?filename=GOVKXNEYERGL",
           "likes": [],
           "comments": []
+        },
+        {
+          "title": "Song",
+          "body": "https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2F(SOFTWILLY%20OUTRO)%20Hentai%20Girl%204%20Me320kbps.mp3?v=1598495005532",
+          "likes": [],
+          "comments": []
+        },
+        {
+          "title": "fribaynightdunkin",
+          "body": "https://v6p9d9t4.ssl.hwcdn.net/html/2876359-359162/index.html",
+          "likes": [],
+          "comments": []
+        },
+        {
+          "title": "woahh yankee wit no brimm  and new theme?",
+          "body": "{\"0\":\"red\",\"1\":\"url(https://raw.githubusercontent.com/Orago/assets/main/meown/images/Panel%20Image.png) repeat\",\"2\":\"url(https://preview.redd.it/is37020g4a631.png?auto=webp&s=37f09687f944410a8ddab83afb2b101614eda754) repeat\",\"3\":\"url(https://raw.githubusercontent.com/Orago/assets/main/meown/images/Button.png)\",\"4\":\"#9eb1bb\",\"5\":\"url(https://wallpaperaccess.com/full/3053366.png)\",\"6\":\"url(https://raw.githubusercontent.com/Orago/assets/main/meown/images/Input%20Field.png)\",\"7\":\"url(https://raw.githubusercontent.com/Orago/assets/main/meown/images/NavBar.png) repeat\",\"8\":\"#6575ae\",\"9\":\"#3a4b53\",\"10\":\"#303e45\",\"11\":\"url(https://raw.githubusercontent.com/Orago/assets/main/meown/images/Background.png)\",\"12\":\"#7289da\",\"13\":\"#000000\",\"14\":\"#ffffff\",\"15\":\"#ff5252\"}",
+          "likes": [],
+          "comments": []
+        },
+        {
+          "title": "this is a test",
+          "body": "``` Testing testing hello! ``` hmm lets see",
+          "likes": [],
+          "comments": []
+        },
+        {
+          "title": "Less gooo images are now working on posts using !i {image url} i! to display it",
+          "body": "Sheesh !i https://cdn.glitch.com/0322d62f-81b5-4f06-9b33-557687636cec%2Fboxie-512px.png i!",
+          "likes": [],
+          "comments": []
+        },
+        {
+          "title": "testing mentions rn",
+          "body": "hows it going @sus !",
+          "likes": [],
+          "comments": []
+        },
+        {
+          "title": "next line",
+          "body": "is this \\n  a next line?",
+          "likes": [],
+          "comments": []
         }
       ],
       "codes": [
@@ -165,7 +195,9 @@
       "following": [
         "cat",
         "aouab",
-        "orago"
+        "orago",
+        "sus",
+        "testing"
       ],
       "followers": [
         "kind",
@@ -174,7 +206,9 @@
         "cat",
         "oragd",
         "orago",
-        "orago"
+        "orago",
+        "sus",
+        "testing"
       ],
       "communities": [
         "meown",
@@ -395,10 +429,18 @@
       "background": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
       "banner": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
       "description": "sus indeed",
-      "avatar": "https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png",
-      "following": [],
-      "followers": [],
-      "communities": [],
+      "avatar": "https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fsneeze.jpg?v=1595670987936",
+      "following": [
+        "orago"
+      ],
+      "followers": [
+        "orago"
+      ],
+      "communities": [
+        "meown",
+        "themes",
+        "cat"
+      ],
       "codes": [],
       "posts": [
         {
@@ -412,6 +454,60 @@
           "body": "impstr",
           "likes": [],
           "comments": []
+        },
+        {
+          "title": "wpwwww",
+          "body": "eeeee",
+          "likes": [],
+          "comments": []
+        },
+        {
+          "title": "ttestst",
+          "body": "232",
+          "likes": [],
+          "comments": []
+        },
+        {
+          "title": "testing",
+          "body": "!l test l!",
+          "likes": [],
+          "comments": []
+        },
+        {
+          "title": "ting",
+          "body": "https://www.w3schools.com/code/tryit.asp?filename=GPBFNN5U5EBK",
+          "likes": [],
+          "comments": []
+        },
+        {
+          "title": "Discord :>",
+          "body": "{\"0\":\"red\",\"1\":\"url(https://wallpaperaccess.com/full/3053366.png) no-repeat fixed\",\"2\":\"#99aab5\",\"3\":\"#becbd2\",\"4\":\"#9eb1bb\",\"5\":\"#7d97a5\",\"6\":\"#57707d\",\"7\":\"#6c80cb\",\"8\":\"#6575ae\",\"9\":\"#3a4b53\",\"10\":\"#303e45\",\"11\":\"url(https://cdn.glitch.com/0322d62f-81b5-4f06-9b33-557687636cec%2Fdiscord.jpg)\",\"12\":\"#7289da\",\"13\":\"#000000\",\"14\":\"#ffffff\",\"15\":\"#ff5252\"}",
+          "likes": [],
+          "comments": []
+        },
+        {
+          "title": "yoooo lmaooo",
+          "body": "{\"0\":\"red\",\"1\":\"url(https://images.opencollective.com/discordhooks/1f8f486/background.png) repeat fixed\",\"2\":\"url(https://preview.redd.it/is37020g4a631.png?auto=webp&s=37f09687f944410a8ddab83afb2b101614eda754) repeat\",\"3\":\"url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPfiPRAMmxLYOwVuUnBofI-6p2ay_4npTWPg&usqp=CAU)\",\"4\":\"#9eb1bb\",\"5\":\"url(https://wallpaperaccess.com/full/3053366.png)\",\"6\":\"url(https://wallpapercave.com/wp/wp8481117.png)\",\"7\":\"url(https://cdn.dribbble.com/users/989466/screenshots/4510162/discord-wallpaper.png) repeat\",\"8\":\"#6575ae\",\"9\":\"#3a4b53\",\"10\":\"#303e45\",\"11\":\"url(https://cdn.glitch.com/0322d62f-81b5-4f06-9b33-557687636cec%2Fdiscord.jpg)\",\"12\":\"#7289da\",\"13\":\"#000000\",\"14\":\"#ffffff\",\"15\":\"#ff5252\"}",
+          "likes": [],
+          "comments": []
+        },
+        {
+          "title": "delete later",
+          "body": "https://love2dev.com/blog/progressive-web-app-features/",
+          "likes": [],
+          "comments": []
+        },
+        {
+          "title": "also delete later",
+          "body": "https://whatpwacando.today/",
+          "likes": [],
+          "comments": []
+        },
+        {
+          "title": "also also delete later",
+          "body": "https://developers.google.com/web/ilt/pwa/introduction-to-push-notifications",
+          "likes": [],
+          "comments": []
         }
       ],
       "roles": [],
@@ -421,32 +517,130 @@
       "password": "$2a$10$PQWWp1q9z1uSlNAweLgFk.9PsgXa.AGhdk.5q4kwHfHEPe3pSL0ta",
       "email": "idislikepeels@gmail.com",
       "preferred": "Actz",
-      "coins": 2,
+      "coins": 17,
       "xp": 2,
       "background": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
       "banner": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
       "description": "ur mom gay",
-      "avatar": "https://cdn.discordapp.com/attachments/689670471641202698/825782024962572298/ezgif.com-gif-maker_8.gif",
+      "avatar": "https://media.discordapp.net/attachments/689670471641202698/831964324511088710/ezgif.com-gif-maker.gif",
       "following": [],
       "followers": [],
       "communities": [],
-      "codes": [],
+      "codes": [
+        "beta",
+        "soon-release"
+      ],
       "posts": [
         {
           "title": "Why orago is the best dev in za world 😳",
           "body": "he do epic codor thing 😳😳😳",
           "likes": [],
           "comments": []
-        },
+        }
+      ],
+      "roles": [],
+      "creation_date": 1616948364281
+    },
+    "beens": {
+      "password": "$2a$10$qDS4rBWmZqAWm2O2oCCdgu8avuDtevG1LHuiSO1RhWGO/fomkvt6O",
+      "email": "hadleykibblewhite@gmail.com",
+      "preferred": "beens",
+      "coins": 0,
+      "xp": 0,
+      "background": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
+      "banner": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
+      "description": "description",
+      "avatar": "https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png",
+      "following": [],
+      "followers": [],
+      "communities": [],
+      "codes": [],
+      "posts": [],
+      "roles": [],
+      "creation_date": 1617600752461
+    },
+    "memi": {
+      "password": "$2a$10$jTbj1eujSeTY4IR40HSZkOsgqmjfY7lOz5ITEps9oQjlfDKDlmyIy",
+      "email": "iannejeanllido7@gmail.com",
+      "preferred": "MeMi",
+      "coins": 0,
+      "xp": 0,
+      "background": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
+      "banner": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
+      "description": "i like balls",
+      "avatar": "https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png",
+      "following": [],
+      "followers": [],
+      "communities": [],
+      "codes": [],
+      "posts": [],
+      "roles": [],
+      "creation_date": 1620013322757
+    },
+    "testing": {
+      "password": "$2a$10$7v5yPSxbnpIe11I1CO5leOR5s4fGSRpSkf5afvZwRvf0Dc/mlJa4u",
+      "email": "test@in.g",
+      "preferred": "testing",
+      "coins": 0,
+      "xp": 0,
+      "background": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
+      "banner": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
+      "description": "testing",
+      "avatar": "https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png",
+      "following": [
+        "orago"
+      ],
+      "followers": [
+        "orago"
+      ],
+      "communities": [],
+      "codes": [],
+      "posts": [
         {
-          "title": "White and light blue",
-          "body": "{\"0\":\"black\",\"1\":\"#dbf6ff\",\"2\":\"#ffffff\",\"3\":\"#becbd2\",\"4\":\"#9eb1bb\",\"5\":\"#dbf6ff\",\"6\":\"#57707d\",\"7\":\"#ffffff\",\"8\":\"#000000\",\"9\":\"#3a4b53\",\"10\":\"#191a1a\",\"11\":\"#ffffff\",\"12\":\"#bdeeff\",\"13\":\"#000000\",\"14\":\"#000000\",\"15\":\"#ff5252\"}",
+          "title": "THeme",
+          "body": "{\"0\":\"red\",\"1\":\"url(https://raw.githubusercontent.com/Orago/assets/main/meown/images/Stripey%203000x2000%20sharp.png) repeat fixed\",\"2\":\"url(https://raw.githubusercontent.com/Orago/assets/main/meown/images/boxieNotif.png) repeat\",\"3\":\"url(https://raw.githubusercontent.com/Orago/assets/main/meown/images/Button.png)\",\"4\":\"#9eb1bb\",\"5\":\"url(https://raw.githubusercontent.com/Orago/assets/main/meown/images/Status%20Buttons%20100x.png)\",\"6\":\"url(https://raw.githubusercontent.com/Orago/assets/main/meown/images/Input%20Field.png)\",\"7\":\"url(https://raw.githubusercontent.com/Orago/assets/main/meown/images/NavBar.png) repeat\",\"8\":\"#6575ae\",\"9\":\"#3a4b53\",\"10\":\"#303e45\",\"11\":\"url(https://raw.githubusercontent.com/Orago/assets/main/meown/images/Background.png)\",\"12\":\"#7289da\",\"13\":\"#000000\",\"14\":\"#ffffff\",\"15\":\"#ff5252\"}",
           "likes": [],
           "comments": []
         }
       ],
       "roles": [],
-      "creation_date": 1616948364281
+      "creation_date": 1620536378683
+    },
+    "5cxlls": {
+      "password": "$2a$10$i2CSKDU9ptQdbE.yKHPJLu5EFpXGKRPUxh/jvBEf8DSVJ8640hM1e",
+      "email": "xzswjnaradkm@solarunited.org",
+      "preferred": "5cxlls",
+      "coins": 0,
+      "xp": 0,
+      "background": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
+      "banner": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
+      "description": "hi im parker",
+      "avatar": "https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png",
+      "following": [],
+      "followers": [],
+      "communities": [],
+      "codes": [],
+      "posts": [],
+      "roles": [],
+      "creation_date": 1620829474637
+    },
+    "evezies": {
+      "password": "$2a$10$WBu1quDzoSuW9PAFPLMbxO72CZvmzy9uRqikpewEJXL6m3JwRGere",
+      "email": "hkvxzezjhwphfuc@supersave.net",
+      "preferred": "Evezies",
+      "coins": 0,
+      "xp": 0,
+      "background": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
+      "banner": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
+      "description": "hi",
+      "avatar": "https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png",
+      "following": [],
+      "followers": [],
+      "communities": [],
+      "codes": [],
+      "posts": [],
+      "roles": [],
+      "creation_date": 1620833031667
     }
   },
   "community": {
@@ -460,7 +654,8 @@
       "members": [
         "orago",
         "null",
-        "test"
+        "test",
+        "sus"
       ],
       "creation_date": "1603731256000",
       "posts": [
@@ -498,6 +693,34 @@
           "likes": [],
           "comments": [],
           "username": "orago"
+        },
+        {
+          "title": "test",
+          "body": "test",
+          "likes": [],
+          "comments": [],
+          "username": "sus"
+        },
+        {
+          "title": "Image",
+          "body": "https://cdn.discordapp.com/attachments/660390332772646922/831184443325677578/162561661_309802660570796_7263309214070859870_n.jpg",
+          "likes": [],
+          "comments": [],
+          "username": "orago"
+        },
+        {
+          "title": "Discord blue",
+          "body": ".simple-padding-16{padding-top:16px!important;padding-bottom:16px!important}",
+          "likes": [],
+          "comments": [],
+          "username": "sus"
+        },
+        {
+          "title": "Discord blue (Fixed)",
+          "body": "{\"0\":\"red\",\"1\":\"url(https://images.opencollective.com/discordhooks/1f8f486/background.png) repeat fixed\",\"2\":\"url(https://preview.redd.it/is37020g4a631.png?auto=webp&s=37f09687f944410a8ddab83afb2b101614eda754) repeat\",\"3\":\"#becbd2\",\"4\":\"#9eb1bb\",\"5\":\"url(https://wallpaperaccess.com/full/3053366.png)\",\"6\":\"#57707d\",\"7\":\"url(https://cdn.dribbble.com/users/989466/screenshots/4510162/discord-wallpaper.png) repeat\",\"8\":\"#6575ae\",\"9\":\"#3a4b53\",\"10\":\"#303e45\",\"11\":\"url(https://cdn.glitch.com/0322d62f-81b5-4f06-9b33-557687636cec%2Fdiscord.jpg)\",\"12\":\"#7289da\",\"13\":\"#000000\",\"14\":\"#ffffff\",\"15\":\"#ff5252\"}",
+          "likes": [],
+          "comments": [],
+          "username": "orago"
         }
       ]
     },
@@ -518,7 +741,9 @@
       "background": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
       "banner": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
       "description": "hi",
-      "members": [],
+      "members": [
+        "sus"
+      ],
       "avatar": "https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png",
       "creation_date": 1610719625092,
       "posts": [
@@ -537,10 +762,20 @@
       "background": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
       "banner": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
       "description": "woo a dedicated community to the changelogs",
-      "color": "#000000",
-      "members": [],
+      "members": [
+        "orago"
+      ],
       "avatar": "https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png",
-      "creation_date": 1610721041705
+      "creation_date": 1610721041705,
+      "posts": [
+        {
+          "title": "Black Theme",
+          "body": "{\"0\":\"black\",\"1\":\"#a6a6a6\",\"2\":\"#dfe5e8\",\"3\":\"#becbd2\",\"4\":\"#9eb1bb\",\"5\":\"#3f4040\",\"6\":\"#57707d\",\"7\":\"#1e1f1f\",\"8\":\"#435761\",\"9\":\"#3a4b53\",\"10\":\"#191a1a\",\"11\":\"#141414\",\"12\":\"#3b3e3f\",\"13\":\"#000000\",\"14\":\"#ffffff\",\"15\":\"#ff5252\"}",
+          "likes": [],
+          "comments": [],
+          "sender": "orago"
+        }
+      ]
     },
     "themes": {
       "owner": "orago",
@@ -549,10 +784,12 @@
       "banner": "https://cdn.glitch.com/0322d62f-81b5-4f06-9b33-557687636cec%2F9e5ddb3fd1ba8dd983bb9569b35f8103.jpg",
       "description": "Welcome to the Meown Official Subforum",
       "avatar": "https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png",
+      "creation_date": 1610721041705,
       "members": [
         "orago",
         "null",
-        "test"
+        "test",
+        "sus"
       ],
       "posts": [
         {
@@ -575,30 +812,92 @@
           "likes": [],
           "comments": [],
           "username": "orago"
+        },
+        {
+          "title": "Dark Purple :>",
+          "body": "{\"0\":\"black\",\"1\":\"#32153d\",\"2\":\"#420535\",\"3\":\"#becbd2\",\"4\":\"#9eb1bb\",\"5\":\"#411754\",\"6\":\"#57707d\",\"7\":\"#2a042f\",\"8\":\"#562173\",\"9\":\"#3a4b53\",\"10\":\"#191a1a\",\"11\":\"#371d4e\",\"12\":\"#101746\",\"13\":\"#000000\",\"14\":\"#000000\",\"15\":\"#bf57db\"}",
+          "likes": [],
+          "comments": [],
+          "username": "sus"
+        },
+        {
+          "title": "Dark Purple V2",
+          "body": "{\"0\":\"black\",\"1\":\"#32153d\",\"2\":\"#300439\",\"3\":\"#becbd2\",\"4\":\"#9eb1bb\",\"5\":\"#411754\",\"6\":\"#57707d\",\"7\":\"#2a042f\",\"8\":\"#562173\",\"9\":\"#3a4b53\",\"10\":\"#191a1a\",\"11\":\"#371d4e\",\"12\":\"#101746\",\"13\":\"#aa77d4\",\"14\":\"#943389\",\"15\":\"#bf57db\"}",
+          "likes": [],
+          "comments": [],
+          "username": "sus"
+        },
+        {
+          "title": "Almost Discord V1",
+          "body": "{\"0\":\"black\",\"1\":\"#23272a\",\"2\":\"#dfe5e8\",\"3\":\"#becbd2\",\"4\":\"#9eb1bb\",\"5\":\"#7d97a5\",\"6\":\"#57707d\",\"7\":\"#26282b\",\"8\":\"#161718\",\"9\":\"#3a4b53\",\"10\":\"#303e45\",\"11\":\"#2c2f33\",\"12\":\"#2c2f33\",\"13\":\"#000000\",\"14\":\"#ffffff\",\"15\":\"#ff5252\"}",
+          "likes": [],
+          "comments": [],
+          "username": "orago"
+        },
+        {
+          "title": "Green",
+          "body": "{\"0\":\"black\",\"1\":\"#153d16\",\"2\":\"#043917\",\"3\":\"#becbd2\",\"4\":\"#9eb1bb\",\"5\":\"#082609\",\"6\":\"#57707d\",\"7\":\"#042f09\",\"8\":\"#237321\",\"9\":\"#3a4b53\",\"10\":\"#191a1a\",\"11\":\"#1d4e35\",\"12\":\"#264710\",\"13\":\"#b8d477\",\"14\":\"#339481\",\"15\":\"#57db78\"}",
+          "likes": [],
+          "comments": [],
+          "username": "sus"
+        },
+        {
+          "title": "Discord Blue Theme",
+          "body": "{\"0\":\"red\",\"1\":\"#7289da\",\"2\":\"#99aab5\",\"3\":\"#becbd2\",\"4\":\"#9eb1bb\",\"5\":\"#7d97a5\",\"6\":\"#57707d\",\"7\":\"#6c80cb\",\"8\":\"#6575ae\",\"9\":\"#3a4b53\",\"10\":\"#303e45\",\"11\":\"url(https://cdn.glitch.com/0322d62f-81b5-4f06-9b33-557687636cec%2Fdiscord.jpg)\",\"12\":\"#7289da\",\"13\":\"#000000\",\"14\":\"#ffffff\",\"15\":\"#ff5252\"}",
+          "likes": [],
+          "comments": [],
+          "username": "sus"
+        },
+        {
+          "title": "Discord Blue Better",
+          "body": "{\"0\":\"red\",\"1\":\"url(https://images.opencollective.com/discordhooks/1f8f486/background.png) no-repeat fixed\",\"2\":\"url(https://preview.redd.it/is37020g4a631.png?auto=webp&s=37f09687f944410a8ddab83afb2b101614eda754)\",\"3\":\"#becbd2\",\"4\":\"#9eb1bb\",\"5\":\"#7d97a5\",\"6\":\"#57707d\",\"7\":\"url(https://cdn.dribbble.com/users/989466/screenshots/4510162/discord-wallpaper.png)\",\"8\":\"#6575ae\",\"9\":\"#3a4b53\",\"10\":\"#303e45\",\"11\":\"url(https://cdn.glitch.com/0322d62f-81b5-4f06-9b33-557687636cec%2Fdiscord.jpg)\",\"12\":\"#7289da\",\"13\":\"#000000\",\"14\":\"#ffffff\",\"15\":\"#ff5252\"}",
+          "likes": [],
+          "comments": [],
+          "username": "orago"
+        },
+        {
+          "title": "This do make discord look pretty good tho",
+          "body": "{\"0\":\"red\",\"1\":\"url(https://images.opencollective.com/discordhooks/1f8f486/background.png) no-repeat fixed\",\"2\":\"url(https://preview.redd.it/is37020g4a631.png?auto=webp&s=37f09687f944410a8ddab83afb2b101614eda754)\",\"3\":\"#becbd2\",\"4\":\"#9eb1bb\",\"5\":\"url(https://wallpaperaccess.com/full/3053366.png)\",\"6\":\"#57707d\",\"7\":\"url(https://cdn.dribbble.com/users/989466/screenshots/4510162/discord-wallpaper.png)\",\"8\":\"#6575ae\",\"9\":\"#3a4b53\",\"10\":\"#303e45\",\"11\":\"url(https://cdn.glitch.com/0322d62f-81b5-4f06-9b33-557687636cec%2Fdiscord.jpg)\",\"12\":\"#7289da\",\"13\":\"#000000\",\"14\":\"#ffffff\",\"15\":\"#ff5252\"}",
+          "likes": [],
+          "comments": [],
+          "username": "orago"
+        },
+        {
+          "title": "Discord Theme Fix",
+          "body": "{\"0\":\"red\",\"1\":\"url(https://images.opencollective.com/discordhooks/1f8f486/background.png) repeat fixed\",\"2\":\"url(https://preview.redd.it/is37020g4a631.png?auto=webp&s=37f09687f944410a8ddab83afb2b101614eda754) repeat\",\"3\":\"#becbd2\",\"4\":\"#9eb1bb\",\"5\":\"url(https://wallpaperaccess.com/full/3053366.png)\",\"6\":\"#57707d\",\"7\":\"url(https://cdn.dribbble.com/users/989466/screenshots/4510162/discord-wallpaper.png) repeat\",\"8\":\"#6575ae\",\"9\":\"#3a4b53\",\"10\":\"#303e45\",\"11\":\"url(https://cdn.glitch.com/0322d62f-81b5-4f06-9b33-557687636cec%2Fdiscord.jpg)\",\"12\":\"#7289da\",\"13\":\"#000000\",\"14\":\"#ffffff\",\"15\":\"#ff5252\"}",
+          "likes": [],
+          "comments": [],
+          "username": "orago"
+        },
+        {
+          "title": "Official Theme v0.1",
+          "body": "{\"0\":\"red\",\"1\":\"url(https://raw.githubusercontent.com/Orago/assets/main/meown/images/Stripey%203000x2000%20sharp.png) repeat fixed\",\"2\":\"url(https://raw.githubusercontent.com/Orago/assets/main/meown/images/boxieNotif.png) repeat\",\"3\":\"url(https://raw.githubusercontent.com/Orago/assets/main/meown/images/Button.png)\",\"4\":\"#9eb1bb\",\"5\":\"url(https://raw.githubusercontent.com/Orago/assets/main/meown/images/Status%20Buttons%20100x.png)\",\"6\":\"url(https://raw.githubusercontent.com/Orago/assets/main/meown/images/Input%20Field.png)\",\"7\":\"url(https://raw.githubusercontent.com/Orago/assets/main/meown/images/NavBar.png) repeat\",\"8\":\"#6575ae\",\"9\":\"#3a4b53\",\"10\":\"#303e45\",\"11\":\"url(https://raw.githubusercontent.com/Orago/assets/main/meown/images/Background.png)\",\"12\":\"#7289da\",\"13\":\"#000000\",\"14\":\"#ffffff\",\"15\":\"#ff5252\"}",
+          "likes": [],
+          "comments": [],
+          "username": "orago"
         }
       ]
     },
-    "mittzpost": {
+    "general": {
       "owner": "orago",
-      "preferred": "MittzPost",
+      "preferred": "Meown General",
       "background": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
       "banner": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
-      "description": "lol",
-      "color": "#000000",
-      "members": [],
+      "description": "An official meown server for anyone to use",
+      "members": [
+        "orago"
+      ],
       "avatar": "https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png",
-      "creation_date": 1612797844595
-    },
-    "hub": {
-      "owner": "orago",
-      "preferred": "hub",
-      "background": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
-      "banner": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
-      "description": "official meown server for anyone to use",
-      "color": "#000000",
-      "members": [],
-      "avatar": "https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png",
-      "creation_date": 1614136047686
+      "creation_date": 1614136047686,
+      "posts": [
+        {
+          "title": "Hmmmm",
+          "body": "{\"0\":\"red\",\"1\":\"url(https://raw.githubusercontent.com/Orago/assets/main/meown/images/Stripey%203000x2000%20sharp.png) repeat fixed\",\"2\":\"url(https://raw.githubusercontent.com/Orago/assets/main/meown/images/boxieNotif.png) repeat\",\"3\":\"url(https://raw.githubusercontent.com/Orago/assets/main/meown/images/Button.png)\",\"4\":\"#9eb1bb\",\"5\":\"url(https://raw.githubusercontent.com/Orago/assets/main/meown/images/Status%20Buttons%20100x.png)\",\"6\":\"url(https://raw.githubusercontent.com/Orago/assets/main/meown/images/Input%20Field.png)\",\"7\":\"url(https://raw.githubusercontent.com/Orago/assets/main/meown/images/NavBar.png) repeat\",\"8\":\"#6575ae\",\"9\":\"#3a4b53\",\"10\":\"#303e45\",\"11\":\"url(https://raw.githubusercontent.com/Orago/assets/main/meown/images/Background.png)\",\"12\":\"#7289da\",\"13\":\"#000000\",\"14\":\"#ffffff\",\"15\":\"#ff5252\"}",
+          "likes": [],
+          "comments": [],
+          "username": "orago"
+        }
+      ]
     }
   },
   "wallet": {
@@ -620,45 +919,12 @@
     "oragoking@gmail.com",
     "orago.king@gmail.com",
     "moshlingcat2004@gmail.com",
-    "idislikepeels@gmail.com"
-  ],
-  "changelog": {
-    "V0.01 Beginning": [
-      "Where it all began or atleast hadn't been documented."
-    ],
-    "V0.02 Curious And Feeling Loved": [
-      "Added the ability to comment on other's posts",
-      "Added liking posts."
-    ],
-    "V0.04 Safety First!": [
-      "<a href=\"/u/aouab\">@aouab</a> and <a href=\"/u/orago\">I (@Orago)</a> added hashing which helps make the website super secure!"
-    ],
-    "V0.06 Sub-forums / Groups": [
-      "Working on making sub-forums / categories.",
-      "This may not be permanent but I am hoping for the best."
-    ],
-    "V0.07 Communities and Threads!": [
-      "Sub Forums renamed to communities",
-      "added threads which are basically posts for communities."
-    ],
-    "v0.075 Speech Synthesis and Audio Recognition": [
-      "I am in the process of creating audio recognition and speech synthesis so that meown can be used with voice commands similar to google assistant and reply back.",
-      " this is highly developmental and may not work on old browsers."
-    ],
-    "v0.08 New theme and possibly upcoming themes!": [
-      "Meown is now fully customizable meaning that you can change every single color including text.",
-      "Along with this you can import and export themes to text to share with your friends."
-    ],
-    "v0.09 Roles and permissions": [
-      "Added roles and colors for the roles to show status and priority of certain users.",
-      "Soon permissions will rely on what roles you have so there can be things such as moderators and staff to keep meown safe."
-    ],
-    "v0.10 Patches, Bugs, and Minimization of Code": [
-      "Fixed Profile menu's not popping up or showing.",
-      "Fixed mobile app capability.",
-      "Updated Url from Meown.TK, to Meown.ML and re-enabled Https://",
-      "Patched a bug where you could dupe coins.",
-      "Data will now be loading from the Meown Api rather than from Meown servers itself to save on server stress."
-    ]
-  }
+    "idislikepeels@gmail.com",
+    "hadleykibblewhite@gmail.com",
+    "delete@me.please",
+    "iannejeanllido7@gmail.com",
+    "test@in.g",
+    "xzswjnaradkm@solarunited.org",
+    "hkvxzezjhwphfuc@supersave.net"
+  ]
 }

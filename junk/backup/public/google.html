@@ -1,0 +1,21 @@
+<meta
+  name="google-signin-client_id"
+  content="992058418175-6ttca63fm6ja767n9qq1f0pl2dvie5b5.apps.googleusercontent.com"
+/>
+<script src="https://apis.google.com/js/platform.js" async defer></script>
+<div class="g-signin2" data-onsuccess="onSignIn"></div>
+<form method="post" action="/edit" style="display:inline-block;">
+  <input type="hidden" name="method" value="delete-post" />
+  <input type="hidden" name="id" value="${values.username}" />
+  <input type="hidden" name="sentnum" value="${index}" />
+  <input type="hidden" name="category" value="${values.category}" /><button
+    type="submit"
+  >
+    Delete Post
+  </button>
+</form>
+<button
+  onclick="copy('https://${location.hostname}/u/${values.username||'unknown'}#post-${index};');notification('Link Copied!');"
+>
+  Copy URL <i class="fa fa-link"></i>&nbsp;
+</button>

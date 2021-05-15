@@ -52,14 +52,16 @@ function changeC(){
 	document.getElementById("style").innerHTML = inputCss;
     document.getElementById("outputCss").value = document.getElementById("style").innerHTML;
 }
+    
 
 function new_el(/**/){
     var
     args = arguments,
     result = "";
-    alert(args[1])
+    
    for(var i=0; i<args.length; i++){
    values=args[i];
+     
   if (!values){
     values = {
       type:"a",
@@ -70,33 +72,26 @@ function new_el(/**/){
       tags:undefined
     }
   }
- /* function isJSON(str) { 
-      try { return (JSON.parse(str) && !!str); } 
-      catch (e) { return false; } 
- */ }
-
-
-  //if ( isJSON( values ) )  values = JSON.parse(values);
-
+     
   var result,
     beginning,
     middle,end;
 
   beginning=`<${values.type} `;
 
-  if(values.class)  beginning+=`class="${values.class}" `;
-  if(values.style)  beginning+=`style="${values.style}" `;
-  if(values.id)  beginning+=`id="${values.id}" `;
+  if(values.class){ beginning+=`class="${values.class}" `; }
+  if(values.style){ beginning+=`style="${values.style}" `; }
+  if(values.id){ beginning+=`id="${values.id}" `; }
 
   beginning+=`>`;
 
   end = `</${values.type}>`;
 
-  if (values.value)  middle=values.value;
+  if (values.value){ middle=values.value; }
 
   res = beginning;
 
-  if (middle)  res+=middle;
+  if (middle){ res+=middle; }
   
   res+=end;
   }

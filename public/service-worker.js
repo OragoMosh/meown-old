@@ -23,12 +23,12 @@ self.addEventListener('install', async (event) => {
         './index.html',*/
         offlineFallbackPage,
         'https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie32bfull.png',
-        '/css/error.css',
-        '/simple.css',
-        '/simple-theme.css',
-        '/css/simple-extra,css',
+        '/assets/css/error.css',
+        '/assets/css/simple.css',
+        '/assets/css/simple-theme.css',
+        '/assets//css/simple-extra,css',
         '/manifest.json',
-        'tools.css'
+        '/assets/tools.css'
       ]);
     })
     //caches.open(cacheName).then((cache) => cache.add(offlineFallbackPage))
