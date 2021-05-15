@@ -7,19 +7,24 @@ const express = require("express"),
       nodemailer = require("nodemailer"),
       path = require('path'),
       formidable = require('formidable'),
-      cors = require('cors');
+      cors = require('cors'),
+      fetch = require('node-fetch'),
+      {google} = require('googleapis');
 
-var database_location=__dirname+"/database.json";
-const database = JSON.parse(fs.readFileSync(database_location));
+var database_location=__dirname+"/database.json",
+    database = JSON.parse(fs.readFileSync(database_location)),
+    config_location=__dirname+"/config.json",
+    config = JSON.parse(fs.readFileSync(config_location)),
+    changelogs = config.changelogs||config.changelog||{"Error":["Idk why its not working rn sry"]};
 
 const app = express();
 
 const server = require("http").createServer(app);
 const io = require("socket.io")(server);
 
-const config = require(__dirname+"/config.json");
 
 const urlencodedParser = bodyParser.urlencoded({ extended: true });
+
 var port = process.env.PORT || 3232;
 
 var hostname = config.url,
@@ -30,7 +35,9 @@ var anti = "this.value = this.value.replace(/[^a-z0-9]/i, '')";
 //const User = require('./modules/dashboard');
 //var Message = require('./modules/tools/msg');
 var variablePack = require('../modules/tools/variablepack'),
-    functionPack = require('../modules/tools/functionpack');
+    functionPack = require('../modules/tools/functionpack'),
+    webhook = new require('../modules/tools/webhook');
+
 var logs = {
   views: {},
   changes: {}
@@ -38,7 +45,10 @@ var logs = {
 
 // Routing
 app.use(cookieParser());
+app.use(bodyParser.json());
+app.use(bodyParser.raw());
 app.use(express.static(__dirname + "/../public"));
+app.use(express.static(__dirname + "/../assets"));
 app.use('/tools',express.static(__dirname + "/../modules/tools"));
 app.set("view engine", "ejs");
 
@@ -55,14 +65,37 @@ do_am_pm();
 var am_pm;
 
 function do_am_pm() {if (date.getHours() - 4 < 12) {am_pm = "AM";} else if (date.getHours() - 4 > 12) {am_pm = "PM";} else {am_pm = "broken??";}}
-
+function deleteUser(id){
+  delete database.user[id];
+  var c = database.community
+  Object.keys(c).forEach(function (i){
+c[i]?.members!==undefined?c[i]=c[i]?.members.filter(i => i !== id):null;
+});
+}
 server.listen(port, function() {
   console.log("Server listening at port %d", port);
   console.log(
     `Time: ${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()} ${date.getHours() - 4}:${date.getMinutes()}:${date.getSeconds()} ${am_pm}`
   );
+ /* var webhookMessage = {
+    "embeds":[
+      {
+        author: {
+          name: 'Meown',url: 'https://meown.ml/',icon_url: config.logo,
+        },
+        thumbnail: {url:config.logo},
+        description: 'Meown is now online!',
+        footer: {
+	      	text: 'Made with Meown API',
+	      	icon_url: 'https://cdn.glitch.com/0322d62f-81b5-4f06-9b33-557687636cec%2Fboxie-512px.png',
+	      }
+      },
+    ]
+  }
+  webhook.config = Object.assign({}, config.webhook, webhookMessage);
+webhook.send()
+*/
 });
-
 var fake_user = {
       "password": "$2a$10$w49HxOAv6PN5HSpexhNu1OUNrohjJeEoBTta7dsqp4EtX1RPTZy36",
       "email": "",
@@ -117,10 +150,6 @@ async function mail(to, subject, text, html) {
 
   // create reusable transporter object using the default SMTP transport
   let transporter = nodemailer.createTransport({
-    //host: "smtp.ethereal.email",
-    //requireTLS: true,
-    //port: 587,
-    //secure: false,
     service: 'gmail',
     auth: {
       user: 'themittzcat@gmail.com', // generated ethereal user
@@ -143,7 +172,7 @@ async function mail(to, subject, text, html) {
 
 //mail(to,subject,text,html).catch(console.error);
 
-app.get("/data", (request, response) => {response.render("database", { qs: request.query });});
+//app.get("/data", (request, response) => {response.render("database", { qs: request.query });});
 
 app.post("/result", urlencodedParser, (request, response) => {
   console.log(request.body);
@@ -226,17 +255,11 @@ app.get("/terms", (request, response) => {
 });
 
 app.get("/login", (request, response) => {
-  var me = request.cookies["saved-username"],
-      values = render_login("login",me)
-  return response.render("login", { values:values });
+  return response.render("login");
 });
 
 app.get("/register", (request, response) => {
-  var me = request.cookies["saved-username"],
-      values;
-  if (me){values = render_login("login",me)}
-  else{values = render_login("register",me)}
-  return response.render("login", { values:values });
+  return response.render("login");
 });
 
 app.get("/dashboard", (request, response) => {
@@ -295,14 +318,14 @@ if (database.user[me].roles.includes("developer")||database.user[me].roles.inclu
   } else values.recent_followers = "None";
   if (logs.views[me]) values.views = logs.views[me];
   else values.views = 0;
-  var new_el = functionPack.new_el;
+  var newEl = functionPack.newEl;
   function new_feed(values){
     if (!values.text) {values.text="";}
     if (!values.when) {values.when="";}
     if (!values.text) {values.text="";}
-    return new_el({"element":"tr",type:"double",value:
-    new_el({"element":"td",type:"double",value:new_el({"element":"i",type:"double",class:`fa fa-${values.icon} simple-text-blue simple-large`})})+
-    new_el({"element":"td",type:"double",value:values.text})+new_el({"element":"i",type:"double",value:values.when})
+    return newEl({"element":"tr",type:"double",value:
+    newEl({"element":"td",type:"double",value:newEl({"element":"i",type:"double",class:`fa fa-${values.icon} simple-text-blue simple-large`})})+
+    newEl({"element":"td",type:"double",value:values.text})+newEl({"element":"i",type:"double",value:values.when})
     })
   }
   response.render("dashboard.ejs", { database: database, values: values });
@@ -311,7 +334,7 @@ if (database.user[me].roles.includes("developer")||database.user[me].roles.inclu
 app.post("/edit", urlencodedParser, (request, response) => {
   var method = request.body.method,
       me = request.cookies["saved-username"];
-  
+  console.log(request.body)
   if (!method){return response.send(msg("missing", "Method", "/u"));}
   if (me == undefined ||!me){return response.send(msg("include", "Username", "/u"));}
   if (typeof database.user[me] == "undefined"){return response.send(msg("noAccount", "Username"));}
@@ -324,19 +347,12 @@ app.post("/edit", urlencodedParser, (request, response) => {
       database.user[me].password = request.body.sentnewpass;
       text_add += `New Password: ${request.body.sentnewpass}`;
     }
-    if (request.body.sentnewdesc){
-      database.user[me].description = request.body.sentnewdesc;
-    }
-    if (request.body.sentnewavatar){
-      database.user[me].avatar = request.body.sentnewavatar;
-    }
+    if (request.body.sentnewdesc){database.user[me].description = request.body.sentnewdesc;}
+    if (request.body.sentnewavatar){database.user[me].avatar = request.body.sentnewavatar;}
+    
     if (database.user[me].roles.includes("developer") ||database.user[me].roles.includes("moderator")) {
-      if (request.body.sentnewbackground){
-        database.user[me].background =request.body.sentnewbackground;
-      }
-      if (request.body.sentnewbanner){
-        database.user[me].banner =request.body.sentnewbanner;
-      }
+      if (request.body.sentnewbackground){database.user[me].background =request.body.sentnewbackground;}
+      if (request.body.sentnewbanner){database.user[me].banner =request.body.sentnewbanner;}
     }
     fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
     return response.send(msg("edited", "Username", "/u"));
@@ -347,7 +363,7 @@ app.post("/edit", urlencodedParser, (request, response) => {
     if (!request.body.sentpostbody) return response.send(msg("include", "Post Body", "/u"));
     if (!request.body.sentpostcategory) return response.send(msg("include", "Post Category", "/u"));
     if (!request.body.id) return response.send(msg("include", "ID (user / community)", "/u"));
-    if (functionPack.html_check(JSON.stringify(request.body))) {return response.send(msg("custom", "Do not use html!", "/u"));}
+    if (functionPack.htmlCheck(JSON.stringify(request.body))) {return response.send(msg("custom", "Do not use html!", "/u"));}
       
     var text = "", 
         category= request.body.sentpostcategory,
@@ -355,9 +371,9 @@ app.post("/edit", urlencodedParser, (request, response) => {
         post_type = "user";
       
     if (id !== me&&category==="user"){category="community";id=`null`;}
-    for (let i = 0; i < request.body.sentpostbody.length &&request.body.sentpostbody.includes("!n "); i++) {
-      request.body.sentpostbody = request.body.sentpostbody.replace("!n ","<br>");
-    }
+    //for (let i = 0; i < request.body.sentpostbody.length &&request.body.sentpostbody.includes("!n "); i++) {
+    //  request.body.sentpostbody = request.body.sentpostbody.replace("!n ","<br>");
+    //}
     if (database[category][id].posts&&database[category][id].posts.includes(request.body.sentposttitle.toLowerCase())){
       return response.send(msg("postExists", null, "/u"));
     }
@@ -368,7 +384,8 @@ app.post("/edit", urlencodedParser, (request, response) => {
       title: request.body.sentposttitle,
       body: request.body.sentpostbody,
       likes: [],
-      comments: []
+      comments: [],
+      date: Date.now,
     }
     if (category==="community") {details.username = me;}
     database[category][id].posts.push(details);
@@ -378,25 +395,10 @@ app.post("/edit", urlencodedParser, (request, response) => {
     return response.send(msg("postCreated","Username",`/${category[0]}`,`&username=${me}#${database[category][id].posts.length - 1}`));
   } else 
     
-    
-    if (method === "report") {
-    if (!request.body.sentposttitle){return response.send(msg("include", "Post Value", "/u"));}
-    if (!request.body.sentpostbody){return response.send(msg("include", "Post Value", "/u"));}
-    if (functionPack.html_check(JSON.stringify(request.body))){return response.send(msg("custom", "Do not use html!", "/u"));}
-    if (database.user[me].posts&&database.user[me].posts.includes(request.body.sentposttitle.toLowerCase())){return response.send(msg("postExists", "", "/u"));}
-    if (!database.user[me].posts){database.user[me].posts = [];}
-    database.user[me].posts.push({title: request.body.sentposttitle,body: request.body.sentpostbody,likes: [],comments: []});
-    database.user[me].coins += 1;
-    database.user[me].xp += 1;
-    fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
-    return response.send(msg("postCreated","Username",`/u/${me}#${database.user[me].posts.length - 1}`));
-  } else 
-    
-    
     if (method === "delete-post") {
       var category = request.body.category, 
-          id = request.body.id;
-      var deleted_post = {
+          id = request.body.id,
+          deleted_post = {
         "user":{
           "title": "DELETED POST",
           "body": "This post has been deleted by the author or someone with permissions to delete it.",
@@ -409,16 +411,19 @@ app.post("/edit", urlencodedParser, (request, response) => {
           "sender": "meown"
         }
       }
+      if (!category||category!=="user"&&category!=="community"){return response.send(msg("custom", `Error unknown post category! (${category})`, "/u"))}
+      
     if (!database[category][id].posts[request.body.sentnum]) return response.send(msg("post_does_not_exist", "", "/u"));
     
-    database[category][id].posts.splice(request.body.sentnum,1);
-      
+    
     if (category === "user"){
-      if (!permission(1,me)&&id!==me) {response.send(`${permission(1,me)} : ${id!==me}`);}
+      if (!permission(1,me)&&id!==me) {response.send(`Not Your Post! ${permission(1,me)} !== ${id!==me}`);}
       if (!logs.changes[id]){logs.changes[id] = [];}
       if (logs.changes[id]){logs.changes[id].push(`Post #${request.body.sentnum} Deleted "${database[category][id].posts[request.body.sentnum]}"`);}
       else if (!logs.changes[id]) {logs.changes[id] = [];}
     }
+      
+      database[category][id].posts.splice(request.body.sentnum,1);
     return response.send(msg("post_deleted","Username",`/u/${id}#${database[category][id].posts.length - 1}`));
   } else 
     
@@ -439,11 +444,10 @@ app.post("/edit", urlencodedParser, (request, response) => {
     if (!request.body.commentid){return response.send(msg("include", "Comment Id", "/u"));}
     if (database.user[me].posts &&database.user[me].posts[request.body.commentid].comments&&database.user[me].posts[request.body.commentid].comments.includes(request.body.sentcomment.toLowerCase())){return response.send(msg("postExists", null, "/u"));}
     if (!database.user[me].posts){database.user[me].posts = [];}
-    if (functionPack.html_check(request.body.sentcomment.toLowerCase())) return response.send(msg("custom","No HTML Plez"));
+    if (functionPack.htmlCheck(request.body.sentcomment.toLowerCase())) return response.send(msg("custom","No HTML Plez"));
       
     database.user[me].posts[request.body.commentid].comments.push({ username: me, text: request.body.sentcomment });
-    database.user[me].coins += 0.2;
-    database.user[me].xp += 1;
+    database.user[me].xp += 0.05;
     fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
     return response.send(msg("postCreated","Username",`/u/${me}#${database.user[me].posts.length - 1}`));
   } 
@@ -479,54 +483,55 @@ app.post("/edit", urlencodedParser, (request, response) => {
   }
 });
 
-app.get("/connect", urlencodedParser, (request, response) => {
-  var method = request.query.method,
-      user = request.query.user,
+app.get("/connect/:method?/:id?", urlencodedParser, (request, response) => {
+  var method = request.query.method||request.params.method,
+      id = request.query.id||request.params.id,
       me = request.cookies["saved-username"]||undefined;
   
-  if (me)me = me.toLowerCase();else return response.send(msg("custom", "Not Logged in", "/u"));
-  if (user) user = user.toLowerCase(); else return response.send(msg("missing", "user", "/u"));
-  if (!method) return response.send(msg("missing", "Method", "/u"));
+  if (me){me = me.toLowerCase();}else return response.send(msg("custom", "Not Logged in", "/u"));
+  if (id){id = id.toLowerCase();} else return response.send(msg("missing", "ID", "/u"));
+  if (!method){return response.send(msg("missing", "Method", "/"));}
   if (typeof database.user[me] === "undefined") return response.send(msg("noAccount", "Username"));
   if (!bcrypt.compareSync(request.cookies["saved-password"],database.user[me].password)) return response.send(msg("incorrect", "Username", "/dashboard"));
-  if (method==="join" && typeof database.community[user] === "undefined") {return response.send(msg("custom", "ERROR", `/c/${user}`));}
+  if (method==="join" && typeof database.community[id] === "undefined") {return response.send(msg("custom", "ERROR", `/c/${id}`));}
 
   if (method === "follow") {
-    if (me === user)return response.send(msg("custom","You cannot follow yourself!"))
-    if (!database.user[me].following.includes(user)) {
-      database.user[me].following.push(user);
-      database.user[user].followers.push(me);
+    if (me === id)return response.send(msg("custom","You cannot follow yourself!"))
+    if (!database.user[me].following.includes(id)) {
+      database.user[me].following.push(id);
+      database.user[id].followers.push(me);
       fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
-      return response.send(`<meta http-equiv="Refresh" content="0; url='/u?username=${me}&notification=User+Followed!'"/>`);
+      return response.send(`<meta http-equiv="Refresh" content="0; url='/u/${me}&popup=User+Followed!'"/>`);
     } else {
-      database.user[me].following = database.user[me].following.filter(item => item !== user);
+      database.user[me].following = database.user[me].following.filter(item => item !== id);
       fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
       return response.send(
-        `<meta http-equiv="Refresh" content="0; url='/u?username=${
+        `<meta http-equiv="Refresh" content="0; url='/u/${
           request.cookies["saved-username"]
-        }&notification=User+Unfollowed!'"/>`
+        }&popup=User+Unfollowed!'"/>`
       );
     }
   } else if (method === "join") {
-    if (!database.user[me].following.includes(user)) {
-      database.community[user].members.push(me);
-      database.user[me].communities.push(user);
+    if (!database.user[me].following.includes(id)) {
+      database.community[id].members.push(me);
+      database.user[me].communities.push(id);
       fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
-      return response.send(`<meta http-equiv="Refresh" content="0; url='/u?username=${me}&notification=User+Followed!'"/>`);
+      return response.send(`<meta http-equiv="Refresh" content="0; url='/u/${me}&popup=User+Followed!'"/>`);
     } else {
-      database.community[user].members = database.community[user].members.filter(item => item !== me);
-      database.user[me].communities = database.user[me].communities.filter(item => item !== user);
+      database.community[id].members = database.community[id].members.filter(item => item !== me);
+      database.user[me].communities = database.user[me].communities.filter(item => item !== id);
       fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
-      return response.send(`<meta http-equiv="Refresh" content="0; url='/u?username=${me}&notification=User+Unfollowed!'"/>`);
+      return response.send(`<meta http-equiv="Refresh" content="0; url='/u/${me}&popup=User+Unfollowed!'"/>`);
     }
   }
 });
 
 app.post("/login", urlencodedParser, (request, response) => {
-  var username = request.body.sentname,
-      password = request.body.sentpass
+  var username = request.body.username,
+      password = request.body.password
   if (!username || !password) return response.send(msg("include", "Username and Password", request.path));
   if (typeof database.user[username.toLowerCase()] == "undefined") return response.send(msg("noAccount", null, request.path));
+  console.log(`${password} : ${database.user[username.toLowerCase()].password}`)
   if (bcrypt.compareSync(password,database.user[username.toLowerCase()].password)) {
     if (request.cookies["saved-username"] && request.cookies["saved-password"]) {return response.send(msg("loggedIn", "", "/u")); }
     else {
@@ -598,29 +603,35 @@ app.get("/u-text", urlencodedParser, (request, response) => {
 });
 
 app.post("/register", urlencodedParser, (request, response) => {
-  if (typeof database.user[request.body.sentname.toLowerCase()] !== "undefined") return response.send(msg("exists", null, "/u"));
-  if (request.body.sentname == null ||request.body.sentname == undefined ||!request.body.sentname) return response.send(msg("invalid", "Username", "/register"))
-  if (request.body.sentpass == null ||request.body.sentpass == undefined ||!request.body.sentpass) return response.send(msg("invalid", "Password", "/register"));
-  if (request.body.sentdesc == null ||request.body.sentdesc == undefined ||!request.body.sentdesc) return response.send(msg("invalid", "Description", "/register"));
-  if (request.body.sentpass !== request.body.sentpassconfirm) return response.send(msg("match", "password & confirm password", "/register"));
-  if (functionPack.a0(request.body.sentname) || functionPack.html_check(request.body.sentdesc))
+  if (typeof database.user[request.body.username?.toLowerCase()||"-%$#"] !== "undefined") return response.send(msg("exists", null, "/u"));
+  var username = request.body.username,
+      description = request.body.description,
+      password = request.body.password,
+      passwordConfirm = request.body.passwordconfirm,
+      email = request.body.email;
+  
+  if (!username) return response.send(msg("invalid", "Username", "/register"))
+  if (!password) return response.send(msg("invalid", "Password", "/register"));
+  if (!description) return response.send(msg("invalid", "Description", "/register"));
+  if (password !== passwordConfirm) return response.send(msg("match", "password & confirm password", "/register"));
+  if (functionPack.a0(username) || functionPack.htmlCheck(description))
     return response.send(msg("custom", "Do not use custom characters or html!", "/u"));
   
-  if (typeof database.user[request.body.sentname.toLowerCase()] == "undefined") {
-    response.cookie("saved-username", request.body.sentname.toLowerCase(), {maxAge: 1.296e9});
-    response.cookie("saved-password", request.body.sentpass, {maxAge: 1.296e9});
-    database.emails.push(request.body.sentemail.toLowerCase());
+  if (typeof database.user[username.toLowerCase()] == "undefined") {
+    response.cookie("saved-username", username.toLowerCase(), {maxAge: 1.296e9});
+    response.cookie("saved-password", password, {maxAge: 1.296e9});
+    database.emails.push(email.toLowerCase());
     var salt = bcrypt.genSaltSync(10);
-    var hash = bcrypt.hashSync(request.body.sentpass, salt);
-    database.user[request.body.sentname.toLowerCase()] = {
+    var hash = bcrypt.hashSync(password, salt);
+    database.user[username.toLowerCase()] = {
       password: hash,
-      email: request.body.sentemail,
-      preferred: request.body.sentname,
+      email: email,
+      preferred: username,
       coins: 0,
       xp: 0,
       background: "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
       banner: "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
-      description: request.body.sentdesc.toLowerCase(),
+      description: description.toLowerCase(),
       avatar: "https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png",
       following: [],
       followers: [],
@@ -631,8 +642,25 @@ app.post("/register", urlencodedParser, (request, response) => {
       creation_date: Date.now()
     };
     //mail(request.body.sentemail,`Your account, ${request.body.sentname} on ${project_name}`,null,`A user with the name of ${request.body.sentname} on <a href="https://meown.tk">${project_name}</a> created an account by this email, Your login details are <br><li>Username: ${request.body.sentname}</li><li>Password: ${request.body.sentpass}</li><li>Description: ${request.body.sentdesc}</li>`).catch(console.error);
+      var webhookMessage = {
+    "embeds":[
+        {
+          author: {name: 'Meown',url: 'https://meown.ml/',icon_url: config.logo,
+          },
+          thumbnail: {url:config.logo},
+          description: `New user @${username} has joined!`,
+          footer: {
+	        	text: 'Made with Meown API',
+	        	icon_url: 'https://cdn.glitch.com/0322d62f-81b5-4f06-9b33-557687636cec%2Fboxie-512px.png',
+	        }
+        },
+    ]
+  }
+  webhook.config = Object.assign({}, config.webhook, webhookMessage);
+webhook.send()
+    
     fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
-    response.send(`<meta http-equiv="Refresh" content="0; url='/u?username=${request.body.sentname.toLowerCase()}&notification=Account+Created!'"/>`);
+    response.send(`<meta http-equiv="Refresh" content="0; url='/u?username=${username.toLowerCase()}&popup=Account+Created!'"/>`);
   }
 });
 
@@ -659,6 +687,8 @@ function info_data(x,values) {
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="manifest" href="/manifest.json">
+
+
 <script>
   if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("/service-worker.js");
@@ -675,21 +705,6 @@ function info_data(x,values) {
   return result;
 }
 
-app.get("/me-wall/:search?/:length?/:spacing?/", urlencodedParser, (request, response) => {
-  var username = request.params.search||request.query.search||undefined,
-      length = request.params.length||request.query.length||400,
-      spacing = request.params.length||request.query.length||400;
-  
-  if (!username){return response.send("No input given")}
-  if(typeof database.user[username]==="undefined"){return response.send("User doesn\'t exist")}
-  
-  var description = database.user[username].description||"",
-      text = `${functionPack.caps(username)}: ${description}`;
-  
-  var values = {text:text||"ERROR", length:length, spacing:spacing, url:`${request.hostname}/u/${username}`}
-  return response.render("textwall.ejs", { values: values });
-  
-});
 
 app.get("/wallet/:id?", urlencodedParser, (request, response) => {
   var id = request.params.id||request.query.id||undefined;
@@ -706,7 +721,7 @@ app.get("/api/:method?/:search?", cors(), (request, response) => {
       method = request.params.method||request.query.method,
       res = "response";
   
-  if (!method) {response.json({ error: "method" });}
+  if (!method) {return response.json({ error: "method" });}
   if (method) {
     if (method === "user") {
       if (!search) return response.json({ status:200, [res]: "name/id/variant" });
@@ -714,6 +729,7 @@ app.get("/api/:method?/:search?", cors(), (request, response) => {
       var user = database.user[search];
       
       const cloneuser = Object.assign({}, user)||"error";
+      
       delete cloneuser.password;
       delete cloneuser.email;
       
@@ -753,7 +769,7 @@ app.get("/api/:method?/:search?", cors(), (request, response) => {
     } 
     
     else if (method === "changelogs") {
-      var data = JSON.parse(JSON.stringify(database.changelogs||database.changelog||"error"))
+      var data = JSON.parse(JSON.stringify(changelogs||"error"))
       return response.json({status:200,[res]:data});
     }
     
@@ -791,20 +807,28 @@ app.get("/error/:text?/:value?", (request, response) => {
         value = request.query.value||request.params.value||"Well how'd we get here?",
         who = request.query.who,
         symbols=[];
+
+ 
     if (who){value[0]=who+" ";}
-    var i;for (i = 0; i < text.length; i++) {
+    for (var i = 0; i < text.length; i++) {
       var overlay="",emoji_letters = ["U","u","O","o","D","n"]
       if (emoji_letters.includes(text.charAt(i)))overlay="🐈";
       symbols.push({"symbol":text.charAt(i),"overlay":overlay})
     }
-      response.render("error.ejs", {error:JSON.stringify({
-    "code":symbols,
-    "buttons":[{"url":"window.history.back();","text":"Back"},{"url":"location.replace('/');","text":"Homepage"}
-               /*,{"url":"location.replace('/u');","text":"My Page"}*/],
-    "text":value,
-    "type":text
-  })
-  });
+  
+  var values = {
+    "error":{
+      "code":symbols,
+      "buttons":[{"url":"window.history.back();","text":"Back"},{"url":"location.replace('/');","text":"Homepage"}],
+      "text":value,
+      "type":text
+    }
+  };
+  values.error.buttons.push(request.query.requestUrl?{"url":`location.replace('${request.query.requestUrl}');`,"text":`Reload ${request.query.requestUrl}`}:undefined)
+  
+  values.error = JSON.stringify(values.error);
+  
+  response.render("error.ejs", values);
 });
 
 app.get("/u/:search?", (request, response) => {
@@ -825,39 +849,28 @@ app.get("/u/:search?", (request, response) => {
     id: username,
     category: "user",
     background: request.cookies["saved-background"],
-    //data_type: database.user,
     password: request.cookies["saved-password"],
     currency: currency,
     me: me,
     time: time,
     anti: anti,
     hostname: request.hostname,
-    //info_data: info_data,
     visible: {
       postBar:"simple-hidden",
       loggedIn:"simple-hidden"
     }
   };
-  values.header=info_data(`${values.category}: `+functionPack.caps(values.username)||values.username,{category:values.category,username:values.username});
+  values.header=info_data(`${values.category}: `+functionPack.caps(values.username||"")||values.username,{category:values.category,username:values.username});
   
   if (!logs.views[values.id]) logs.views[values.id] = 0;
   
   logs.views[values.id] += 1;
   
-  var Page = require('../modules/page');new Page(values, database).value();
+  //var Page = require('../modules/page');new Page(values, database).value();
   
-  var delete_passwords;
-  
-  const data = {
-    user:{
-      [username]:JSON.parse(JSON.stringify(database[values.category][username]))
-    }
-  }
-  for (values.i = 0; values.i < Object.keys(data.user).length; values.i++) {
-    delete_passwords = Object.keys(data.user)[values.i];
-    delete data.user[delete_passwords]["password"];
-  }
-  response.render("page.ejs", { database: data, values: values });
+
+  app.locals.title = 'My App'
+  response.render("page.ejs", { values: values });
 });
 
 
@@ -869,7 +882,7 @@ function maintenance_check(){
   else return {"status":false};
 }
 
-app.get("/c/:search?", (request, response) => {
+app.get("/cold/:search?", (request, response) => {
   if (maintenance_check().status) {return response.redirect();}
   
   var community = request.params.search||request.query.search||"meown",
@@ -889,7 +902,6 @@ app.get("/c/:search?", (request, response) => {
     time: time,
     anti: anti,
     hostname: request.hostname,
-    //info_data: info_data,
     visible: {
       post_bar: "simple-hidden",
       logged_in: "simple-hidden"
@@ -899,24 +911,23 @@ app.get("/c/:search?", (request, response) => {
   
   var Page = require('../modules/page');new Page(values, database).value();
   
-  var delete_passwords;
   
   const data = JSON.parse(JSON.stringify(database));
+  
   for (values.i = 0; values.i < Object.keys(data.user).length; values.i++) {
-    delete_passwords = Object.keys(data.user)[values.i];
+    var delete_passwords = Object.keys(data.user)[values.i];
     delete data.user[delete_passwords]["password"];
   }
   response.render("page.ejs", { database: data, values: values });
 });
 
-app.get("/com/:search?", (request, response) => {
+app.get("/c/:search?", (request, response) => {
   if (maintenance_check().status) {response.redirect();}
   
   var community = request.params.search||request.query.search||"meown",
       me = request.cookies["saved-username"];
   
-  if (typeof database.community[community]  === "undefined") 
-    return response.send(msg("custom", "No community with this name", `/c/meown`));
+  if (typeof database.community[community]  === "undefined") return response.send(msg("custom", "No community with this name", `/c/meown`));
   
   var values = {
     username: community,
@@ -924,25 +935,18 @@ app.get("/com/:search?", (request, response) => {
     category: "community",
     data_type: database.community,
     password: request.cookies["saved-password"],
-    background: request.cookies["saved-background"],
-    currency: currency,
     me: me,
-    time: time,
-    anti: anti,
     hostname: request.hostname,
-    //info_data: info_data,
     visible: {
       post_bar: "simple-hidden",
       logged_in: "simple-hidden"
     }
   };
-  values.header=info_data(`${values.category}: `+functionPack.caps(values.username));
-  
-  var delete_passwords;
+  values.header = info_data(`${values.category}: `+functionPack.caps(values.username));
   
   const data = JSON.parse(JSON.stringify(database));
-  for (values.i = 0; values.i < Object.keys(data.user).length; values.i++) {
-    delete_passwords = Object.keys(data.user)[values.i];
+  for (var i = 0; i < Object.keys(data.user).length; i++) {
+    var delete_passwords = Object.keys(data.user)[i];
     delete data.user[delete_passwords]["password"];
   }
   response.render("community.ejs", { database: data, values: values });
@@ -952,39 +956,13 @@ app.get("/", (request, response) => {
   var me = request.cookies["saved-username"];
   var values = {
     username: "empty",
-    roles: getRoles(),
-    anti: anti,
-    users: Object.keys(database.user),
-    communities:Object.keys(database.community),
-    like_number: 0,
-    like_list: 0,
-    status: "",
-    post_bar: "",
-    comment_bar: "",
-    profile_menu: "",
-    side_bar: "",
-    scripts: "",
-    self_avatar:
-      "https://cdn.glitch.com/288a0b72-7e13-4dd2-bc7a-3cc2f4db2aab%2Fuser-slash.svg",
+    self_avatar: "https://cdn.glitch.com/288a0b72-7e13-4dd2-bc7a-3cc2f4db2aab%2Fuser-slash.svg",
     self_link: "/u#login",
     infoData: info_data,
     visible: {},
     changelog:""
   };
 
-  
-  
-  for (let i = 0; i < Object.keys(getRoles()).length; i++) {
-    var role;
-    role = Object.keys(values.roles)[i];
-    values.roles[role] = ""
-    var g=0;for (g = 0; g < Object.keys(getRoles()[role]).length; g++) {
-    values.roles[role]+= `<a href="/u?search${getRoles()[role][g]}">${getRoles()[role][g]}</a>`
-    if (Object.keys(getRoles()[role]).length>0) values.roles[role]+=", ";
-  }
-    values.roles[role]=functionPack.fix_end(values.roles[role]);
-  }
-  
   if (me !== undefined) {
     if (typeof database.user[me] == "undefined") {
       return response.send(msg("custom","No account with this name!","/logout"));
@@ -1008,6 +986,11 @@ app.get("/salt/:value?", (request, response) => {
   if (!value) return response.send("No input value");
   return response.send(bcrypt.hashSync(value, bcrypt.genSaltSync(10)))
 });
+
+app.get("/chat", (request, response) => {
+  return response.render("chat");
+});
+
 app.get("/changelogs/:page?", (request, response) => {
   var page = request.params.page||request.query.page||"last",
       result = `
@@ -1045,9 +1028,7 @@ app.get("/changelogs/:page?", (request, response) => {
 app.get("/about/", (request, response) => {
   var me = request.cookies["saved-username"]||"guest";
 
-  function banned(type,who){//I dunno lol
-    response.redirect(`/error?value=${type}&text=@${who} is ${type} Lol`)
-  }
+  function banned(type,who){response.redirect(`/error?value=${type}&text=@${who} is ${type} Lol`);/*I dunno lol*/}
   
   if (typeof database.user[me] === "undefined") return response.send(msg("custom", "Not logged in","/"));
  
@@ -1071,6 +1052,7 @@ app.get("/about/", (request, response) => {
   if (!logs.views[values.id]) logs.views[values.id] = 0;
   
   logs.views[values.id] += 1;
+  
   const data = {
     user:{
       [me]:JSON.parse(JSON.stringify(database[values.category][me]))
@@ -1093,29 +1075,26 @@ app.get("/follow-button/:search?", (request, response) => {
   if (typeof database.user[username]  !== "undefined"){
     result = `Follow @${search}`; url = `/connect?method=follow&user=${username}`;}
   else{result = `Invalid User`; url = `u`;}
+  
   var button = `
   <button onclick="location.replace('${url}')" class="simple-meown-button" style="vertical-align:middle">
   <span>
   Meown | ${result}
   </span>
   <link rel="stylesheet" href="https://beta.meown.tk/simple.css">
-  </button>`
+  </button>
+  `;
+  
   return response.send(button)
 });
 
+
+
 function staff_check(username){
-  if (getRoles().owner.includes(username)){
-    return config.role_info["owner"].permission;
-  } 
-  else if (getRoles().developer.includes(username)){
-    return config.role_info["developer"].permission;
-  }
-  else if (getRoles().moderator.includes(username)){
-    return config.role_info["moderator"].permission;
-  } 
-  else if (getRoles().helper.includes(username)){
-    return config.role_info["helper"].permission;
-  }
+  if (getRoles().owner.includes(username))return config.role_info["owner"].permission;
+  else if (getRoles().developer.includes(username))return config.role_info["developer"].permission;
+  else if (getRoles().moderator.includes(username))return config.role_info["moderator"].permission;
+  else if (getRoles().helper.includes(username))return config.role_info["helper"].permission;
 }
 
 function permission(num,who){
@@ -1129,7 +1108,7 @@ var command_values = request.body.command.split(" "),
     target = command_values[1]||"",
     value = command_values[2]||"";
   
-  if (functionPack.html_check(JSON.stringify(command_values))) return response.send(msg("custom",`Bro.. No Html.`,"/dashboard"));
+  if (functionPack.htmlCheck(JSON.stringify(command_values))) return response.send(msg("custom",`Bro.. No Html.`,"/dashboard"));
   
 var username=request.cookies["saved-username"],
     password = request.cookies["saved-password"]||"Lol";
@@ -1139,6 +1118,17 @@ if (!real_user(username,password)) return response.send(msg("custom",`Invalid Us
 if (command==="ban"&&permission(1,username)){
   if (!database.user[target]||username===target) return response.send(msg("custom",`User Doesn't Exist`,"/dashboard"));
   database.user[target].roles.push("banned")
+    var webhookMessage = {
+    "embeds":[
+        {
+          author: {name: 'Meown',url: 'https://meown.ml/',icon_url: config.logo,},
+          thumbnail: {url:config.logo},
+          description: `The ban hammer has struck @${target}!`,
+          footer: {text: 'Made with Meown API',icon_url: 'https://cdn.glitch.com/0322d62f-81b5-4f06-9b33-557687636cec%2Fboxie-512px.png',}
+        },
+    ]
+  }
+  webhook.config = Object.assign({}, config.webhook, webhookMessage);webhook.send();
  return response.send(msg("custom",`@${target} is banned`,"/dashboard"));
 }
 else if (command==="unban"&&permission(1,username)){
@@ -1147,10 +1137,14 @@ else if (command==="unban"&&permission(1,username)){
   }
   if (database.user[target].roles.includes("banned")){
     database.user[target].roles = database.user[target].roles.filter((n) => {return n != "banned"});
+        var webhookMessage = {"embeds":[{author: {name: 'Meown',url: 'https://meown.ml/',icon_url: config.logo,},thumbnail: {url:config.logo},description: `@${target} has been unbanned, welcome them back or something!`,footer: {text: 'Made with Meown API',icon_url: 'https://cdn.glitch.com/0322d62f-81b5-4f06-9b33-557687636cec%2Fboxie-512px.png',}},]}
+  webhook.config = Object.assign({}, config.webhook, webhookMessage);webhook.send();
     return response.send(msg("custom",`User Unbanned`,"/dashboard"));
   }
   else if (database.user[target].roles.includes("suspended")){
     database.user[target].roles = database.user[target].roles.filter((n) => {return n != "suspended"});
+        var webhookMessage = {"embeds":[{author: {name: 'Meown',url: 'https://meown.ml/',icon_url: config.logo,},thumbnail: {url:config.logo},description: `@${target} has been unsuspended somehow, go give them a hug.`,footer: {text: 'Made with Meown API',icon_url: 'https://cdn.glitch.com/0322d62f-81b5-4f06-9b33-557687636cec%2Fboxie-512px.png',}},]}
+  webhook.config = Object.assign({}, config.webhook, webhookMessage);webhook.send();
     return response.send(msg("custom",`User UnSuspended`,"/dashboard"));
   }
   else return response.send(msg("custom",`User is not banned`,"/dashboard"));
@@ -1173,7 +1167,8 @@ else if (command==="set-coin"&&permission(1,username)){
   
 else if (command==="delete-user"&&permission(1,username)){
   if (!database.user[target]) return response.send(msg("custom",`User Doesn't Exist!`,"/dashboard"));
-  delete database.user[target];
+  deleteUser(target);
+  
  return response.send(msg("custom",`@${target} is no more. (They have been deleted)`));
 }
 
@@ -1206,11 +1201,16 @@ else if (command==="create-user"&&permission(1,username)){
 else {return response.send(msg("custom",`Invalid Command or Error`,"/dashboard"));}
 });
 
-app.get('*', function(request, response){
-response.redirect("/error?value=4⬡4&text=This%20page%20does%20not%20exist,%20maybe%20head%20back?")
-  });
 
-var botname = '⚙️ !v! ittz'
+
+app.get('*', function(request, response){
+response.redirect(`/error/4⬡4/This page does not exist, maybe head back?requestUrl=${request.path}`)
+});
+
+
+
+
+var botName = '⚙️ MEOWN'
 // Total number of users
 var numUsers = 0;
 // Current room list.
@@ -1223,7 +1223,23 @@ var logLeft = 'Left ';
 //           Room (can be created, joined, Left)
 var logLab = 'Mittz Chat';
 var logRoom = ' room ';
-var user={};var id = {};
+
+var 
+  chat = {
+    room:{},
+    curRoomList:{},
+    user:{},
+    userList:[],
+    prefix:"$"
+  },
+  templates = {
+    room: { users: [] }
+  },
+    id = {};
+
+var user = chat.user;
+var room = chat.room;
+
 io.on('connection', function (socket) {
   var addedUser = false;
   var curRoomName = 'Lobby';
@@ -1236,6 +1252,7 @@ io.on('connection', function (socket) {
       message: data
     });
   });
+  
   socket.on('private message', function (data) {
     // we tell the client to execute 'new message'
     if (!user[id[data.to]]){
@@ -1249,8 +1266,8 @@ io.on('connection', function (socket) {
       type: 'pm',
       from:data.from
     });
-    
   });
+  
   // when the client emits 'add user', this listens and executes
   socket.on('add user', function (username) {
     if (addedUser) return;
@@ -1259,6 +1276,9 @@ io.on('connection', function (socket) {
     socket.username = username;
     user[socket.id]=socket;
     id[username] = socket.id;
+    
+    chat.userList.push(id[username]);
+    
     ++numUsers;
     addedUser = true;
 
@@ -1310,7 +1330,12 @@ io.on('connection', function (socket) {
     if (addedUser) {
       --numUsers;
       --curRoomList[curRoomName];
-
+      
+      delete user[socket.id];
+      delete id[socket.username];
+      if (room[room]&&room[room].users){
+        room[room].users = room[room].users.filter(i => i !== socket.username)
+      }
       // If there is no user in room, delete this room,
       // Except this room is 'Lobby'.
       if (curRoomList[curRoomName] === 0 && curRoomName !== 'Lobby') {
@@ -1338,9 +1363,38 @@ io.on('connection', function (socket) {
     socket.emit('show room list', curRoomName, curRoomList);
   });
 
-  socket.on('join room', function (room) {
+  socket.on('join room', function (room){
+    if ( room !== "lobby" && room !== "Lobby" ) 
+      room = "public-"+room
+    joinRoom(room);
+  });
+  
+    socket.on('join dm', function (data) {
+      // we tell the client to execute 'new message'
+      if (!user[id[data.to]]){
+        return socket.emit('new message', {message: "No user with this name :/"});
+      }
+      if (data.to == data.from){
+        return socket.emit('new message', {message: "why u talkin to yourself?"});
+      } 
+      if (!database.user[data.from].followers.includes(data.to)){
+        return socket.emit('new message', {message: "This user is not following you!"});
+      }
+      
+      var dm = [data.to,data.from].sort();
+      joinRoom(`dm-${dm[0]}-${dm[1]}`);
+      user[id[data.to]].emit('new message', {
+        message: `[PM From ${botName}]: You have been invited to a dm by ${data.from}\n Use '${chat.prefix}dm ${data.from}' to join`,
+        type: 'pm',
+        from:data.from
+      });
+      return socket.emit('new message', {message: `You joined a private dm with ${dm[1]}!`});
+    });
+  
+  
+  function joinRoom(room) {
     socket.emit('stop typing');
-
+    
     if (room !== curRoomName) {
       // Before join room, first need to leave current room. -------------------
       socket.leave(curRoomName);
@@ -1354,6 +1408,9 @@ io.on('connection', function (socket) {
       });
       --curRoomList[curRoomName];
 
+      if (chat.room[curRoomName]?.user && chat.room[curRoomName].users.includes(socket.username)){
+      chat.room[curRoomName].users = chat.room[curRoomName].users.filter(i => i !== socket.username)
+      }
       // If there is no user in room, delete this room,
       // Except this room is 'Lobby'.
       if (curRoomList[curRoomName] === 0 && curRoomName !== 'Lobby') {
@@ -1366,6 +1423,9 @@ io.on('connection', function (socket) {
       // If there is no the same room in room list, add it to room list.
       if (!isRoomExist(room, curRoomList)) {
         curRoomList[room] = 1;
+
+        chat.room[room] = templates.room;
+        chat.room[room].users.push(socket.username);
         socket.emit('join left result', {
           username: 'you ',
           logAction: logCreate,
@@ -1374,6 +1434,7 @@ io.on('connection', function (socket) {
         });
       } else {
         ++curRoomList[room];
+        room[room].users.push(socket.username);
         socket.emit('join left result', {
           username: 'you ',
           logAction: logJoin,
@@ -1381,7 +1442,6 @@ io.on('connection', function (socket) {
           roomName: '「' + room + '」'
         });
       }
-
       // Every time someone join a room, reload current room list.
       socket.emit('show room list', room, curRoomList);
       curRoomName = room;
@@ -1394,7 +1454,8 @@ io.on('connection', function (socket) {
         userJoinOrLeftRoom: true
       })
     }
-  });
+  }
+  
 });
 
 // Check if roomName is in roomList Object.

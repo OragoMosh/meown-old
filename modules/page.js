@@ -32,7 +32,7 @@ class all_values {
     values.nav_mobile = "";
     values.i = "";
     values.details = "";*/
-    values.follow_amount = database.user[values.id]&&database.user[values.id].followers&&database.user[values.id].followers.length||0;
+    values.follow_amount = database.user[values.id]?.followers?.length||0;
     values.self_avatar ="https://cdn.glitch.com/288a0b72-7e13-4dd2-bc7a-3cc2f4db2aab%2Fuser-slash.svg";
     values.self_link = "/u#login";
     
@@ -136,9 +136,9 @@ vals.list.forEach(item => {vals.variable[item]=vals.value||""})
       connect_type = "join";
     }
             
-    if (database[values.category][values.id][join_type].includes(values.me)) {values.nav += `<a href="/connect?sent=${values.id}&method=${connect_type}" class="simple-theme-text-favorite simple-bar-item simple-button simple-hide-small simple-padding-large simple-hover-white" title="Unfollow @${values.id}"><i class="fa fa-heartbeat"></i></a>`;}
+    if (database[values.category][values.id][join_type].includes(values.me)) {values.nav += `<a href="/connect/${connect_type}/${values.id}" class="simple-theme-text-favorite simple-bar-item simple-button simple-hide-small simple-padding-large simple-hover-white" title="Un${connect_type} @${values.id}"><i class="fa fa-heartbeat"></i></a>`;}
      
-    else {values.nav += `<a href="/connect?sent=${values.id}&method=${connect_type}" class="simple-theme-text-favorite simple-bar-item simple-button simple-hide-small simple-padding-large simple-hover-white" title="Follow @${values.id}"><i class="fa fa-heart"></i></a>`;}
+    else {values.nav += `<a href="/connect/${connect_type}/${values.id}" class="simple-theme-text-favorite simple-bar-item simple-button simple-hide-small simple-padding-large simple-hover-white" title="${connect_type} @${values.id}"><i class="fa fa-heart"></i></a>`;}
   }
       }
     }
@@ -170,17 +170,17 @@ vals.list.forEach(item => {vals.variable[item]=vals.value||""})
         `
       }
     
-        var myroles = '';
     if (values.category === "user") {
+      var userRoles = database[values.category][values.id].roles;
       values.myroles = [];
-      if (database[values.category][values.id].roles.length>0){
-      database[values.category][values.id].roles.forEach(my_roles);
-      function my_roles(role,index) {
-        if (Object.keys(config.role_info).includes(role)) {values.myroles+= `${config.role_info[role].name}, `;}
-      };
+      if (userRoles.length>0){
+        userRoles.forEach(my_roles);
+        function my_roles(role,index) {
+          if (Object.keys(config.role_info).includes(role)) {values.myroles+= `${config.role_info[role].name}, `;}
+        };
       }
-      else values.myroles = "None"
-      values.myroles = function_pack.fix_end(values.myroles)
+      else {values.myroles = "None";}
+      values.myroles = function_pack.fix_end(values.myroles);
     }
 
 
@@ -255,36 +255,22 @@ vals.list.forEach(item => {vals.variable[item]=vals.value||""})
       values.post_number--;
     }
   }
-
-  if (typeof database[values.category][values.id].following !== "undefined") {
-    if (database[values.category][values.id].following.length - 1 < 0){values.follow_list = "No One";}
-    for (values.follow_number in database[values.category][values.id].following) {
-      values.follow_list += `
-      <span class="simple-tag simple-small simple-theme-d3" onclick="location.replace('/u?search=${database[values.category][values.id].following[values.follow_number]}');">${database[values.category][values.id].following[values.follow_number]}</span>`;
-      if (database[values.category][values.id].following.length - 1 >values.follow_number&&database[values.category][values.id].following.length - 1 > 0)
-        {values.follow_list += `, `;}
+var user = database[values.category][values.id]
+  if (typeof user.following !== "undefined") {
+    if (user.following.length - 1 < 0){values.follow_list = "No One";}
+    for (values.follow_number in user.following) {
+      values.follow_list += `<span class="simple-tag simple-small simple-theme-d3" onclick="location.replace('/u?search=${user.following[values.follow_number]}');">${database[values.category][values.id].following[values.follow_number]}</span>`;
+      if (user.following.length - 1 >values.follow_number&&user.following.length - 1 > 0){values.follow_list += `, `;}
     }
   }
-  
-  if (typeof database[values.category][values.id].communities !== "undefined") {
-    if (database[values.category][values.id].communities.length - 1 < 0) {values.community_list = "None";}
-    for (values.community_number in database[values.category][values.id].communities) {
-      values.community_list += `<span class="simple-tag simple-small simple-theme-d3" onclick="location.replace('/c?search=${database[values.category][values.id].communities[values.community_number]}');">${
-        database[values.category][values.id].communities[values.community_number]
-      }</span>`;
-      if (database[values.category][values.id].communities.length - 1 >values.community_number&&database[values.category][values.id].communities.length - 1 > 0) 
-          {values.community_list += `, `;}
+  var communityList = "",communityNumber = ";"
+  if (typeof user.communities !== "undefined") {
+    if (user.communities.length - 1 < 0) {communityList = "None";}
+    for (communityNumber in user.communities) {
+      communityList += `<span class="simple-tag simple-small simple-theme-d3" onclick="location.replace('/c/${user.communities[communityNumber]}');">${user.communities[communityNumber]}</span>`;
+      if (user.communities.length - 1 >communityNumber&&user.communities.length - 1 > 0) {communityList += `, `;}
     }
   }
-  if (values.category === "community") {values.panelname = database[values.category][values.id].preferred;}
-  else {values.panelname = function_pack.caps(getRole(values.id,values.category).preferred);}
-  values.details = `
-  <h4 class="simple-center" style="color:${getRole(values.id,values.category).color||"black"}">${values.panelname}</h4>
-  <p class="simple-center">
-  <img src="${database[values.category][values.id].avatar}" class="simple-circle" style="height:106px;width:106px;border: 2px solid ${getRole(values.id,values.category).color||"black"};" alt="User Avatar">
-  </p>
-  <hr>
-  `;
     
     var date =new Date(Number(database[values.category][values.id].creation_date));
     

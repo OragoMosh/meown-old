@@ -5,6 +5,8 @@ var prefix = '$' //The symbol used to call a command
 var cmdlist = ''+prefix+'join, '+prefix+'help, '+prefix+'refresh, '+prefix+'reload, '+prefix+'info, '+prefix+'time '+prefix+'fun, '//simple list of the commands that are easier to reach
 var ver = '1.04'//The version of the command used
 var pname = "Meown Chat"
+var url = "https://meown.glitch.me"
+
 
 function getCookie(cname) {
   var name = cname + "=";
@@ -73,7 +75,7 @@ var time = new Date();
   //var inputMessage = document.getElementById("input"); // Input message input box
 
   var usernameInput = document.getElementById("usernameInput"); // Input for usernamevar usernameInput = document.getElementById("usernameInput");
-  var roomList = $('.room-list'); // Room list <ul>
+  var roomList = document.querySelector(".room-list"); // Room list <ul>
   var $btnTips = $('.btn-tips'); // Tool buttons
   
   // Prompt for setting a username
@@ -101,7 +103,9 @@ var time = new Date();
 var cookieName = getCookie("saved-username")
 if (cookieName){
 setUsername (cookieName);
-}else{document.getElementById("chat_all").style.display = "none";}
+}else{
+  location.replace("/login")
+}
   // Sets the client's username
   function setUsername (given_name) {
     // If user name is input, get and then emit 'add user' event.
@@ -158,17 +162,25 @@ setUsername (cookieName);
         if (roomNameRule.test(room)) {
           socket.emit('join room', room);
           //noinspection JSUnresolvedVariable
-          roomList[0].scrollTop = roomList[0].scrollHeight;
+          roomList.scrollTop = roomList.scrollHeight;
         } else {
           log('Length of room name is limited to 1 to 14 characters, ' +
               'and can only be composed by the Chinese, ' +
             'English alphabet, digital and bottom line', {})
         }
         break;
+        
+      case 'dm': 
+        if (username == words[1])
+          return log("You can't start a dm with yourself!")
+        socket.emit('join dm',{from:username,to:words[1]});
+        break;
+        
       case 'help': // Command /help lists all commands
         message = 'Help list: '+prefix+'help1, '+prefix+'help2, '+prefix+'help3 ';
         log(message);
         break;
+        
       case 'help1': // Command /help lists all commands
         log('--------------------');
         log('-- Help List --');
@@ -178,6 +190,7 @@ setUsername (cookieName);
         log('-- use '+prefix+'help2 for more info --');
         log('--------------------');
         break;
+        
       case 'help2': // Command /help lists all commands
         log('--------------------');
         log('-- Help List --');
@@ -187,12 +200,15 @@ setUsername (cookieName);
         log('-- use '+prefix+'help3 for more info --');
         log('--------------------');
         break;
+        
         case '': // Command /help lists all commands
         log('Please type `'+prefix+'help` for more info.');
         break;
+        
         case 'login': // Command /help lists all commands
         log('<div class="g-signin2" data-onsuccess="onSignIn"></div>');
         break;
+        
       case 'updates': // Command /help lists all commands
         log('--------------------');
         log('-- Updates List --');
@@ -200,41 +216,48 @@ setUsername (cookieName);
         log('-- use '+prefix+'help2 for more info --');
         log('--------------------');
         break;
+        
       case 'commands': // Command /help lists all commands
         message = 'Commands: '+cmdlist+prefix+'help';
         log(message);
         break;
+        
       case 'refresh':// Command /refresh = reload room list.
         socket.emit('room list');
         break;
+        
       case 'info':// Command /info = Server info
         message = 'This server is running V'+ver;
         log(message);
         break;
+        
       case 'pm': 
         function rest_of(value,index){
           var x="";
-          var i;
-          for (i = index; i < value.length; i++) {
+          for (var i = index; i < value.length; i++) {
             x += value[i]+" "
         }
           return x;
         }
         socket.emit('private message',{from:username,to:words[1],message:rest_of(words,2)});
         break;
+        
       case 'time': // Command /time shows the current time
         message = 'The time is '+month[time.getMonth()]+', '+weekday[time.getDay()]+' '+time.getHours()+':'+time.getMinutes();
         log(message);
         break;
+        
       case 'reload': // Command /reload will reload the website page
         window.location.reload(true);
         message = 'Reloading will now commence...'
         log(message);
         break;
+        
       default:
         message = 'You have entered an invalid command';
         log(message);
         break;
+        
     }
   }
 
@@ -274,13 +297,14 @@ function scrollToBottom(element) {
   element.scroll({ top: element.scrollHeight, behavior: 'smooth' });
 }
 async function getConfig(){
-  var result;await fetch("https://meown-beta.glitch.me/api?method=config").then(response => response.json()).then(data => {result = data.result;});return await result;
+  var result;await fetch(url+"/api/config").then(response => response.json()).then(data => {result = data.response;});return await result;
 }
 
 var config = getConfig();
+
     async function get_role(username,category){
     var user;
-    await fetch("https://meown-beta.glitch.me/api?method=user&search="+username).then(response => response.json()).then(data => {user = data});
+    await fetch(url+"/api/user/"+username).then(response => response.json()).then(data => {user = data});
     var def = "#000000";
     var vals = {color:def,symbol:"",name:username}
     if (!user[username]){vals.color = def;}
@@ -320,7 +344,7 @@ if (data){
     splash_title("Why tho?")
   }
     switch(data.type){
-    case 'pm': options.color = "purple";break;
+    case 'pm': options.color = "blue";break;
     case 'log': options.color = "grey";break;
     }
   options.type = data.type;
@@ -371,7 +395,10 @@ message.div.appendChild(newMessage);
 
   // Prevents input from having injected markup
   function cleanInput (input) {
-    return $('<div/>').text(input).text();
+    //
+    return input.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    //return $('<div/>').text(input).text();
+    
     //html = html.replace(/</g, "&lt;").replace(/>/g, "&gt;");
   }
 
@@ -398,6 +425,7 @@ message.div.appendChild(newMessage);
   // Gets the 'X is typing' messages of a user
   function getTypingMessages (data) {
     return $('.typing.message').filter(function () {
+      alert(`${$(this)}, ${this}`)
       return $(this).data('username') === data.username;
     });
   }
@@ -514,22 +542,34 @@ message.div.appendChild(newMessage);
 
   // Show current room list.
   socket.on('show room list', function (room, rooms) {
-    roomList.empty();
+    roomList.innerHTML = "";
     var roomClassName = room.trim().toLowerCase().replace(/\s/g,'');
-
+    var roomName = Object.keys(rooms)[0];
+    var numUserInRoom = rooms[0];
+    
     $.each(rooms, function (roomName, numUserInRoom) {
+      console.log(`Rooms: ${JSON.stringify(rooms)}-,- Room Name: ${roomName}-,- Number Users: ${numUserInRoom}`)
       // Set class name of room's <div> to be clear.
+      if (roomName.startsWith("public-")){
+        roomName = roomName.replace("public-","");
+      }
+      if (roomName.startsWith("dm-")){
+        return
+      }
+      
       var className = roomName.trim().toLowerCase().replace(/\s/g,'');
-      $roomDiv = $('<div class="room"></div>')
-        .html('<b>' + roomName + '</b>'
+      var roomDiv = document.createElement("div")
+      roomDiv.setAttribute("class","room")
+      roomDiv.innerHTML = '<b>' + roomName + '</b>'
           + '<span class="user-number-in-room">'
-          + '(' + numUserInRoom + ' users' + ')' + '</span>')
-        .addClass(className)
-        .click(function () {
-          socket.emit('join room', roomName);
-          message.input.focus();
-        });
-      roomList.append($roomDiv);
+          + '(' + numUserInRoom + ' users' + ')' + '</span>'
+      roomDiv.className += ` ${className}`;
+      roomDiv.onclick = function(){
+        socket.emit('join room', roomName);
+        message.input.focus();
+      };
+      
+      roomList.append(roomDiv);
     });
 
     $('.' + roomClassName).addClass('joined-room');

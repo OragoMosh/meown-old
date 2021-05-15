@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<button onclick="new_el();">Test</button>
+<textarea id="json" placeholder="json">
+{
+  "type":"a",
+  "value":"",
+  "class":"",
+  "style":"",
+  "id":"",
+  "tags":""
+}
+</textarea>
+<br>
+RESULT: <div id="result"> </div>
+Output: <textarea id="output"> </textarea>
+<script>
+new_el();
+  
+function new_el(values){
+  if (!values){
+    values = {
+      type:"a",
+      value:undefined,
+      class:undefined,
+      style:undefined,
+      id:undefined,
+      tags:undefined
+    }
+  }
+
+  function isJSON(str) { 
+      try { 
+          return (JSON.parse(str) && !!str); 
+      } catch (e) { 
+          return false; 
+      } 
+  }
+
+  var jsonv = document.getElementById("json").value;
+
+  if ( isJSON( jsonv ) )  values = JSON.parse(jsonv);
+
+  var result,
+    beginning,
+    middle,end;
+
+  beginning=`<${values.type} `;
+
+  if(values.class)  beginning+=`class="${values.class}"`;
+
+  if(values.style)  beginning+=`style="${values.style}"`;
+
+  if(values.id)  beginning+=`id="${values.id}"`;
+
+  beginning+=`>`;
+
+  end = `</${values.type}>`;
+
+  if (values.value)  middle=values.value;
+
+  result = beginning;
+
+  if (middle)  result+=middle;
+  
+  result+=end;
+  
+  document.getElementById("output").value = result;
+  document.getElementById("result").innerHTML = result;
+}
+</script>
+
+</body>
+</html>

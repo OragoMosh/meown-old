@@ -8,7 +8,7 @@
   "main": "server.js",
   "dependencies": {
     "express": "^4.17.1",
-    "socket.io": "^3.1.1",
+    "socket.io": "^4.1.1",
     "express-layout": "^0.1.0",
     "ejs": "^3.1.6",
     "cookie-parser": "^1.4.5",
@@ -16,12 +16,15 @@
     "nodemailer": "latest",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
-    "formidable": "^1.2.2"
+    "formidable": "^1.2.2",
+    "google-auth-library": "^7.0.4",
+    "node-fetch": "^2.6.1",
+    "googleapis": "^73.0.0"
   },
   "scripts": {
     "start": "node server/server.js"
   },
   "engines": {
-    "node": "12.x"
+    "node": "14.x"
   }
 }
