@@ -43,7 +43,7 @@
       "preferred": "Orago",
       "background": "https://cdn.discordapp.com/attachments/660390332772646922/795417339079294986/background.png",
       "banner": "https://cdn.glitch.com/288a0b72-7e13-4dd2-bc7a-3cc2f4db2aab%2Fvapormountain.jpg?v=1606422724403",
-      "avatar": "https://cdn.discordapp.com/attachments/660390332772646922/842875802788954122/b1c6d3613b2bfbeaaacf154f49de00df.jpg",
+      "avatar": "https://cdn.discordapp.com/attachments/660390332772646922/846124989736419359/pizzaboih.png",
       "description": "Hello My name is Orago, I am a game & web developer also Creator of Meown!",
       "creation_date": "-62106700000000",
       "posts": [
@@ -182,8 +182,14 @@
           "comments": []
         },
         {
-          "title": "next line",
-          "body": "is this \\n  a next line?",
+          "title": "test",
+          "body": "is this a next line?\\nor how about tabs?\\nyeees??\\n\\b how about next line and tab too!",
+          "likes": [],
+          "comments": []
+        },
+        {
+          "title": "Video testing!",
+          "body": "!v https://www.w3schools.com/tags/mov_bbb.mp4 v!",
           "likes": [],
           "comments": []
         }
@@ -872,6 +878,20 @@
         {
           "title": "Official Theme v0.1",
           "body": "{\"0\":\"red\",\"1\":\"url(https://raw.githubusercontent.com/Orago/assets/main/meown/images/Stripey%203000x2000%20sharp.png) repeat fixed\",\"2\":\"url(https://raw.githubusercontent.com/Orago/assets/main/meown/images/boxieNotif.png) repeat\",\"3\":\"url(https://raw.githubusercontent.com/Orago/assets/main/meown/images/Button.png)\",\"4\":\"#9eb1bb\",\"5\":\"url(https://raw.githubusercontent.com/Orago/assets/main/meown/images/Status%20Buttons%20100x.png)\",\"6\":\"url(https://raw.githubusercontent.com/Orago/assets/main/meown/images/Input%20Field.png)\",\"7\":\"url(https://raw.githubusercontent.com/Orago/assets/main/meown/images/NavBar.png) repeat\",\"8\":\"#6575ae\",\"9\":\"#3a4b53\",\"10\":\"#303e45\",\"11\":\"url(https://raw.githubusercontent.com/Orago/assets/main/meown/images/Background.png)\",\"12\":\"#7289da\",\"13\":\"#000000\",\"14\":\"#ffffff\",\"15\":\"#ff5252\"}",
+          "likes": [],
+          "comments": [],
+          "username": "orago"
+        },
+        {
+          "title": "White Theme v1",
+          "body": "Copy this ```{\"0\":\"black\",\"1\":\"#ffffff\",\"2\":\"#a3a3a3\",\"3\":\"#000000\",\"4\":\"#9eb1bb\",\"5\":\"#000000\",\"6\":\"#ffffff\",\"7\":\"#cb3837\",\"8\":\"#e4e5e8\",\"9\":\"#3a4b53\",\"10\":\"#303e45\",\"11\":\"#f0f2f5\",\"12\":\"#383838\",\"13\":\"#292929\",\"14\":\"#787dff\",\"15\":\"#ff5252\"}```",
+          "likes": [],
+          "comments": [],
+          "username": "orago"
+        },
+        {
+          "title": "White Theme v2",
+          "body": "```{\"0\":\"black\",\"1\":\"#ffffff\",\"2\":\"#a3a3a3\",\"3\":\"#dc5555\",\"4\":\"#45b9f7\",\"5\":\"#dc5555\",\"6\":\"#ffffff\",\"7\":\"#cb3837\",\"8\":\"#e4e5e8\",\"9\":\"#3a4b53\",\"10\":\"#303e45\",\"11\":\"#f0f2f5\",\"12\":\"#383838\",\"13\":\"#292929\",\"14\":\"#545454\",\"15\":\"#ff5252\"}```",
           "likes": [],
           "comments": [],
           "username": "orago"

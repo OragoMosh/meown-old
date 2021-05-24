@@ -1,10 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
 <head id="header">
-<%- values.infoData(`Homepage!`) %>
+
+  
+  <title>Meown | Homepage!</title>
+<meta property="og:title" content="Meown | Homepage!" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://meown.ml" />
+<meta property="og:image" content="https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png?v=1594354728664" />
+<meta property="og:description" content="A small social media made by one person" />
+<meta name="theme-color" content="#cb3837">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" href="https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie32bfull.png">
+<link id="favicon" rel="icon" href="https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie32bfull.png" type="image/x-icon">
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="manifest" href="/manifest.json">
+
+
+<script>
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("/service-worker.js");
+      navigator.registerProtocolHandler(
+    "web+meown", "https://meown.ml/custom/%s", "Meown"
+  );
+  }
+</script>
+  
+  
 <meta charset="UTF-8">
 <meta name="keywords" content="Social media, meown, meown.ml, meown.tk" />
-<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Open+Sans'>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <script src="/assets/js/tools.js" defer></script>
 <link href="/assets/css/tools.css" rel="stylesheet">
@@ -26,9 +53,7 @@
     <i class="fa fa-home simple-margin-right"></i>Meown
    </a>
    <div class="simple-bar-item simple-button simple-hide-small simple-right simple-padding-large simple-hover-white simple-dropdown-hover" title="My Account" >
-    <div id="Status" class="simple-round simple-theme-d2 simple-dropdown-content simple-bar-block simple-theme-border simple-round" style="width:300px;right:0;top:78px;">
-     
-    </div>
+    <div id="Status" class="simple-round-xlarge simple-theme-d2 simple-dropdown-content simple-bar-block simple-round" style="width:300px;right:0;top:78px;"></div>
     <img onclick="location.replace('/u')" class="simple-circle simple-theme-border " style="height:30px;width:30px" alt="Avatar" id="myAvatar">
      <script>
        window.addEventListener("load", async function () {
@@ -67,12 +92,15 @@
       <a href="/login" class="simple-bar-item simple-button simple-padding-large">Login</a>
       <a href="/register" class="simple-bar-item simple-button simple-padding-large">Register</a>`;
     }
+      
     status.innerHTML+=`
     <form method="get" action="/u" style="display:inline-block;"><input type="text" name="search" class="simple-theme-l5 simple-theme-border simple-padding" placeholder="Find User" style="width:20vw;"></form>
     <form method="get" action="/c" style="display:inline-block;"><input type="text" name="search" class="simple-theme-l5 simple-theme-border simple-padding" placeholder="Find Community" style="width:20vw;"></form>
-    <a onclick="window.opener=null;window.open('','_self');window.close();window.history.go(-1);" class="simple-bar-item simple-button">Close</a>`
+    <a onclick="window.open('','_self').close();" class="simple-button">Close</a>`
     mobileStatus.innerHTML+=`
-    <a onclick="window.close();" class="simple-bar-item simple-button simple-padding-large">Close</a>`;
+    <form method="get" action="/u" style="display:inline-block;"><input type="text" name="search" class="simple-theme-l5 simple-theme-border simple-padding" placeholder="Find User" style="width:80vw;"></form>
+    <form method="get" action="/c" style="display:inline-block;"><input type="text" name="search" class="simple-theme-l5 simple-theme-border simple-padding" placeholder="Find Community" style="width:80vw;"></form>
+    <a onclick="window.open('','_self').close();" class="simple-bar-item simple-button simple-padding-large">Close</a>`;
 });
   </script>
 </div>
@@ -115,7 +143,7 @@
           Meown is supposed to be a very simple social media with a quite simple database structure capable of doing many things making it easier to expand!
         </p>
         <p>
-          Feel free to <a class="simple-button simple-theme simple-round" href="u#register">Join now !</a>
+          Feel free to <a class="simple-button simple-theme-button simple-theme simple-round" href="/register">Join now !</a>
           and be one of the 
           <a id="userCount">
           0
@@ -136,11 +164,54 @@
         </p>
       </div>
       
-<div class="simple-theme-l5 simple-theme-border simple-card simple-round simple-container simple-margin" id="changelogs">Not Loaded</div>
+<div class="simple-theme-l5 simple-theme-border simple-card simple-round simple-container simple-margin simple-theme-text-1" id="changelogs" onclick="openChangeLogs();">Not Loaded</div>
+      
 <script>
+  var changeLogIndex = "last",
+      changeLogMax = 0;
+  function openChangeLogs(){
+    openChangeLogPage(changeLogIndex);
+  }
+  
+  async function openChangeLogPage(index){
+    var changelogs = await MeownApi( "changelogs" ).then( ( values )=>{ return values } );
+    var result = `<b>Changelogs:</b><br><span>${ changelog( index ).name }</span><br>`;
+    
+    function changelog (number){
+      number==="last" ? number = Object.keys( changelogs ).length-1 : number=number;
+      changeLogIndex = number;
+      changeLogMax = Object.keys( changelogs ).length-1;
+      if ( number &&! isNaN( number ) ){
+        return {
+          name: caps( Object.keys( changelogs )[ number ] ) || "Missing_Name",
+          values: changelogs[ Object.keys( changelogs )[ number ] ] || "Missing_Values"
+        }
+      }
+      else return {
+        name: caps( Object.keys( changelogs )[ Object.keys( changelogs ).length-1 ] ) || "Missing_Name",
+        values: changelogs[ Object.keys( changelogs )[ Object.keys( changelogs ).length-1 ] ] || "Missing_Values"
+      };
+    }
+    
+    changelog( index ).values.forEach(add_log);
+    
+    function add_log(item,index){
+      if ( index >= 0 ){ result+= `<span>- ${item}</span><br>`; }
+      else { result+= `<span>- ${item}</span>`; }
+    }
+    menu( {title:`
+    <button class="simple-button simple-round-xlarge simple-theme-button simple-theme-text-1" onclick="if (0 < changeLogIndex){ changeLogIndex--; openChangeLogPage(changeLogIndex); }" > <span> &lt; </span> </button> 
+    <button class="simple-button simple-round-xlarge simple-theme-button simple-theme-text-1" onclick="if (changeLogMax > changeLogIndex){ changeLogIndex++; openChangeLogPage(changeLogIndex); }" > <span> &gt; </span> </button>
+    `, body:result } );
+  }
+  
+  
+  
+  
   window.addEventListener( "load", async function () {
-    var changelogs = await MeownApi( "changelogs" ).then( ( values )=>{ return values } ),
-        result = `<b>Changelogs:</b><br>${ changelog( "last" ).name }<br>`;
+    var changelogs = await MeownApi( "changelogs" ).then( ( values )=>{ return values } );
+    var result = `<b>Changelogs:</b><br><span>${ changelog( "last" ).name }</span><br>`;
+        
     
   function changelog (number){
     number==="last"?number === Object.keys( changelogs ).length-1:number=number;
@@ -154,15 +225,6 @@
       name: caps( Object.keys( changelogs )[ Object.keys( changelogs ).length-1 ] ),
       values: changelogs[ Object.keys( changelogs )[ Object.keys( changelogs ).length-1 ] ]
     };
-  }
-  changelog( "last" ).values.forEach(add_log);
-  function add_log(item,index){
-    if ( index >= 0 ){
-      result+= `- ${item}<br>`;
-    }
-    else {
-      result+= `- ${item}`;
-    }
   }
   document.getElementById( "changelogs" ).innerHTML = result; 
   });
@@ -178,15 +240,15 @@
         <p class="left">
         | Owner: ${roles.owner} |
         <br>
-        | Developers: ${ roles.developer || "None" } |
+        | Developers: ${ roles.developer.toString().replace(/,/g,", ") || "None" } |
         <br>
-        | Moderators: ${ roles.moderator || "None" } |
+        | Moderators: ${ roles.moderator.toString().replace(/,/g,", ") || "None" } |
         <br>
-        | Helpers: ${ roles.helper || "None" } |
+        | Helpers: ${ roles.helper.toString().replace(/,/g,", ") || "None" } |
         <br>
-        | Verified Creators: ${ roles.verified || "None" } |
+        | Verified Creators: ${ roles.verified .toString().replace(/,/g,", ")|| "None" } |
         <br>
-        | Beta Testers: ${ roles.verified || "None" } |
+        | Beta Testers: ${ roles.verified.toString().replace(/,/g,", ") || "None" } |
         </p>
       `;
     })
@@ -224,18 +286,12 @@
       <br>
       
       <div class="simple-theme-l5 simple-theme-border simple-card simple-round simple-padding-16 simple-center">
-      <p onclick="menu({title:'do you really want ads?'})">ADS</p></div>
+      <p onclick="menu({title:'do you really want ads?'});">ADS</p></div>
       
       <br>
       
       <div class="simple-theme-l5 simple-theme-border simple-card simple-round simple-padding-32 simple-center">
-        <p><i class="fa fa-bug simple-xxlarge" onclick="menu({title:'Reporting Bugs has not been added yet',body:'Sorry about that :p'})"></i><br>Report bugs</p>
-      </div>
-      
-      <br>
-      
-      <div class="simple-theme-l5 simple-theme-border simple-card simple-round simple-padding-32 simple-center">
-
+        <p><i class="fa fa-bug simple-xxlarge" onclick="menu({title:'Reporting Bugs has not been added yet',body:'Sorry about that :p'});"></i><br>Report bugs</p>
       </div>
     <!-- End Right Column -->
     </div>
@@ -319,7 +375,7 @@ function getCookie(cname) {
 <div id="overlay" class="simple-modal simple-animate-opacity">
   <div class="simple-modal-content simple-round simple-card simple-theme-l5 simple-theme-border simple-theme-text-1" style="padding:32px">
     <div class="simple-container">
-      <i onclick="document.getElementById('overlay').style.display='none'" class="fa fa-remove simple-xlarge simple-button simple-transparent simple-right simple-xlarge"></i>
+      <i onclick="document.getElementById('overlay').style.display='none'" class="fa fa-remove simple-xlarge simple-round-xxlarge simple-button simple-theme-button"></i>
       <h2 class="simple-wide" id="overlayTitle">Null Title</h2>
       <p id="overlayBody">Null Body</p>
     </div>

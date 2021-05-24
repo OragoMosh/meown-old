@@ -94,7 +94,9 @@ r.style.setProperty(`--${i}`, loaded_colors[i]);
   i++
   }
 }
-
+function closeTab(){
+  window.open('','_self').close();
+}
 function mouseOver(v){
 var o = v.object,
 	t = v.true,
@@ -233,6 +235,43 @@ async function share(values){
     console.error("Share failed:", err.message);
   }
 }
+
+  function makeVideo(url){
+    var result = document.createElement("video"),
+        sources = "";
+    
+    result.setAttribute("style", "width:100%;height:300px;");
+    
+    if ( url.includes(".ogg") || url.endsWith(".ogg") ) sources+=`\n<source src="${url}" type="video/ogg">`
+    sources+=`\n<source src="${url}" type="video/mp4">`;
+    
+    result.innerHTML = `
+      ${sources}
+      Your browser does not support the video tag.
+    `;
+    
+    return result;
+  }
+
+
+
+/*
+function changeSymbols(input){
+        if ( input.includes("!i") ){ input = reSymbol(input,"!i","i!",`<img style="width:20%;height:20%;" src="`, `">`); }
+      if ( input.includes("```") ){ input = reSymbol(input,"```","```",`<div class=" simple-container simple-card simple-round simple-margin simple-theme-border">`,`</div>`); }
+      if ( input.includes("@") ){ input = mention(input); }
+      if ( input.includes("\\n") ){ input = input.replace(/\\n/g,"<br>"); }
+      if ( input.includes("\\b") ){ input = input.replace(/\\b/g,"&emsp;"); }
+  return input
+}
+*/
+/*
+        if ( values.body.includes("!i") ){ values.body = reSymbol(values.body,"!i","i!",`<img style="width:20%;height:20%;" src="`, `">`); }
+      if ( values.body.includes("```") ){ values.body = reSymbol(values.body,"```","```",`<div class=" simple-container simple-card simple-round simple-margin simple-theme-border">`,`</div>`); }
+      if ( values.body.includes("@") ){ values.body = mention(values.body); }
+      if ( values.body.includes("\\n") ){ values.body = values.body.replace(/\\n/g,"<br>"); }
+      if ( values.body.includes("\\b") ){ values.body = values.body.replace(/\\b/g,"&emsp;"); }
+*/
 
   function copy(txt){
   var cb = document.getElementById("cb");

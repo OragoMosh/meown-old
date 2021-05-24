@@ -26,31 +26,31 @@ function fix_end(x) {var i=0;for (i = 0; i < x.length; i++) {if (x.endsWith(",")
 function new_el(values){if (!values)values = {element:"a",type:"double",value:undefined,class:undefined,style:undefined,id:undefined,tags:undefined};var result,beginning,middle,end;beginning=`<${values.element} `;if(!values.element)values.element=`a`;if(values.class)beginning+=`class="${values.class}"`;if(values.style)beginning+=`class="${values.style}"`;if(values.id){beginning+=`class="${values.id}"`;beginning+=`>`;}if (values.value){middle=values.value;result = beginning;}if (middle)result+=middle;if (values.type === "double"){end = `</${values.element}>`;result+=end;}return result;}
 
 function reSymbol(input,oldString1,oldString2,newString1,newString2){
-var regex = new RegExp(`${oldString1}\s*(.*?)\s*${oldString2}`, "g");
+  var regex = new RegExp(`${oldString1}\s*(.*?)\s*${oldString2}`, "g");
 
-oldString1 = oldString1||"```"; oldString2 = oldString2||"```";
-newString1 = newString1||"^^"; newString2 = newString2||"^^";
-var matches = [],
-	matchesResult = {},
-  m;
-    
-while (m = regex.exec(input)) {
-  matches.push(m[0]);
-}
+  oldString1 = oldString1||"```"; oldString2 = oldString2||"```";
+  newString1 = newString1||"^^"; newString2 = newString2||"^^";
+  var matches = [],
+    matchesResult = {},
+    m;
 
-matches.forEach((e)=>{
-var e1 = e,
-	e2 = e;
-e2 = e2.replace("```",newString1);
-e2 = e2.replace("```",newString2);
-matchesResult[e1] = e2;
-})
+  while (m = regex.exec(input)) {
+    matches.push(m[0]);
+  }
 
-Object.keys(matchesResult).forEach((e)=>{
-input=input.replace(e,matchesResult[e])
-})
+  matches.forEach((e)=>{
+  var e1 = e,
+    e2 = e;
+  e2 = e2.replace("```",newString1);
+  e2 = e2.replace("```",newString2);
+  matchesResult[e1] = e2;
+  })
 
-return input;
+  Object.keys(matchesResult).forEach((e)=>{
+  input=input.replace(e,matchesResult[e])
+  })
+
+  return input;
 }
 
 function mention(input,user){

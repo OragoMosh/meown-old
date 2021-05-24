@@ -366,9 +366,14 @@ if (options){
   if (options.color){newMessage.style.color = options.color}
   if (options.color_values){newMessage.style.color = options.color}
 }
-
+        if ( msg.includes("!i") ){ var element = document.createELement("img"); element.setAttribute("style","width:20%;height:20%;");element.setAttribute("src",reSymbol(msg,"!i","i!",``,``)); message.div.append(element);}
+      if ( msg.includes("```") ){ var element = document.createELement("div"); element.setAttribute("class","simple-container simple-card simple-round simple-margin simple-theme-border");element.setAttribute("src",reSymbol(msg,"```","```",``,``)); message.div.appendChild(element);}
+      if ( msg.includes("@") ){ msg = mention(msg); }
+      if ( msg.includes("\\n") ){ msg = msg.replace(/\\n/g,"<br>"); }
+      if ( msg.includes("\\b") ){ msg = msg.replace(/\\b/g,"&emsp;"); }
   if (!who){newMessage.innerText = `${msg}`;}else{newMessage.innerText = `${who}: ${msg}`;}
-  var scrolling=false;if (message.div.scrollHeight-message.div.scrollTop <= message.div.offsetHeight){scrolling=true;}
+  var scrolling=false;
+  if (message.div.scrollHeight-message.div.scrollTop <= message.div.offsetHeight){scrolling=true;}
 message.div.appendChild(newMessage);
   if (scrolling){scrollToBottom(message.div)}
 }//End of "addMessage(who,message_value){}"
@@ -441,6 +446,26 @@ message.div.appendChild(newMessage);
     return COLORS[randIndex];
   }
 
+  function countInArray(array, what) {
+    var count = 0;
+    for (var i = 0; i < array.length; i++)
+    	if (array[i] === what) count++;
+    return count;
+}
+
+  function updateRoomList(users){
+    var userElement = document.getElementById("users");
+    userElement.innerHTML = "";
+    if (countInArray(users, username) > 1){
+      setTimeout(function(){ window.location.replace("/?popup=This%20account%20is%20already%20connected!"); }, 500);
+    }
+    if (userElement){
+      users.forEach( (e,i) => {
+        userElement.innerHTML+= `<li class="simple-button simple-theme-button" onclick="window.location.replace('/u/${e}');" title="Visit @${e}\'s page!">${i}: ${e}</li> <br>`;
+      })
+      
+    }
+  }
   // Keyboard events
 
   $window.keydown(function (event) {
@@ -470,6 +495,7 @@ message.div.appendChild(newMessage);
 
   // Whenever the server emits 'login', log the login message
   socket.on('login', function (data) {
+    updateRoomList(data.users);
     connected = true;
     // Display the welcome message
     var message = '— Welcome to ' + pname+ ' —';
@@ -491,6 +517,7 @@ message.div.appendChild(newMessage);
 
   // Whenever the server emits 'user joined', log it in the chat body
   socket.on('user joined', function (data) {
+    updateRoomList(data.users);
     log(data.username+" "+data.logAction + data.logLocation + data.roomName, {
       userConnEvent: true,
       username: data.username
@@ -501,6 +528,7 @@ message.div.appendChild(newMessage);
 
   // Whenever the server emits 'user left', log it in the chat body
   socket.on('user left', function (data) {
+    updateRoomList(data.users);
     log(data.username+" "+data.logAction + data.logLocation + data.roomName, {
       userConnEvent: true,
       username: data.username
@@ -574,9 +602,10 @@ message.div.appendChild(newMessage);
 
     $('.' + roomClassName).addClass('joined-room');
   });
-
+  
   socket.on('join left result', function (data) {
     // log results.
+    console.log(data.users);
     log(data.username + data.logAction
       + data.logLocation + data.roomName, {});
   });

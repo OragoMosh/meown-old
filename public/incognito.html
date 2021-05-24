@@ -1,0 +1,16 @@
+<script>
+  window.addEventListener("load", async function () {
+    if ('storage' in navigator && 'estimate' in navigator.storage) {
+        const {usage, quota} = await navigator.storage.estimate();
+        alert(`Using ${usage} out of ${quota} bytes.`);
+
+        if(quota < 120000000){
+            alert('Incognito')
+        } else {
+            alert('Not Incognito')
+        }   
+    } else {
+        alert('Can not detect')
+    }
+  });
+</script>

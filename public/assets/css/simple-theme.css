@@ -38,8 +38,10 @@
 .simple-theme-text-1 *{color:var(--13); important}
 .simple-theme-text-2 *{color:var(--14); important}
 
-.simple-theme-input {color:#fff !important; background:var(--6); !important; background-size:100%;}
-.simple-theme-button {color:#fff !important; background:var(--3); !important; background-size:100%;}
+.simple-theme-logo{color:var(--13); !important; background-color:var(--7);filter: brightness(80%); !important;}
+
+.simple-theme-input {color:var(--13) !important; background:var(--6); !important; background-size:100%;}
+.simple-theme-button {color:var(--14) !important; background:var(--3); !important; background-size:100%;}
 
  @keyframes textColor {
 	 0% {color: var(--13);}
@@ -49,8 +51,6 @@
 .simple-theme-text-glow {animation: textColor 10s ease infinite;}
 
 .simple-theme-text-favorite {color:var(--15); !important}
-
-.simple-theme-logo{color:#fff !important; background-color:var(--7);filter: brightness(80%); !important}
 
 .simple-theme-background{background: var(--11);background-attachment: fixed;}
 

@@ -1,42 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
 <head id="header">
+<script>
+  /*window.addEventListener("load", async function () {
+    infoData({title:id})
+  })
+  */
+</script>
 
-  <title>Meown | Users!</title>
-  <meta property="og:title" content="Meown | Users!" />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://meown.ml" />
-  <meta property="og:image" content="https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png?v=1594354728664" />
-  <meta property="og:description" content="A small social media made by one person" />
-  <meta name="theme-color" content="#cb3837">
-  <meta name="twitter:card" content="summary_large_image">
-  <link rel="icon" type="image/png" href="https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie32bfull.png">
-  <link id="favicon" rel="icon" href="https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie32bfull.png" type="image/x-icon">
-  <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="manifest" href="/manifest.json">
-
-  <script>
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("/service-worker.js");
-        navigator.registerProtocolHandler(
-      "web+meown", "https://meown.ml/custom/%s", "Meown"
-    );
-    }
-  </script>
-
-  <meta charset="UTF-8">
-  <meta name="keywords" content="Social media, meown, meown.ml, meown.tk" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <link href="/assets/css/tools.css" rel="stylesheet" >
-  <script src="/tools/functionpack.js"></script>
-  <script src="/assets/js/tools.js"></script>
-  <script src="/assets/js/meown.js"></script>
-  <link rel="stylesheet" href="/assets/css/simple.css">
-  <link rel="stylesheet" href="/assets/css/meown.css">
-  <link rel="stylesheet" href="/assets/css/simple-theme.css">
+<meta charset="UTF-8">
+<meta name="keywords" content="Social media, meown, meown.ml, meown.tk" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="/assets/css/tools.css" rel="stylesheet" >
+<script src="/tools/functionpack.js"></script>
+<script src="/assets/js/tools.js"></script>
+<script src="/assets/js/meown.js"></script>
+<link rel="stylesheet" href="/assets/css/simple.css">
+<link rel="stylesheet" href="/assets/css/meown.css">
+<link rel="stylesheet" href="/assets/css/simple-theme.css">
 </head>
 <style>html, body, h1, h2, h3, h4, h5 {font-family: "Open Sans", sans-serif}</style>
 <body class="simple-theme-background" >
@@ -113,11 +95,11 @@
     status.innerHTML+=`
     <form method="get" action="/u" style="display:inline-block;"><input type="text" name="search" class="simple-theme-l5 simple-theme-border simple-padding" placeholder="Find User" style="width:20vw;"></form>
     <form method="get" action="/c" style="display:inline-block;"><input type="text" name="search" class="simple-theme-l5 simple-theme-border simple-padding" placeholder="Find Community" style="width:20vw;"></form>
-    <a onclick="window.open('','_self').close();" class="simple-button">Close</a>`
+    <a onclick="window.close();" class="simple-button">Close</a>`
     mobileStatus.innerHTML+=`
     <form method="get" action="/u" style="display:inline-block;"><input type="text" name="search" class="simple-theme-l5 simple-theme-border simple-padding" placeholder="Find User" style="width:80vw;"></form>
     <form method="get" action="/c" style="display:inline-block;"><input type="text" name="search" class="simple-theme-l5 simple-theme-border simple-padding" placeholder="Find Community" style="width:80vw;"></form>
-    <a onclick="window.open('','_self').close();" class="simple-bar-item simple-button simple-padding-large">Close</a>`;
+    <a onclick="window.close();" class="simple-bar-item simple-button simple-padding-large">Close</a>`;
 });
   </script>
     </div>
@@ -185,64 +167,7 @@
       </div>
       <br>
       </div>
-      <br>
-      
-      <!-- Accordion -->
-      <div class="simple-card simple-round">
-        <div class="simple-white">
-          <button onclick="javascript:toggleClass(document.getElementById('Demo1'),'simple-show');" class="simple-theme-l1 simple-theme-text-2 simple-button simple-block simple-left-align">
-            <i class="fa fa-shield fa-fw simple-margin-right"></i>
-            Roles
-          </button>
-          <div id="Demo1" class="simple-hide simple-container simple-theme-border">
-            <p>Roles: <span id="myroles"></span></p>
-          </div>
-          <button onclick="javascript:toggleClass(document.getElementById('Demo2'),'simple-show');" class="simple-theme-l1 simple-theme-text-2 simple-button simple-block simple-left-align">
-            <i class="fa fa-heart fa-fw simple-margin-right"></i>
-            Follows
-          </button>
-          <div id="Demo2" class="simple-hide simple-container simple-theme-border">
-            <p>Followers: <span id="followers"></span></p>
-            <p>Following: <span id="following"></span></p>
-            <p>Communities: <span id="communities"></span></p>
-          </div>
-          <script>
-            window.addEventListener("load", async function () {
-           var user = await MeownApi(`user/${id}`).then(res => {return res;});
-           var config = await MeownApi(`config`).then(res => {return res;});
-                var userRoles = user.roles;
-                var myroles = [];
-                if (userRoles.length>0){
-                  userRoles.forEach((role,index)=>{ if (Object.keys(config.role_info).includes(role)) {myroles+= `${config.role_info[role].name}, `;} });
-                }
-                else {myroles = "None";}
-              var followList = followNumber = communityList = communityNumber = "";
 
-                if (typeof user.following !== "undefined") {
-              if (user.following.length - 1 < 0){followList = "No One";}
-              for (followNumber in user.following) {
-                followList += `<span class="simple-tag simple-small simple-theme-l3" onclick="location.replace('/u/${user.following[followNumber]}');">${user.following[followNumber]}</span>`;
-                if (user.following.length - 1 >followNumber&&user.following.length - 1 > 0){followList += `, `;}
-              }
-            }
-
-                if (typeof user.communities !== "undefined") {
-              if (user.communities.length - 1 < 0) {communityList = "None";}
-              for (communityNumber in user.communities) {
-                communityList += `<span class="simple-tag simple-small simple-theme-l3" onclick="location.replace('/c/${user.communities[communityNumber]}');">${user.communities[communityNumber]}</span>`;
-                if (user.communities.length - 1 >communityNumber&&user.communities.length - 1 > 0) {communityList += `, `;}
-              }
-            }
-
-
-                document.getElementById("followers").innerHTML = user?.followers?.length||0;
-                document.getElementById("following").innerHTML = followList;
-                document.getElementById("communities").innerHTML = communityList;
-                document.getElementById("myroles").innerHTML = fixEnd(myroles);
-            })
-          </script>
-        </div>      
-      </div>
       <br>
       
       <!-- Interests --> 
@@ -303,27 +228,100 @@
   </script>
 </div>
   
-    <div id="postList" class="simple-theme-text-1"></div>
+<div class="simple-theme-l5 simple-container simple-card simple-round simple-margin simple-theme-border">
+  <h6 class="simple-opacity">Delete Post</h6>
+  <input type="number" class="simple-round-xxlarge simple-theme-input simple-theme-border simple-padding" id="sentnumDelete" placeholder="Post number" min="0" max="1000" style="width:200px;" required>
+  <button class="simple-button simple-round-xlarge simple-theme-button" onclick="deletePost();"><i class="fa fa-pencil"></i> Send</button>
+  <script>
+    function deletePost(){
+      var details = {
+        method: 'delete-post',
+        id:id,
+        category:category,
+        number:document.getElementById("sentnumDelete").value,
+      }
+      post('/edit', details).then((e)=>{location.reload();})
+    }
+  </script>
+</div>
+    
+<div class="simple-theme-l5 simple-container simple-card simple-round simple-margin simple-theme-border staff">
+      <h6 class="simple-opacity">New Command</h6>
+        <input type="text" id="sentCommand" class="simple-round-xxlarge simple-theme-input simple-theme-border simple-padding" placeholder="Command">
+        <button class="simple-button simple-round-xlarge simple-theme-button" onclick="commandPost();"><i class="fa fa-pencil"></i> Send</button>
+  <script>
+    function commandPost(){
+      var details = {
+        method: 'new-post',
+        id:id,
+        post:document.getElementById("sentCommand").value,
+      }
+      post('/command', details).then((e)=>{location.reload();})
+    }
+  </script>
+</div>  
       
-    <div onclick="loadMorePosts();" id="loadPosts" class="simple-theme-l5 simple-container simple-card simple-round simple-margin simple-theme-border simple-theme-text-1">
-      <span>Load More</span>
-      <script>
-      async function loadMorePosts(){
-        
-        if (postIndex <=0){
-          document.getElementById("loadPosts").style.display = "none";
-          return popup(`There are no more posts left to load!`);
-        }
-        var ii = 0;
-        while ( ii < max( postIndex, 5 ) ){
-           addPost(await posts[ postIndex ] , [ postIndex ]);
-           postIndex--
-          if ( postIndex == 0 ){document.getElementById("loadPosts").style.display = "none";}
-           ii++
+<div class="simple-theme-l5 simple-container simple-card simple-round simple-margin simple-theme-border staff">
+  <h6 class="simple-opacity">Edit Account</h6>
+        <input type="text" id="sentNewPass" placeholder="New password (optional)" style="width:100%;" class="simple-round-xxlarge simple-theme-input simple-theme-border simple-padding"><br>
+        <input type="text" id="sentNewDesc" placeholder="Change description (optional)" style="width:100%;" class="simple-round-xxlarge simple-theme-input simple-theme-border simple-padding"><br>
+        <input type="text" id="sentNewAvatar" placeholder="Change avatar (optional)" style="width:100%;" class="simple-round-xxlarge simple-theme-input simple-theme-border simple-padding"><br>
+        <input type="text" id="sentNewBackground" placeholder="Change Background (optional, moderators & developers only)" style="width:100%;" class="simple-round-xxlarge simple-theme-input simple-theme-border simple-padding staff" readonly><br class="staff">
+        <input type="text" id="sentNewBanner" placeholder="Change Banner (optional, moderators & developers only)" style="width:100%;" class="simple-round-xxlarge simple-theme-input simple-theme-border simple-padding staff" readonly><br class="staff">
+        <button class="simple-button simple-round-xlarge simple-theme-button" onclick="editUser();"><i class="fa fa-pencil"></i> Send</button>
+  <script>
+    function editUser(){
+      var details = {
+        method: 'details',
+        id:id,
+        sentnewdetails: {
+          pass: document.getElementById("sentNewPass").value,
+          desc:document.getElementById("sentNewDesc").value,
+          avatar:document.getElementById("sentNewAvatar").value,
+          background:document.getElementById("sentNewBackground").value,
+          banner:document.getElementById("sentNewBanner").value,
         }
       }
-      </script>
-    </div>
+      post('/edit', details).then((e)=>{location.reload();})
+    }
+  </script>
+</div>  
+      
+<div class="simple-theme-l5 simple-container simple-card simple-round simple-margin simple-theme-border staff">
+      <h6 class="simple-opacity">Redeem Code</h6>
+        <input type="text" id="sentCode" class="simple-round-xxlarge simple-theme-input simple-theme-border simple-padding" placeholder="Code">
+        <button class="simple-button simple-round-xlarge simple-theme-button" onclick="redeemCode();"><i class="fa fa-pencil"></i> Send</button>
+  <script>
+    function redeemCode(){
+      var details = {
+        method: 'redeem',
+        id:id,
+        code:document.getElementById("sentCode").value,
+      }
+      post('/edit', details).then((e)=>{location.reload();})
+    }
+  </script>
+</div>  
+  
+<div class="simple-theme-l5 simple-container simple-card simple-round simple-margin simple-theme-border staff">
+      <h6 class="simple-opacity">New Community</h6>
+        <input type="text" id="sentdCommunity" class="simple-round-xxlarge simple-theme-input simple-theme-border simple-padding" placeholder="Name">
+  <input type="text" id="sentDescription" class="simple-round-xxlarge simple-theme-input simple-theme-border simple-padding" placeholder="Description">
+        <button class="simple-button simple-round-xlarge simple-theme-button" onclick="newCommunity();"><i class="fa fa-pencil"></i> Send</button>
+  <script>
+    function newCommunity(){
+      var details = {
+        method: 'new-community',
+        id:id,
+        community:document.getElementById("sentCommunity").value,
+        desc:document.getElementById("sentDescription").value,
+      }
+      post('/edit', details).then((e)=>{location.reload();})
+    }
+  </script>
+</div>
+      
+
     <!-- End Middle Column -->
     </div>
     
@@ -356,91 +354,19 @@
   </div>
 <!-- End Page Container -->
 </div>
+  </body>
+</html>
 <br>
 <input id="cb" type="text" hidden>
 <script>
   var me = getCookie("saved-username")||"guest";
-  var id = "<%- values.id %>";
+  var id = me/* "orago" */;
   var category = "user";
   var connectType = "follow";
   var posts = [],
       postsLength = 0,
       postsProgress = 0;
-  
-var video,
-    togglePipButton,
-    pipWindow;
-  
-  
-  function loadVideo(url){
-    var videoEl = makeVideo(url);
-    videoEl.setAttribute("id", "mainVideo");
-    menu({
-      title:`Video Loaded!`,
-      body:videoEl.outerHTML+`
-      <button onclick="toggleVideo(this);" toggled="true" class="simple-round-xxlarge simple-button simple-theme-button">Pause</button>
-      <button onclick="toggleButtons(this);" class="simple-round-xxlarge simple-button simple-theme-button">Buttons</button>
-      <button id="videoPIP" class="simple-round-xxlarge simple-button simple-theme-button">Toggle PIP</button>
-      `
-    });
-    video = document.getElementById("mainVideo");
-    togglePipButton = document.getElementById("videoPIP");
-    
-    togglePipButton.addEventListener('click', async function(event) {
-  console.log('Toggling Picture-in-Picture...');
-  togglePipButton.disabled = true;
-  try {
-    if (video !== document.pictureInPictureElement) await video.requestPictureInPicture();
-    else await document.exitPictureInPicture();
-  }
-  catch(error) { console.log(`> Argh! ${error}`); }
-  finally { togglePipButton.disabled = false; }
-});
 
-video.addEventListener('enterpictureinpicture', function(event) {
-  console.log(`> Window size is ${pipWindow.width}x${pipWindow.height}`); console.log('> Video entered Picture-in-Picture');
-  pipWindow = event.pictureInPictureWindow;
-  pipWindow.addEventListener('resize', onPipWindowResize);
-});
-
-video.addEventListener('leavepictureinpicture', function(event) {
-  console.log('> Video left Picture-in-Picture');
-  pipWindow.removeEventListener('resize', onPipWindowResize);
-});
-    
-if ('pictureInPictureEnabled' in document) {
-  setPipButton();
-  video.addEventListener('loadedmetadata', setPipButton);
-  video.addEventListener('emptied', setPipButton);
-} else {
-  togglePipButton.hidden = true;
-}
-    setTimeout(function(){ 
-      video.play();
-    }, 500);
-  }
-  
-  function onPipWindowResize(event) {
-    console.log(`> Window size changed to ${pipWindow.width}x${pipWindow.height}`);
-  }
-
-  function setPipButton() {
-    togglePipButton.disabled = (video.readyState === 0) || !document.pictureInPictureEnabled || video.disablePictureInPicture;
-  }
-  
-  
-    function toggleVideo(El){
-      if ( !El || !El.getAttribute("toggled") ) return
-      var status = El.getAttribute("toggled") == "true";
-      El.innerHTML = status ? "Play" : "Pause";
-      El.setAttribute("toggled", status ? "false" : "true");
-      status ? video.pause() : video.play();
-    }
-  
-    function toggleButtons(El){
-      video.controls = !video.controls;
-    }
-  
   async function MeownApi(input){
     var o=o||"";
     var r = await fetch(`/api/${input}`).then(l => l.json()).then(l => l.response)
@@ -466,58 +392,6 @@ if ('pictureInPictureEnabled' in document) {
   }
 }
   
-  
-MeownApi(`${category}/${id}?includeposts=true`).then(async data => {
-      var postList = document.getElementById("postList"),
-          sendPost = document.getElementById("sendPost");
-          posts = data.posts||[];
-          postIndex = data.posts.length-1||0;
-  
-      if (sendPost&&id==me){sendPost.className = sendPost.className.replace("simple-hide", "");}
-  
-    while (postIndex > posts.length-max(posts.length+1,5)) {
-      await addPost(data.posts[postIndex],[postIndex]);
-      forEvery(postIndex,15,`loadAd();`);
-      postIndex--;
-    }
-});
-  
-  function loadAd(){
-          var advert = `Go check out my @orago 's page!`
-    var adValues = {
-      "title":"Sponsored Message",
-      "body":`This is a advertisement ${advert}`,
-      "likes":[],  
-      "comments":[],       
-      "index":3,           
-      "id":"meown"
-    }
-    addPost(adValues,"Sponsored");
-  }
-    async function addPost(values,index){
-      values = values || {}
-      values.index=index;
-      values.category == category;
-      values.id=values.id||id;
-      
-      values.body = changeSymbols(values.body);
-      
-      var postTemplate = `
-      <div class="simple-theme-l5 simple-theme-border simple-theme-text-1 simple-container simple-card simple-round simple-margin" id="post-3"><br>
-        <img src="${await MeownApi(`/user/${values.id}/`).then(function(response){return response.avatar})}" alt="User_Avatar" class="simple-circle" style="width:90px;height:90px"> 
-        <button class="simple-right simple-button simple-theme-button simple-round-xxlarge" style="" onclick="postMenu(${JSON.stringify(values).replace(/\"/g,"\'")})"><i class="fa fa-bars"></i></button>
-        <span class="simple-right simple-opacity">
-        #${index} 
-        <i class="fa fa-heart"></i>:${values?.likes?.length?values.likes:0||0}</span>&nbsp;
-
-        <br><b style="font-size: 2em;color:#e3c522;">&nbsp;${values.id||"unknown"}: </b>
-        <a style="font-size: 1.5em;">${values.title}</a><br>
-        <hr class="simple-clear">
-        <p>${values.body}</p>
-      </div>
-      `;
-        postList.innerHTML+=postTemplate;
-    }
 // Accordion
 function postMenu(values){
   console.log(values)
@@ -525,7 +399,7 @@ function postMenu(values){
   <form method="post" action="/edit" style="display:inline-block;">
   <input type="hidden" name="method" value="delete-post"> 
   <input type="hidden" name="id" value="${values.id}"> 
-  <input type="hidden" name="number" value="${values.index}"> 
+  <input type="hidden" name="sentnum" value="${values.index}"> 
   <input type="hidden" name="category" value="${category||"user"}">
   <button type="submit">Delete Post</button>
   </form>
@@ -547,12 +421,7 @@ function menu(values){
   overlay.title.innerHTML=values.title||"";
   overlay.body.innerHTML=values.body||"";
 }
-  function closeMenu(){
-    if (!!document.getElementById("mainVideo")){
-      document.getElementById("mainVideo").pause();
-    }
-    document.getElementById('overlay').style.display='none';
-  }
+  
 function accordion(id) {
   var x = document.getElementById(id);
   if (x.className.indexOf("simple-show") == -1) {
@@ -585,7 +454,7 @@ setTimeout(function(){ new_date() }, 1300);
 <div id="overlay" class="simple-modal simple-animate-opacity">
   <div class="simple-modal-content simple-round simple-card simple-theme-l5 simple-theme-border simple-theme-text-1" style="padding:32px">
     <div class="simple-container">
-      <i onclick="closeMenu();" id="closeOverlay" class="fa fa-remove simple-xlarge simple-round-xxlarge simple-button simple-theme-button simple-right"></i>
+      <i onclick="document.getElementById('overlay').style.display='none'" class="fa fa-remove simple-xlarge simple-round-xxlarge simple-button simple-theme-button simple-right"></i>
       <h2 class="simple-wide" id="overlayTitle">Null Title</h2>
       <p id="overlayBody">Null Body</p>
     </div>
