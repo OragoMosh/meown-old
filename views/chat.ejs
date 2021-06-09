@@ -1,18 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head id="header">
-<meta charset="UTF-8">
-<meta name="keywords" content="Social media, meown, meown.ml, meown.tk" />
-<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Open+Sans'>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<script src="/assets/js/tools.js" defer></script>
-<link href="/assets/css/tools.css" rel="stylesheet">
-<link href="/assets/css/simple.css" rel="stylesheet">
-<link href="/assets/css/meown.css" rel="stylesheet">
-<link href="/assets/css/simple-theme.css" rel="stylesheet">
-  
-  
-  <script data-ad-client="ca-pub-9294595868006747" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+  <meta charset="UTF-8">
+  <meta name="keywords" content="Social media, meown, meown.ml, meown.tk" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="/assets/js/tools.js" defer></script>
+  <script src="/assets/js/meown.js"></script>
+  <script src="/tools/functionpack.js"></script>
+  <link href="/assets/css/tools.css" rel="stylesheet">
+  <link href="/assets/css/simple.css" rel="stylesheet">
+  <link href="/assets/css/meown.css" rel="stylesheet">
+  <link href="/assets/css/simple-theme.css" rel="stylesheet">
 </head>
 <style>html, body, h1, h2, h3, h4, h5 {font-family: "Open Sans", sans-serif}</style>
 <body class="simple-theme-background">
@@ -27,7 +26,7 @@
     <i class="fa fa-home simple-margin-right"></i>Meown
    </a>
    <div class="simple-bar-item simple-button simple-hide-small simple-right simple-padding-large simple-hover-white simple-dropdown-hover" title="My Account" >
-    <div id="Status" class="simple-round simple-theme-d2 simple-dropdown-content simple-bar-block simple-theme-border simple-round" style="width:300px;right:0;top:78px;">
+    <div id="Status" class="simple-round simple-theme-d2 simple-dropdown-content simple-bar-block simple-round" style="width:300px;right:0;top:78px;">
      
     </div>
     <img onclick="location.replace('/u')" class="simple-circle simple-theme-border " style="height:30px;width:30px" alt="Avatar" id="myAvatar">
@@ -71,9 +70,9 @@
     status.innerHTML+=`
     <form method="get" action="/u" style="display:inline-block;"><input type="text" name="search" class="simple-theme-l5 simple-theme-border simple-padding" placeholder="Find User" style="width:20vw;"></form>
     <form method="get" action="/c" style="display:inline-block;"><input type="text" name="search" class="simple-theme-l5 simple-theme-border simple-padding" placeholder="Find Community" style="width:20vw;"></form>
-    <a onclick="window.opener=null;window.open('','_self');window.close();window.history.go(-1);" class="simple-bar-item simple-button">Close</a>`
+    <a onclick="window.open('','_self').close();" class="simple-bar-item simple-button">Close</a>`
     mobileStatus.innerHTML+=`
-    <a onclick="window.close();" class="simple-bar-item simple-button simple-padding-large">Close</a>`;
+    <a onclick="window.open('','_self').close();" class="simple-bar-item simple-button simple-padding-large">Close</a>`;
 });
   </script>
 </div>

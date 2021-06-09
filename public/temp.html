@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head id="header">
+  <meta charset="UTF-8">
+  <meta name="keywords" content="Social media, meown, meown.ml, meown.tk" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link href="/assets/css/tools.css" rel="stylesheet" >
+  <script src="/tools/functionpack.js"></script>
+  <script src="/assets/js/tools.js"></script>
+  <script src="/assets/js/meown.js"></script>
+  <link rel="stylesheet" href="/assets/css/simple.css">
+  <link rel="stylesheet" href="/assets/css/meown.css">
+  <link rel="stylesheet" href="/assets/css/simple-theme.css">
+</head>
+<style>html, body, h1, h2, h3, h4, h5 {font-family: "Open Sans", sans-serif}</style>
+<body class="simple-theme-background" >
+<!-- Navbar -->
+  
+<div class="simple-navbar">
+  
+ <div class="simple-bar simple-theme-d2 simple-theme-border simple-left-align simple-large simple-round-xlarge">
+  <br>
+  <a class="simple-bar-item simple-hide-medium simple-hide-large simple-right simple-padding-large simple-hover-white simple-theme-d2 simple-round simple-mobile-button" >
+    <i class="fa fa-bars"></i>
+   </a>
+   
+   <a href="../" class="simple-bar-item simple-button simple-padding-16 simple-theme-logo simple-round">
+    <i class="fa fa-home simple-margin-right"></i>
+    Meown
+   </a>
+   
+      <a id="nav">
+   
+   </a>
+   
+   <script>
+     var connect = {
+       "type":"follow",
+       "users":"following",
+       "icon":"heart",
+       "text":function (){return this.type}
+     }
+     window.addEventListener("load", async function () {
+       connect.text = connect.text();
+       
+       if(
+         ( await MeownApi(`${category}/${id}`).then((res)=>{
+               return res[connect.users];
+          }) ).includes(me)
+         ){
+         connect.icon = "heartbeat";
+         connect.text = `Un${connect.text}`;
+       }
+
+       if (id !== me)
+       document.getElementById("nav").innerHTML +=
+       `<a href="/connect/${connect.type}/${id}" class="simple-theme-text-favorite simple-bar-item simple-button simple-hide-small simple-padding-large simple-hover-white" title="${connect.text} @${id}"><i class="fa fa-${connect.icon}"></i></a>`;
+     });
+   </script>
+   
+   <div class="simple-bar-item simple-button simple-hide-small simple-right simple-padding-large simple-hover-white simple-dropdown-hover" title="My Account" >
+    <div id="Status" class="simple-round-xlarge simple-theme-d2 simple-dropdown-content simple-bar-block simple-round" style="width:300px;right:0;top:78px;">
+       <script>
+    window.addEventListener("load", function () {
+    var mobileStatus = document.getElementById("mobileStatus"),
+        status = document.getElementById("Status"),
+        me = getCookie("saved-username")||false;
+      
+    if (me){
+      status.innerHTML+=`
+      <a href="/u" class="simple-bar-item simple-button">My Page</a>
+      <a href="/dashboard" class="simple-bar-item simple-button">Dashboard</a>
+      <form method="get" action="/logout"><button type="submit" class="simple-bar-item simple-button">Logout</button></form>`;
+      mobileStatus.innerHTML+=`
+      <a href="/u" class="simple-bar-item simple-button simple-padding-large">My Page</a>
+      <a href="/dashboard" class="simple-bar-item simple-button simple-padding-large">Dashboard</a>`;
+    }
+    else{
+      status.innerHTML+=`
+      <a href="/login" class="simple-bar-item simple-button">Login</a>
+      <a href="/register" class="simple-bar-item simple-button">Register</a>`;
+      mobileStatus.innerHTML+=`
+      <a href="/login" class="simple-bar-item simple-button simple-padding-large">Login</a>
+      <a href="/register" class="simple-bar-item simple-button simple-padding-large">Register</a>`;
+    }
+      
+    status.innerHTML+=`
+    <form method="get" action="/u" style="display:inline-block;"><input type="text" name="search" class="simple-theme-l5 simple-theme-border simple-padding" placeholder="Find User" style="width:20vw;"></form>
+    <form method="get" action="/c" style="display:inline-block;"><input type="text" name="search" class="simple-theme-l5 simple-theme-border simple-padding" placeholder="Find Community" style="width:20vw;"></form>
+    <a onclick="window.close();" class="simple-button">Close</a>`
+    mobileStatus.innerHTML+=`
+    <form method="get" action="/u" style="display:inline-block;"><input type="text" name="search" class="simple-theme-l5 simple-theme-border simple-padding" placeholder="Find User" style="width:80vw;"></form>
+    <form method="get" action="/c" style="display:inline-block;"><input type="text" name="search" class="simple-theme-l5 simple-theme-border simple-padding" placeholder="Find Community" style="width:80vw;"></form>
+    <a onclick="window.close();" class="simple-bar-item simple-button simple-padding-large">Close</a>`;
+});
+  </script>
+    </div>
+    <img onclick="location.replace('/u')" class="simple-circle simple-theme-border " style="height:30px;width:30px" alt="Avatar" id="myAvatar">
+     <script>
+       window.addEventListener("load", async function () {
+         document.getElementById("myAvatar").setAttribute("src", await MeownApi(`user/${getCookie("saved-username")||"guest"}`).then((res)=>{
+           return res.avatar;
+         })||"");
+      });
+     </script>
+   </div>
+   <!-- Navbar on small screens -->
+  <div class="simple-bar-block simple-theme-d2 simple-hide-large simple-hide-medium simple-large simple-mobile-options">
+  <span id="mobileStatus"></span>
+  </div>
+   
+ </div>
+</div>
+
+
+<!-- Page Container -->
+<div class="simple-container simple-content" style="max-width:1400px;margin-top:80px">    
+  <!-- The Grid -->
+  <div class="simple-row">
+    <!-- Left Column -->
+    <div class="simple-col m3 simple-theme-text-1">
+      <!-- Profile -->
+      <!--<div class="simple-card simple-round simple-white">-->
+      <div id="profileBackground" class="simple-theme-l5 simple-card simple-round simple-theme-border">
+      <script>window.addEventListener("load", async function() {document.getElementById("profileBackground").setAttribute("style",await MeownApi(`${category}/${id}`).then(res => {return ` background: url(${res.background||""}) no-repeat 0px 0px/100% 100%`;}))});</script>
+      <div class="simple-container"><br> 
+      <div class="simple-card simple-round" style="background-image: linear-gradient(45deg, rgba(255,255,255,0.3), rgba(255,255,255,0.3) )">
+        <div class="simple-container">
+          <h4 class="simple-center" id="profileName">
+           Null
+           <script>window.addEventListener("load", async function () {document.getElementById("profileName").innerHTML=id;})</script>
+          </h4>
+          
+  <div class="simple-meown-profile-container">
+    <img id="searchAvatar" class="simple-circle simple-meown-profile-avatar" alt="Avatar">
+    <div id="uploadAvatar" class="simple-circle simple-meown-profile-avatar-overlay">Change avatar</div>
+          <script>
+       window.addEventListener("load", async function () {
+         document.getElementById("searchAvatar").setAttribute("src", await MeownApi(`${category}/${id||"guest"}`).then((res)=>{
+           return res.avatar;
+         })||"");
+         if (id===me){
+          mouseOver({
+            "object":document.getElementById("uploadAvatar"),
+            "true":`document.getElementById("uploadAvatar").style.opacity = 1;`,
+            "false":`document.getElementById("uploadAvatar").style.opacity = 0;`
+          });
+          document.getElementById("uploadAvatar").setAttribute("onclick",`
+          (function() {var u = prompt('Change avatar url? (Click cancel to not change the url)');if (!u)return;post('/edit', {method: 'details',details: {avatar:u} }).then((e)=>{location.reload();});})()
+          `);
+         };
+      });
+     </script>
+  </div>
+
+  <hr>
+        </div>
+      </div>
+      </div>
+      <br>
+      </div>
+
+      <br>
+      
+      <!-- Interests --> 
+      <div class="simple-theme-l5 simple-theme-border simple-card simple-round simple-hide-small">
+        <div class="simple-container">
+          <p>Interests</p>
+          <p></p>
+        </div>
+      </div>
+      <br>
+      
+      <!-- Alert Box -->
+      <div class="simple-theme-l4 simple-container simple-display-container simple-round simple-theme-border simple-margin-bottom simple-hide-small">
+        <span onclick="this.parentElement.style.display='none'" class="simple-button simple-display-topright simple-round" style="filter: brightness(90%);">
+          <i class="fa fa-remove"></i>
+        </span>
+        <p><strong>Hello!</strong></p>
+        <p>This is a notification box which currently has no use :p</p>
+      </div>
+    
+    <!-- End Left Column -->
+    </div>
+    
+    <!-- Middle Column -->
+    <div class="simple-col m7 simple-theme-text-1">
+      <div class="simple-container simple-card simple-round simple-margin simple-theme-border" id="myBanner">
+             <script>
+       window.addEventListener("load", async function () {
+         var banner = document.getElementById("myBanner");
+         banner.setAttribute("style",` background: url('${await MeownApi(`${category}/${id}`).then((res)=>{return res.banner;})||""}'); background-size: 100% 100%;`);
+      });
+     </script>
+        
+<div class="simple-container simple-card simple-round simple-margin simple-theme-border" style="background-image: linear-gradient(45deg, rgba(255,255,255,0.3), rgba(255,255,255,0.3) );">
+        <h4>[About me]</h4><br>
+        <p id="description">"None"</p>
+  <script>window.addEventListener("load", async function () {document.getElementById("description").innerHTML=await MeownApi(`${category}/${id}`).then((res)=>{return res.description||"Error";})});</script>
+        </div>
+      </div>
+      
+      
+<div id="sendPost" class="simple-theme-l5 simple-container simple-card simple-round simple-margin simple-theme-border">
+  <h6 class="simple-opacity">New Post</h6>
+  <input type="text" name="sentposttitle" id="postTitle" class="simple-round-xxlarge simple-theme-input simple-theme-border simple-padding" placeholder="Post Title" required>
+  <input type="text" name="sentpostbody" id="postBody" class="simple-round-xxlarge simple-theme-input simple-theme-border simple-padding" placeholder="Post Body" required><br>
+  <button class="simple-button simple-round-xlarge simple-theme-button" onclick="sendPost();"><i class="fa fa-pencil"></i> Send</button>
+    <script>
+    function sendPost(){
+      var details = {
+        method: 'new-post',
+        id:id,
+        category:category,
+        title:document.getElementById("postTitle").value,
+        body:document.getElementById("postBody").value
+      }
+      post('/edit', details).then((e)=>{location.reload();})
+    }
+  </script>
+</div>
+  
+<div class="simple-theme-l5 simple-container simple-card simple-round simple-margin simple-theme-border">
+  <h6 class="simple-opacity">Delete Post</h6>
+  <input type="number" class="simple-round-xxlarge simple-theme-input simple-theme-border simple-padding" id="sentnumDelete" placeholder="Post number" min="0" max="1000" style="width:200px;" required>
+  <button class="simple-button simple-round-xlarge simple-theme-button" onclick="deletePost();"><i class="fa fa-pencil"></i> Send</button>
+  <script>
+    function deletePost(){
+      var details = {
+        method: 'delete-post',
+        id:id,
+        category:category,
+        number:document.getElementById("sentnumDelete").value,
+      }
+      post('/edit', details).then((e)=>{location.reload();})
+    }
+  </script>
+</div>
+    
+<div class="simple-theme-l5 simple-container simple-card simple-round simple-margin simple-theme-border staff">
+      <h6 class="simple-opacity">New Command</h6>
+        <input type="text" id="sentCommand" class="simple-round-xxlarge simple-theme-input simple-theme-border simple-padding" placeholder="Command">
+        <button class="simple-button simple-round-xlarge simple-theme-button" onclick="commandPost();"><i class="fa fa-pencil"></i> Send</button>
+  <script>
+    function commandPost(){
+      var details = {
+        method: 'new-post',
+        id:id,
+        post:document.getElementById("sentCommand").value,
+      }
+      post('/command', details).then((e)=>{location.reload();})
+    }
+  </script>
+</div>  
+      
+<div class="simple-theme-l5 simple-container simple-card simple-round simple-margin simple-theme-border staff">
+  <h6 class="simple-opacity">Edit Account</h6>
+        <input type="text" id="sentNewPass" placeholder="New password (optional)" style="width:100%;" class="simple-round-xxlarge simple-theme-input simple-theme-border simple-padding"><br>
+        <input type="text" id="sentNewDesc" placeholder="Change description (optional)" style="width:100%;" class="simple-round-xxlarge simple-theme-input simple-theme-border simple-padding"><br>
+        <input type="text" id="sentNewAvatar" placeholder="Change avatar (optional)" style="width:100%;" class="simple-round-xxlarge simple-theme-input simple-theme-border simple-padding"><br>
+        <input type="text" id="sentNewBackground" placeholder="Change Background (optional, moderators & developers only)" style="width:100%;" class="simple-round-xxlarge simple-theme-input simple-theme-border simple-padding staff" readonly><br class="staff">
+        <input type="text" id="sentNewBanner" placeholder="Change Banner (optional, moderators & developers only)" style="width:100%;" class="simple-round-xxlarge simple-theme-input simple-theme-border simple-padding staff" readonly><br class="staff">
+        <button class="simple-button simple-round-xlarge simple-theme-button" onclick="editUser();"><i class="fa fa-pencil"></i> Send</button>
+  <script>
+    function editUser(){
+      var details = {
+        method: 'details',
+        id:id,
+        details: {
+          pass: document.getElementById("sentNewPass").value,
+          desc:document.getElementById("sentNewDesc").value,
+          avatar:document.getElementById("sentNewAvatar").value,
+          background:document.getElementById("sentNewBackground").value,
+          banner:document.getElementById("sentNewBanner").value,
+        }
+      }
+      post('/edit', details).then((e)=>{location.reload();})
+    }
+  </script>
+</div>  
+      
+<div class="simple-theme-l5 simple-container simple-card simple-round simple-margin simple-theme-border staff">
+      <h6 class="simple-opacity">Redeem Code</h6>
+        <input type="text" id="sentCode" class="simple-round-xxlarge simple-theme-input simple-theme-border simple-padding" placeholder="Code">
+        <button class="simple-button simple-round-xlarge simple-theme-button" onclick="redeemCode();"><i class="fa fa-pencil"></i> Send</button>
+  <script>
+    function redeemCode(){
+      var details = {
+        method: 'redeem',
+        id:id,
+        code:document.getElementById("sentCode").value,
+      }
+      post('/edit', details).then((e)=>{location.reload();})
+    }
+  </script>
+</div>  
+  
+<div class="simple-theme-l5 simple-container simple-card simple-round simple-margin simple-theme-border staff">
+      <h6 class="simple-opacity">New Community</h6>
+        <input type="text" id="sentdCommunity" class="simple-round-xxlarge simple-theme-input simple-theme-border simple-padding" placeholder="Name">
+  <input type="text" id="sentDescription" class="simple-round-xxlarge simple-theme-input simple-theme-border simple-padding" placeholder="Description">
+        <button class="simple-button simple-round-xlarge simple-theme-button" onclick="newCommunity();"><i class="fa fa-pencil"></i> Send</button>
+  <script>
+    function newCommunity(){
+      var details = {
+        method: 'new-community',
+        id:id,
+        community:document.getElementById("sentCommunity").value,
+        desc:document.getElementById("sentDescription").value,
+      }
+      post('/edit', details).then((e)=>{location.reload();})
+    }
+  </script>
+</div>
+      
+<div class="simple-theme-l5 simple-container simple-card simple-round simple-margin simple-theme-border staff">
+      <h6 class="simple-opacity">New Community</h6>
+<div class="simple-grid-container">
+  <div class="simple-grid-item">1: <input type="color" value="#ff0000" class="colors"> (Panel Color)</div>
+  <div class="simple-grid-item">2: <input type="color" value="#ff0000" class="colors"> (Notification Box)</div>
+  <div class="simple-grid-item">3: <input type="color" value="#ff0000" class="colors"> (Buttons)</div>
+  <div class="simple-grid-item">4: <input type="color" value="#ff0000" class="colors"> (Disabled)</div>
+  <div class="simple-grid-item">5: <input type="color" value="#ff0000" class="colors"> (Status Buttons)</div>
+  <div class="simple-grid-item">6: <input type="color" value="#ff0000" class="colors"> (Input fields)</div>
+  <div class="simple-grid-item">7: <input type="color" value="#ff0000" class="colors"> (Navigation Bar)</div>
+  <div class="simple-grid-item">8: <input type="color" value="#ff0000" class="colors"> (Card Border)</div>
+  <div class="simple-grid-item">9: <input type="color" value="#ff0000" class="colors"> (Disabled)</div>
+  <div class="simple-grid-item">10: <input type="color" value="#ff0000" class="colors"> (Disabled)</div>
+  <div class="simple-grid-item">11: <input type="color" value="#ff0000" class="colors"> (Background 1)</div>
+  <div class="simple-grid-item">12: <input type="color" value="#ff0000" class="colors"> (Background 2)</div>
+  <div class="simple-grid-item">13: <input type="color" value="#ff0000" class="colors"> (Text 1)</div>
+  <div class="simple-grid-item">14: <input type="color" value="#ff0000" class="colors"> (Text 2)</div>
+  <div class="simple-grid-item">15: <input type="color" value="#ff0000" class="colors"> (Favorite Icon)</div>
+  </div>
+<br><br>
+<button type="button" onclick="color_get()">Load Template Colors</button>
+<button type="button" onclick="color_save()">Save</button>
+<button type="button" onclick="color_load()">Load Existing</button>
+<button type="button" onclick="color_copy()">Copy Colors As Text</button>
+<button type="button" onclick="color_paste()">Paste Colors</button>
+<a id="colors"></a>
+</div>
+      
+
+    <!-- End Middle Column -->
+    </div>
+    
+    <!-- Right Column -->
+    <div class="simple-col m2 simple-theme-text-1">
+      <div class="simple-theme-l5 simple-theme-border simple-card simple-round simple-padding-16 simple-center" id="speec">
+      <p><span type="button" id="microphone" onclick="runSpeechRecognition()"><i class="fa fa-microphone fa-fw simple-margin-right"></i></span><span id="action"></span></p>
+        <div id="output" class="hide"></div>
+      </div><br>
+      
+      <div class="simple-theme-l5 simple-theme-border simple-card simple-round simple-padding-16 simple-center">
+      <p id="time" >Open Time<br>(May cause lag)</p>
+      </div>
+      
+      <br>
+      
+      <div class="simple-theme-l5 simple-theme-border simple-card simple-round simple-padding-16 simple-center">
+      <p onclick="menu({title:'do you really want ads?'})">ADS</p></div>
+      
+      <br>
+      
+      <div class="simple-theme-l5 simple-theme-border simple-card simple-round simple-padding-32 simple-center">
+        <p><i class="fa fa-bug simple-xxlarge" onclick="menu({title:'Reporting Bugs has not been added yet',body:'Sorry about that :p'})"></i><br>Report bugs</p>
+      </div>
+      
+      <br>
+    <!-- End Right Column -->
+    </div>
+  <!-- End Grid -->
+  </div>
+<!-- End Page Container -->
+</div>
+  </body>
+</html>
+<br>
+<input id="cb" type="text" hidden>
+<script>
+  var me = getCookie("saved-username")||"guest";
+  var id = me/* "orago" */;
+  var category = "user";
+  var connectType = "follow";
+  var posts = [],
+      postsLength = 0,
+      postsProgress = 0;
+
+  async function MeownApi(input){
+    var o=o||"";
+    var r = await fetch(`/api/${input}`).then(l => l.json()).then(l => l.response)
+    return r;
+  }
+  
+  
+  
+  function displayNotification() {
+  if (Notification.permission == 'granted') {
+    navigator.serviceWorker.getRegistration().then(function(reg) {
+      var options = {
+        body: 'Here is a notification body!',
+        icon: 'images/example.png',
+        vibrate: [100, 50, 100],
+        data: {
+          dateOfArrival: Date.now(),
+          primaryKey: 1
+        }
+      };
+      reg.showNotification('Hello world!', options);
+    });
+  }
+}
+  
+// Accordion
+function postMenu(values){
+  console.log(values)
+  menu({'type':values.type, 'title':`@${values.id}, Post #${values.index}`,'body':`
+  <form method="post" action="/edit" style="display:inline-block;">
+  <input type="hidden" name="method" value="delete-post"> 
+  <input type="hidden" name="id" value="${values.id}"> 
+  <input type="hidden" name="sentnum" value="${values.index}"> 
+  <input type="hidden" name="category" value="${category||"user"}">
+  <button type="submit">Delete Post</button>
+  </form>
+  <button onclick="copy("https://${location.hostname}/u/${values.id||"unknown"}#post-${values.index};");notification("Link Copied!");">Copy URL <i class="fa fa-link">
+  </i>&nbsp;
+  </button>
+  ${values.likes?`<form method="post" action="/edit" style="display:inline-block;"> <input type="hidden" name="method" value="like"> <input type="hidden" name="type" value="posts"> <input type="hidden" name="sentname" value="${values.id}"> <input type="hidden" name="sentid" value="${values.number}"><button type="submit" onclick="notification("<3!")">Likes: <i class="fa fa-heart" ></i>${values?.likes?.length?values.likes:0||0}</button></form>`:""}`});
+} 
+  
+function menu(values){
+  values = values || {};
+  
+  var overlay = {
+    main:document.getElementById('overlay'),
+    title:document.getElementById('overlayTitle'),
+    body:document.getElementById('overlayBody')
+  }
+  overlay.main.style.display='block';
+  overlay.title.innerHTML=values.title||"";
+  overlay.body.innerHTML=values.body||"";
+}
+  
+function accordion(id) {
+  var x = document.getElementById(id);
+  if (x.className.indexOf("simple-show") == -1) {
+    x.className += " simple-show";
+  } else { 
+    x.className = x.className.replace(" simple-show", "");
+  }
+}
+// Used to toggle the menu on smaller screens when clicking on the menu button
+function openNav() {
+  var x = document.getElementById("navDemo");
+  if (x.className.indexOf("simple-show") == -1) {
+    x.className += " simple-show";
+  } else { 
+    x.className = x.className.replace(" simple-show", "");
+  }
+}
+</script>
+<div id="assets"></div><!--Loads the extra files that aren't written in the document.-->
+<script>
+  window.onload = new_date();
+function new_date(){
+var time = new Date().toString()
+time=time.split(" ")
+  time = `${time[0]} ${time[1]} ${time[2]} ${time[3]}<br>${time[4]}`
+document.getElementById("time").innerHTML = `<p>Time:</p>${time}`;
+setTimeout(function(){ new_date() }, 1300);
+}
+</script>
+<div id="overlay" class="simple-modal simple-animate-opacity">
+  <div class="simple-modal-content simple-round simple-card simple-theme-l5 simple-theme-border simple-theme-text-1" style="padding:32px">
+    <div class="simple-container">
+      <i onclick="document.getElementById('overlay').style.display='none'" class="fa fa-remove simple-xlarge simple-round-xxlarge simple-button simple-theme-button simple-right"></i>
+      <h2 class="simple-wide" id="overlayTitle">Null Title</h2>
+      <p id="overlayBody">Null Body</p>
+    </div>
+  </div>
+</div>

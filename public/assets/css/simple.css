@@ -1,5 +1,44 @@
 /* SIMPLE.CSS 4.14 November 2020 by Jan Egil and Borge Refsnes */
 
+
+
+/* Google Fonts */
+@import url(https://fonts.googleapis.com/css?family=Anonymous+Pro);
+
+/* Global */
+
+
+/* Animation */
+.simple-typewriter {
+  color: #fff;
+  font-family: monospace;
+   /* Ensures the content is not revealed until the animation */
+  border-right: .15em solid transparent; /* The typwriter cursor */
+  /*white-space: nowrap; /* Keeps the content on a single line */
+  margin: 0 auto; /* Gives that scrolling effect as the typing happens */
+  letter-spacing: .15em; /* Adjust as needed */
+  animation: 
+    typing 2.5s steps(30, end),
+    blink-caret 2.5s steps(30),
+    overflow-delay 2.5s steps(30);
+}
+
+/* The typing effect */
+@keyframes typing {
+  from { width: 0 }
+  to { width: 100% }
+}
+
+@keyframes overflow-delay {
+  from { overflow:hidden; }
+  to { overflow:hidden; }
+}
+/* The typewriter cursor effect */
+@keyframes blink-caret {
+  from, to { border-color: orange }
+  50% { border-color: transparent }
+}
+
 /* Meown */
 .simple-meown-button {
   display: inline-block;

@@ -1,8 +1,22 @@
 window.addEventListener("load", function () {
-  color_load();
+  
   if (document.getElementsByTagName("BODY"))checkHttps();
   loaded();
 });
+
+function loaded(){
+  color_load();
+  if (!document.getElementById("assets")){
+    document.querySelectorAll('body')[0].innerHTML+='<div id="assets">\</div>';loaded();
+  }
+  else if (document.getElementById("notification")===null&&document.getElementById("assets"))
+document.getElementById("assets").innerHTML+= '<div id="popup">\</div>';/*Add popup notification box*/
+//document.getElementById("assets").innerHTML+= '<script onload="check_https()">check_https();function check_https(){if(location.protocol.toString()==="http:"){location.replace(`https://${location.hostname}${location.pathname}`);}}</script>'
+
+  if (params.get('popup')==null) popup('Page Loaded!')
+  else popup(params.get('popup'));
+  document.getElementById("popup").style.backgroundColor = "#333"
+}
 
 function checkHttps(){if(location.protocol.toString()==="http:") location.replace(`https://${location.hostname}${location.pathname}`);}
 
@@ -11,9 +25,7 @@ function reset_colors(){
 /*colors = {"1":"#FFFFFF","2":"#dfe5e8","3":"#becbd2","4":"#9eb1bb","5":"#7d97a5",
           "6":"#57707d","7":"#4d636f","8":"#435761","9":"#3a4b53","10":"#303e45",
           "11":"#303e45","12":"#7d97a5","13":"#000000","14":"#FFFFFF","15":"#ff5252"}*/
-colors = {"1":"#a6a6a6","2":"#dfe5e8","3":"#becbd2","4":"#9eb1bb","5":"#3f4040",
-         "6":"#57707d","7":"#1e1f1f","8":"#435761","9":"#3a4b53","10":"#191a1a",
-         "11":"#141414","12":"#3b3e3f","13":"#000000","14":"#707070","15":"#ff5252"}
+colors = {"1":"#404040","2":"#865050","3":"#dc5555","4":"#45b9f7","5":"#dc5555","6":"#5a5a5a","7":"#cb3837","8":"#464646","9":"#3a4b53","10":"#303e45","11":"#323232","12":"#383838","13":"#a5a5a5","14":"#cfcfcf","15":"#ff5252"}
 }
   function post(url, data) {
     console.log(`Function post - ${url} : ${JSON.stringify(data)}`)
@@ -63,6 +75,13 @@ while (i < color_length) {
 localStorage.setItem('color-palette', JSON.stringify(colors));
 }
   
+function randomString(length) {
+    var result = '',
+    characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    for (var i = length; i > 0; --i) result += characters[Math.floor(Math.random() * characters.length)];
+    return result;
+}
+
 function color_copy(){
   document.getElementById("colors").innerHTML = `<input id="color_values">`;
   document.getElementById("color_values").value = localStorage.getItem('color-palette');
@@ -94,7 +113,9 @@ r.style.setProperty(`--${i}`, loaded_colors[i]);
   i++
   }
 }
-
+function closeTab(){
+  window.open('','_self').close();
+}
 function mouseOver(v){
 var o = v.object,
 	t = v.true,
@@ -234,6 +255,43 @@ async function share(values){
   }
 }
 
+  function makeVideo(url){
+    var result = document.createElement("video"),
+        sources = "";
+    
+    result.setAttribute("style", "width:100%;height:300px;");
+    
+    if ( url.includes(".ogg") || url.endsWith(".ogg") ) sources+=`\n<source src="${url}" type="video/ogg">`
+    sources+=`\n<source src="${url}" type="video/mp4">`;
+    
+    result.innerHTML = `
+      ${sources}
+      Your browser does not support the video tag.
+    `;
+    
+    return result;
+  }
+
+
+
+/*
+function changeSymbols(input){
+        if ( input.includes("!i") ){ input = reSymbol(input,"!i","i!",`<img style="width:20%;height:20%;" src="`, `">`); }
+      if ( input.includes("```") ){ input = reSymbol(input,"```","```",`<div class=" simple-container simple-card simple-round simple-margin simple-theme-border">`,`</div>`); }
+      if ( input.includes("@") ){ input = mention(input); }
+      if ( input.includes("\\n") ){ input = input.replace(/\\n/g,"<br>"); }
+      if ( input.includes("\\b") ){ input = input.replace(/\\b/g,"&emsp;"); }
+  return input
+}
+*/
+/*
+        if ( values.body.includes("!i") ){ values.body = reSymbol(values.body,"!i","i!",`<img style="width:20%;height:20%;" src="`, `">`); }
+      if ( values.body.includes("```") ){ values.body = reSymbol(values.body,"```","```",`<div class=" simple-container simple-card simple-round simple-margin simple-theme-border">`,`</div>`); }
+      if ( values.body.includes("@") ){ values.body = mention(values.body); }
+      if ( values.body.includes("\\n") ){ values.body = values.body.replace(/\\n/g,"<br>"); }
+      if ( values.body.includes("\\b") ){ values.body = values.body.replace(/\\b/g,"&emsp;"); }
+*/
+
   function copy(txt){
   var cb = document.getElementById("cb");
   cb.value = txt;
@@ -250,18 +308,7 @@ var popup_status = false;
 window.addEventListener("load", function () {/*Start - If website Loaded*/
 
 });
-function loaded(){
-  if (!document.getElementById("assets")){
-    document.querySelectorAll('body')[0].innerHTML+='<div id="assets">\</div>';loaded();
-  }
-  else if (document.getElementById("notification")===null&&document.getElementById("assets"))
-document.getElementById("assets").innerHTML+= '<div id="popup">\</div>';/*Add popup notification box*/
-//document.getElementById("assets").innerHTML+= '<script onload="check_https()">check_https();function check_https(){if(location.protocol.toString()==="http:"){location.replace(`https://${location.hostname}${location.pathname}`);}}</script>'
 
-  if (params.get('popup')==null) popup('Page Loaded!')
-  else popup(params.get('popup'));
-  document.getElementById("popup").style.backgroundColor = "#333"
-}
 
 function popup(text,time) {
   if (time==null) time = 2000;
@@ -308,10 +355,11 @@ function infoData(values) {
 }
 
 function toggleClass(element,className) {
-  var temp = element;
-  temp.className.indexOf(className) == -1?
-  temp.className += ` ${className}`:
-  temp.className = temp.className.replace(` ${className}`, "");
+  if (!element)return console.log(`Missing Element`);
+  if (!className)return console.log(`Missing Class Name`)
+  element.className.indexOf(className) == -1?
+  element.className += ` ${className}`:
+  element.className = element.className.replace(` ${className}`, "");
 }
 
 

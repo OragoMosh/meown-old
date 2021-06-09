@@ -33,7 +33,7 @@ class all_values {
     else text = `Invalid/Empty Input '${values.part}'`;
   //return `Invalid/Empty Input '${part}'<br><button onclick=location.replace('https://'+window.location.hostname+'/${url}')>Back</button>`;
 
-    return `<meta http-equiv="Refresh" content="0; url='${values.url}?notification=${text}${values.query}'"/>`;
+    return `<meta http-equiv="Refresh" content="0; url='${values.url}?popup=${text}${values.query}'"/>`;
   }
   
 }

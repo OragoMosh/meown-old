@@ -1,0 +1,26 @@
+<button onclick="notification('how are you?','hmmm')">Notify me!</button>
+<script>
+function notification(title, body, icon) {
+    var options = {
+      title:title|| "",
+      body: body|| "",
+      icon: icon || "https://cdn.glitch.com/0322d62f-81b5-4f06-9b33-557687636cec%2Fboxie-512px.png"
+  }
+    
+  if (!("Notification" in window)) { return alert("This browser does not support desktop notification"); }
+
+  else if (Notification.permission === "granted") {
+    var notification = new Notification(options.title,options);
+  }
+
+  else if (Notification.permission !== "denied") {
+    Notification.requestPermission().then(function (permission) {
+      if (permission === "granted") {
+        var notification = new Notification(options.title,options);
+      }
+    });
+  }
+
+}
+
+</script>

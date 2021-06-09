@@ -210,7 +210,6 @@ app.get("/manifest", (request, response) => {
       "type": "image/png"
     }
   ]
-  
 }
   return response.json(manifest)
 });
@@ -220,11 +219,11 @@ function render_login(type,me){
   if (!type){type = "login";}
   if (type === "login"){
     if (me){
-  var values ={method:"get",action:"/logout",title:`Logout`,fields:`<br>`,button:"Log Out",body:"You are currently Logged In.<br>Click to log out!",}
+  var values = {method:"get",action:"/logout",title:`Logout`,fields:`<br>`,button:"Log Out",body:"You are currently Logged In.<br>Click to log out!",}
   return values;
   }
   else{
-  var values ={method:"POST",action:"/login",title:`Login`,button:"Log In",body:"Hello!"+`<br><br><a href="/register">Register</a> | <a href="#">Forgot</a> | `,
+  var values = {method:"POST",action:"/login",title:`Login`,button:"Log In",body:"Hello!"+`<br><br><a href="/register">Register</a> | <a href="#">Forgot</a> | `,
   fields:`
   <input type="text" id="username" name="sentname" placeholder="Username" required/>
   <input type="password" id="password" name="sentpass" placeholder="Password" required/>
@@ -333,56 +332,62 @@ if (database.user[me].roles.includes("developer")||database.user[me].roles.inclu
 
 app.post("/edit", urlencodedParser, (request, response) => {
   var method = request.body.method,
-      me = request.cookies["saved-username"];
-  console.log(request.body)
+      me = request.cookies["saved-username"],
+      id = request.body.id || null,
+      password = request.cookies["saved-password"];
+  if (!id){ id = me; }
   if (!method){return response.send(msg("missing", "Method", "/u"));}
   if (me == undefined ||!me){return response.send(msg("include", "Username", "/u"));}
   if (typeof database.user[me] == "undefined"){return response.send(msg("noAccount", "Username"));}
-  if (!bcrypt.compareSync(request.cookies["saved-password"],database.user[me].password)) return response.send(msg("incorrect", "Username", "/dashboard"));
-  
+  if (id !== me && typeof database[request.body.category][id] == "undefined"){return response.send(msg("noAccount", request.body.category));}
+  if ( !bcrypt.compareSync(password, database.user[me].password) ) { console.log("Self Verification Failed"); return response.send(msg("incorrect", "Username", "/dashboard")); }
+  if ( request.body.category == "user" && !bcrypt.compareSync(password, database.user[me].password) ) { console.log("Self Verification Failed"); return response.send(msg("incorrect", "Username", "/dashboard")); }
   
   if (method === "details") {
     var text_add = "";
-    if (request.body.sentnewpass) {
-      database.user[me].password = request.body.sentnewpass;
-      text_add += `New Password: ${request.body.sentnewpass}`;
+    var details = request.body.details;
+    if (!details)return
+    if (details.pass) {
+      database.user[me].password = details.pass;
+      text_add += `New Password: ${details.pass}`;
     }
-    if (request.body.sentnewdesc){database.user[me].description = request.body.sentnewdesc;}
-    if (request.body.sentnewavatar){database.user[me].avatar = request.body.sentnewavatar;}
+    if (details.desc){database.user[me].description = details.desc;}
+    if (details.avatar){database.user[me].avatar = details.avatar;}
     
     if (database.user[me].roles.includes("developer") ||database.user[me].roles.includes("moderator")) {
-      if (request.body.sentnewbackground){database.user[me].background =request.body.sentnewbackground;}
-      if (request.body.sentnewbanner){database.user[me].banner =request.body.sentnewbanner;}
+      if (details.background){database.user[me].background = details.background;}
+      if (details.banner){database.user[me].banner = details.banner;}
     }
     fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
     return response.send(msg("edited", "Username", "/u"));
   } else 
     
     if (method === "new-post") {
-    if (!request.body.sentposttitle) return response.send(msg("include", "Post Title", "/u"));
-    if (!request.body.sentpostbody) return response.send(msg("include", "Post Body", "/u"));
-    if (!request.body.sentpostcategory) return response.send(msg("include", "Post Category", "/u"));
-    if (!request.body.id) return response.send(msg("include", "ID (user / community)", "/u"));
-    if (functionPack.htmlCheck(JSON.stringify(request.body))) {return response.send(msg("custom", "Do not use html!", "/u"));}
+    var req = request.body;
+    if (!req.title){ return response.send(msg("include", "Post Title", "/u")); }
+    if (!req.body){ return response.send(msg("include", "Post Body", "/u")); }
+    if (!req.category){ return response.send(msg("include", "Post Category", "/u")); }
+    if (!req.id){ return response.send(msg("include", "ID (user / community)", "/u")); }
+    if (functionPack.htmlCheck(JSON.stringify(req))) {return response.send(msg("custom", "Do not use html!", "/u"));}
       
     var text = "", 
-        category= request.body.sentpostcategory,
-        id = request.body.id,
+        category= req.category,
         post_type = "user";
       
     if (id !== me&&category==="user"){category="community";id=`null`;}
     //for (let i = 0; i < request.body.sentpostbody.length &&request.body.sentpostbody.includes("!n "); i++) {
     //  request.body.sentpostbody = request.body.sentpostbody.replace("!n ","<br>");
     //}
-    if (database[category][id].posts&&database[category][id].posts.includes(request.body.sentposttitle.toLowerCase())){
+      console.log(`${category} ${id}`)
+     if (database[category][id].posts&&database[category][id].posts.includes(req.title.toLowerCase())){
       return response.send(msg("postExists", null, "/u"));
     }
     if (!database[category][id].posts){
       database[category][id].posts = [];
     }
     var details={
-      title: request.body.sentposttitle,
-      body: request.body.sentpostbody,
+      title: req.title,
+      body: req.body,
       likes: [],
       comments: [],
       date: Date.now,
@@ -396,8 +401,10 @@ app.post("/edit", urlencodedParser, (request, response) => {
   } else 
     
     if (method === "delete-post") {
-      var category = request.body.category, 
-          id = request.body.id,
+      console.log("Deleting")
+      var req = request.body
+      var category = req.category, 
+          id = req.id,
           deleted_post = {
         "user":{
           "title": "DELETED POST",
@@ -411,42 +418,45 @@ app.post("/edit", urlencodedParser, (request, response) => {
           "sender": "meown"
         }
       }
-      if (!category||category!=="user"&&category!=="community"){return response.send(msg("custom", `Error unknown post category! (${category})`, "/u"))}
-      
-    if (!database[category][id].posts[request.body.sentnum]) return response.send(msg("post_does_not_exist", "", "/u"));
-    
+  
+      if (!category||category!=="user"&&category!=="community"){ console.log(`Error unknown post category! (${category})`); return response.send(msg("custom", `Error unknown post category! (${category})`, "/u")); }
+
+    if (!database[category][id].posts[req.number]){ console.log(`"post_does_not_exist"`); return response.send(msg("post_does_not_exist", "", "/u")); }
+
     
     if (category === "user"){
-      if (!permission(1,me)&&id!==me) {response.send(`Not Your Post! ${permission(1,me)} !== ${id!==me}`);}
+      if (!permission(1,me)&&id!==me) { console.log(`Not Your Post! ${permission(1,me)} !== ${id!==me}`); return response.send(`Not Your Post! ${permission(1,me)} !== ${id!==me}`);}
       if (!logs.changes[id]){logs.changes[id] = [];}
-      if (logs.changes[id]){logs.changes[id].push(`Post #${request.body.sentnum} Deleted "${database[category][id].posts[request.body.sentnum]}"`);}
+      if (logs.changes[id]){logs.changes[id].push(`Post #${req.number} Deleted "${database[category][id].posts[req.number]}"`);}
       else if (!logs.changes[id]) {logs.changes[id] = [];}
     }
-      
-      database[category][id].posts.splice(request.body.sentnum,1);
+      database[category][id].posts.splice(req.number,1);
+      console.log("Post Deleted")
     return response.send(msg("post_deleted","Username",`/u/${id}#${database[category][id].posts.length - 1}`));
   } else 
     
     
     if (method === "redeem") {
-    if (typeof config.codes[request.body.sentcode] == "undefined") return response.send(msg("custom", "Invalid Code!", "/dashboard"));
-    if (database.user[me].codes.includes(request.body.sentcode)) return response.send(msg("custom", "Code Exists!", "/dashboard"));
-    if (logs.changes[me]) logs.changes[me].push(`Code Redeemed: "${request.body.sentcode}" for ${config.codes[request.body.sentcode]} ${currency} `);
+      var req = request.body;
+    if (typeof config.codes[req.code] == "undefined") return response.send(msg("custom", "Invalid Code!", "/dashboard"));
+    if (database.user[me].codes.includes(req.code)) return response.send(msg("custom", "Code Exists!", "/dashboard"));
+    if (logs.changes[me]) logs.changes[me].push(`Code Redeemed: "${req.code}" for ${config.codes[req.code]} ${currency} `);
     else if (!logs.changes[me]) logs.changes[me] = [];
       
-    database.user[me].codes.push(request.body.sentcode);
-    database.user[me].coins += config.codes[request.body.sentcode];
+    database.user[me].codes.push(req.code);
+    database.user[me].coins += config.codes[req.code];
     return response.send(msg("custom", "Code Redeemed", "/dashboard"));
   } else 
     
     if (method === "new-post-comment") {
-    if (!request.body.sentcomment){return response.send(msg("include", "Comment Value", "/u"));}
-    if (!request.body.commentid){return response.send(msg("include", "Comment Id", "/u"));}
-    if (database.user[me].posts &&database.user[me].posts[request.body.commentid].comments&&database.user[me].posts[request.body.commentid].comments.includes(request.body.sentcomment.toLowerCase())){return response.send(msg("postExists", null, "/u"));}
+      var req = request.body
+    if (!req.comment){return response.send(msg("include", "Comment Value", "/u"));}
+    if (!req.commentid){return response.send(msg("include", "Comment Id", "/u"));}
+    if (database.user[me].posts &&database.user[me].posts[req.commentid].comments&&database.user[me].posts[req.commentid].comments.includes(req.comment.toLowerCase())){return response.send(msg("postExists", null, "/u"));}
     if (!database.user[me].posts){database.user[me].posts = [];}
-    if (functionPack.htmlCheck(request.body.sentcomment.toLowerCase())) return response.send(msg("custom","No HTML Plez"));
+    if (functionPack.htmlCheck(req.comment.toLowerCase())) return response.send(msg("custom","No HTML Plez"));
       
-    database.user[me].posts[request.body.commentid].comments.push({ username: me, text: request.body.sentcomment });
+    database.user[me].posts[req.commentid].comments.push({ username: me, text: req.comment });
     database.user[me].xp += 0.05;
     fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
     return response.send(msg("postCreated","Username",`/u/${me}#${database.user[me].posts.length - 1}`));
@@ -455,20 +465,21 @@ app.post("/edit", urlencodedParser, (request, response) => {
     
     
     if (method === "new-community") {
-    if (typeof database.community[request.body.sentcommunity.toLowerCase()] !== "undefined") {return response.send(msg("exists", null, "/u"));}
-    if (!request.body.sentcommunity) {return response.send(msg("invalid", "Community", "/register"));}
-    if (!request.body.sentdesc) {return response.send(msg("invalid", "Description", "/register"));}
+      var req = request.body;
+    if (typeof database.community[req.community.toLowerCase()] !== "undefined") {return response.send(msg("exists", null, "/u"));}
+    if (!req.community) {return response.send(msg("invalid", "Community", "/register"));}
+    if (!req.desc) {return response.send(msg("invalid", "Description", "/register"));}
       
-      var community = request.body.sentcommunity.toLowerCase();
+      var community = req.sentcommunity.toLowerCase();
       
     if (typeof database.community[community] === "undefined") {
-      database.user[me].communities.push(request.body.sentcommunity.toLowerCase());
-      database.community[request.body.sentcommunity.toLowerCase()] = {
+      database.user[me].communities.push(req.community.toLowerCase());
+      database.community[req.community.toLowerCase()] = {
         owner: me,
-        preferred: request.body.sentcommunity,
+        preferred: req.community,
         background: "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
         banner: "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
-        description: request.body.sentdesc.toLowerCase(),
+        description: req.desc.toLowerCase(),
         color: "#000000",
         members:[],
         avatar: "https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png",
@@ -551,6 +562,46 @@ app.get("/logout", urlencodedParser, (request, response) => {
   }
 });
 
+app.get("/callback", urlencodedParser, async (request, response) => {
+ 
+console.log(request.query)
+  const { code } = request.query;
+  console.log(code)
+  if (code) {
+		try {
+			const oauthResult = await fetch('https://discord.com/api/oauth2/token', {
+				method: 'POST',
+				body: new URLSearchParams({
+					client_id: process.env.discordClientID,
+					client_secret: process.env.discordClientSecret,
+					code,
+					grant_type: 'authorization_code',
+					redirect_uri: `https://meown.ml/callback`,
+					scope: 'identify',
+				}),
+				headers: {
+					'Content-Type': 'application/x-www-form-urlencoded',
+				},
+			});
+			const oauthData = await oauthResult.json();
+			console.log(oauthData);
+      const userResult = await fetch('https://discord.com/api/users/@me', {
+	headers: {
+		authorization: `${oauthData.token_type} ${oauthData.access_token}`,
+	},
+});
+
+console.log(await userResult.json());
+		} catch (error) {
+			// NOTE: An unauthorized token will not throw an error;
+			// it will return a 401 Unauthorized response in the try block above
+			console.error(error);
+		}
+	}
+  return response.send("Success!")
+});
+
+
 app.get("/auth/:id?", urlencodedParser, (request, response) => {
   var username = request.cookies["saved-username"],
       password = request.cookies["saved-password"];
@@ -614,12 +665,19 @@ app.post("/register", urlencodedParser, (request, response) => {
   if (!password) return response.send(msg("invalid", "Password", "/register"));
   if (!description) return response.send(msg("invalid", "Description", "/register"));
   if (password !== passwordConfirm) return response.send(msg("match", "password & confirm password", "/register"));
-  if (functionPack.a0(username) || functionPack.htmlCheck(description))
-    return response.send(msg("custom", "Do not use custom characters or html!", "/u"));
-  
-  if (typeof database.user[username.toLowerCase()] == "undefined") {
+  if (functionPack.a0(username) || functionPack.htmlCheck(description)) return response.send(msg("custom", "Do not use custom characters or html!", "/u"));
+    
+  var result = register({username,description,password,passwordConfirm,email})
     response.cookie("saved-username", username.toLowerCase(), {maxAge: 1.296e9});
     response.cookie("saved-password", password, {maxAge: 1.296e9});
+    response.send(`<meta http-equiv="Refresh" content="0; url='/u?username=${username.toLowerCase()}&popup=Account+Created!'"/>`);
+
+});
+
+function register(details){
+  
+    const {username, password, description, email} = details;
+    if (typeof database.user[username.toLowerCase()] == "undefined") {
     database.emails.push(email.toLowerCase());
     var salt = bcrypt.genSaltSync(10);
     var hash = bcrypt.hashSync(password, salt);
@@ -644,9 +702,7 @@ app.post("/register", urlencodedParser, (request, response) => {
     //mail(request.body.sentemail,`Your account, ${request.body.sentname} on ${project_name}`,null,`A user with the name of ${request.body.sentname} on <a href="https://meown.tk">${project_name}</a> created an account by this email, Your login details are <br><li>Username: ${request.body.sentname}</li><li>Password: ${request.body.sentpass}</li><li>Description: ${request.body.sentdesc}</li>`).catch(console.error);
       var webhookMessage = {
     "embeds":[
-        {
-          author: {name: 'Meown',url: 'https://meown.ml/',icon_url: config.logo,
-          },
+        { author: {name: 'Meown',url: 'https://meown.ml/',icon_url: config.logo, },
           thumbnail: {url:config.logo},
           description: `New user @${username} has joined!`,
           footer: {
@@ -656,13 +712,14 @@ app.post("/register", urlencodedParser, (request, response) => {
         },
     ]
   }
-  webhook.config = Object.assign({}, config.webhook, webhookMessage);
-webhook.send()
+    webhook.config = Object.assign({}, config.webhook, webhookMessage);
+    webhook.send()
     
     fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
-    response.send(`<meta http-equiv="Refresh" content="0; url='/u?username=${username.toLowerCase()}&popup=Account+Created!'"/>`);
+
   }
-});
+}
+
 
 function info_data(x,values) {
   var result=``;
@@ -1258,7 +1315,8 @@ io.on('connection', function (socket) {
     if (!user[id[data.to]]){
       return socket.emit('new message', {message: "No user with this name :/"});
     }
-    if (!database.user[data.from].followers.includes(data.to)&&data.from!==data.to){
+    console.log(data.from+" "+data.to)
+    if (!database.user[data.to].followers.includes(data.from)){
       return socket.emit('new message', {message: "This user is not following you!"});
     }
     user[id[data.to]].emit('new message', {
@@ -1289,20 +1347,24 @@ io.on('connection', function (socket) {
     // And set user number in it = 1, else user number + 1.
     if (!isRoomExist(curRoomName, curRoomList)) {
       curRoomList[curRoomName] = 1;
+      chat.room[curRoomName] = templates.room;
+      chat.room[curRoomName].users.push(socket.username);
     } else {
+      chat.room[curRoomName].users.push(socket.username);
       ++curRoomList[curRoomName];
     }
 
     // First join chat room, show current room list.
     socket.emit('show room list', curRoomName, curRoomList);
-
     socket.emit('login', {
-      numUsers: numUsers
+      numUsers: numUsers,
+      users: chat.room[curRoomName].users
     });
 
     // echo to room (default as 'Lobby') that a person has connected
     socket.broadcast.emit('user joined', {
       username: socket.username,
+      users: chat.room[curRoomName].users,
       numUsers: numUsers,
       logAction: logJoin,
       logLocation: logLab,
@@ -1333,8 +1395,8 @@ io.on('connection', function (socket) {
       
       delete user[socket.id];
       delete id[socket.username];
-      if (room[room]&&room[room].users){
-        room[room].users = room[room].users.filter(i => i !== socket.username)
+      if (chat.room[curRoomName]?.users?.includes(socket.username)){
+        chat.room[curRoomName].users.splice(chat.room[curRoomName].users.indexOf(socket.username),1)
       }
       // If there is no user in room, delete this room,
       // Except this room is 'Lobby'.
@@ -1377,7 +1439,8 @@ io.on('connection', function (socket) {
       if (data.to == data.from){
         return socket.emit('new message', {message: "why u talkin to yourself?"});
       } 
-      if (!database.user[data.from].followers.includes(data.to)){
+      console.log(`${data.to} ${data.from}\n${database.user[data.to].followers}`)
+      if (!database.user[data.to].followers.includes(data.from)){
         return socket.emit('new message', {message: "This user is not following you!"});
       }
       
@@ -1392,7 +1455,7 @@ io.on('connection', function (socket) {
     });
   
   
-  function joinRoom(room) {
+  async function joinRoom(room) {
     socket.emit('stop typing');
     
     if (room !== curRoomName) {
@@ -1400,6 +1463,7 @@ io.on('connection', function (socket) {
       socket.leave(curRoomName);
       socket.broadcast.to(curRoomName).emit('user left', {
         username: socket.username,
+        users: await io.in(curRoomName).allSockets(),
         numUsers: numUsers,
         logAction: logLeft,
         logLocation: logRoom,
@@ -1428,6 +1492,7 @@ io.on('connection', function (socket) {
         chat.room[room].users.push(socket.username);
         socket.emit('join left result', {
           username: 'you ',
+          users: chat.room[room].users,
           logAction: logCreate,
           logLocation: logRoom,
           roomName: '「' + room + '」'
@@ -1437,16 +1502,19 @@ io.on('connection', function (socket) {
         room[room].users.push(socket.username);
         socket.emit('join left result', {
           username: 'you ',
+          users: chat.room[room].users,
           logAction: logJoin,
           logLocation: logRoom,
           roomName: '「' + room + '」'
         });
       }
       // Every time someone join a room, reload current room list.
+      console.log(`Why: ${chat.room[room]}`)
       socket.emit('show room list', room, curRoomList);
       curRoomName = room;
       socket.broadcast.to(room).emit('user joined', {
         username: socket.username,
+        users: chat.room[room].users,
         numUsers: numUsers,
         logAction: logJoin,
         logLocation: logRoom,

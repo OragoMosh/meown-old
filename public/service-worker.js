@@ -28,7 +28,7 @@ self.addEventListener('install', async (event) => {
         '/assets/css/simple-theme.css',
         '/assets//css/simple-extra,css',
         '/manifest.json',
-        '/assets/tools.css'
+        '/assets/css/tools.css'
       ]);
     })
     //caches.open(cacheName).then((cache) => cache.add(offlineFallbackPage))
