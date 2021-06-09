@@ -47,6 +47,15 @@
       "url": "/about",
       "icons": [{ "src": "https://raw.githubusercontent.com/Orago/mittens/master/assets/images/boxie-x192-big.png", "sizes": "192x192" }]
     }
-  ]
-  
+  ],
+  "protocol_handlers": [
+    {
+      "protocol": "web+meown/u",
+      "url": "/u?search=%s"
+    },
+    {
+      "protocol": "web+meown/c",
+      "url": "/c?search=%s"
+    }
+  ] 
 }

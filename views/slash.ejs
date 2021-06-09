@@ -18,16 +18,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="manifest" href="/manifest.json">
 
-
 <script>
   if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("/service-worker.js");
       navigator.registerProtocolHandler(
-    "web+meown", "https://meown.ml/custom/%s", "Meown"
+    "web+meown", `${window.location.href}?q=%s`, "Meown"
   );
   }
 </script>
-  
   
 <meta charset="UTF-8">
 <meta name="keywords" content="Social media, meown, meown.ml, meown.tk" />
@@ -40,7 +38,9 @@
 <link href="/assets/css/simple-theme.css" rel="stylesheet">
   <script data-ad-client="ca-pub-9294595868006747" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 </head>
-<style>html, body, h1, h2, h3, h4, h5 {font-family: "Open Sans", sans-serif}</style>
+<style>
+  html, body, h1, h2, h3, h4, h5 {font-family: "Open Sans", sans-serif}
+</style>
 <body class="simple-theme-background">
 <!-- Navbar -->
 <div class="simple-navbar">

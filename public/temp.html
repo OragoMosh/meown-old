@@ -1,24 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head id="header">
-<script>
-  /*window.addEventListener("load", async function () {
-    infoData({title:id})
-  })
-  */
-</script>
-
-<meta charset="UTF-8">
-<meta name="keywords" content="Social media, meown, meown.ml, meown.tk" />
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<link href="/assets/css/tools.css" rel="stylesheet" >
-<script src="/tools/functionpack.js"></script>
-<script src="/assets/js/tools.js"></script>
-<script src="/assets/js/meown.js"></script>
-<link rel="stylesheet" href="/assets/css/simple.css">
-<link rel="stylesheet" href="/assets/css/meown.css">
-<link rel="stylesheet" href="/assets/css/simple-theme.css">
+  <meta charset="UTF-8">
+  <meta name="keywords" content="Social media, meown, meown.ml, meown.tk" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link href="/assets/css/tools.css" rel="stylesheet" >
+  <script src="/tools/functionpack.js"></script>
+  <script src="/assets/js/tools.js"></script>
+  <script src="/assets/js/meown.js"></script>
+  <link rel="stylesheet" href="/assets/css/simple.css">
+  <link rel="stylesheet" href="/assets/css/meown.css">
+  <link rel="stylesheet" href="/assets/css/simple-theme.css">
 </head>
 <style>html, body, h1, h2, h3, h4, h5 {font-family: "Open Sans", sans-serif}</style>
 <body class="simple-theme-background" >
@@ -154,7 +147,7 @@
             "false":`document.getElementById("uploadAvatar").style.opacity = 0;`
           });
           document.getElementById("uploadAvatar").setAttribute("onclick",`
-          (function() {var u = prompt('Change avatar url? (Click cancel to not change the url)');if (!u)return;post('/edit', {method: 'details',sentnewavatar:u}).then((e)=>{location.reload();});})()
+          (function() {var u = prompt('Change avatar url? (Click cancel to not change the url)');if (!u)return;post('/edit', {method: 'details',details: {avatar:u} }).then((e)=>{location.reload();});})()
           `);
          };
       });
@@ -274,7 +267,7 @@
       var details = {
         method: 'details',
         id:id,
-        sentnewdetails: {
+        details: {
           pass: document.getElementById("sentNewPass").value,
           desc:document.getElementById("sentNewDesc").value,
           avatar:document.getElementById("sentNewAvatar").value,
@@ -319,6 +312,34 @@
       post('/edit', details).then((e)=>{location.reload();})
     }
   </script>
+</div>
+      
+<div class="simple-theme-l5 simple-container simple-card simple-round simple-margin simple-theme-border staff">
+      <h6 class="simple-opacity">New Community</h6>
+<div class="simple-grid-container">
+  <div class="simple-grid-item">1: <input type="color" value="#ff0000" class="colors"> (Panel Color)</div>
+  <div class="simple-grid-item">2: <input type="color" value="#ff0000" class="colors"> (Notification Box)</div>
+  <div class="simple-grid-item">3: <input type="color" value="#ff0000" class="colors"> (Buttons)</div>
+  <div class="simple-grid-item">4: <input type="color" value="#ff0000" class="colors"> (Disabled)</div>
+  <div class="simple-grid-item">5: <input type="color" value="#ff0000" class="colors"> (Status Buttons)</div>
+  <div class="simple-grid-item">6: <input type="color" value="#ff0000" class="colors"> (Input fields)</div>
+  <div class="simple-grid-item">7: <input type="color" value="#ff0000" class="colors"> (Navigation Bar)</div>
+  <div class="simple-grid-item">8: <input type="color" value="#ff0000" class="colors"> (Card Border)</div>
+  <div class="simple-grid-item">9: <input type="color" value="#ff0000" class="colors"> (Disabled)</div>
+  <div class="simple-grid-item">10: <input type="color" value="#ff0000" class="colors"> (Disabled)</div>
+  <div class="simple-grid-item">11: <input type="color" value="#ff0000" class="colors"> (Background 1)</div>
+  <div class="simple-grid-item">12: <input type="color" value="#ff0000" class="colors"> (Background 2)</div>
+  <div class="simple-grid-item">13: <input type="color" value="#ff0000" class="colors"> (Text 1)</div>
+  <div class="simple-grid-item">14: <input type="color" value="#ff0000" class="colors"> (Text 2)</div>
+  <div class="simple-grid-item">15: <input type="color" value="#ff0000" class="colors"> (Favorite Icon)</div>
+  </div>
+<br><br>
+<button type="button" onclick="color_get()">Load Template Colors</button>
+<button type="button" onclick="color_save()">Save</button>
+<button type="button" onclick="color_load()">Load Existing</button>
+<button type="button" onclick="color_copy()">Copy Colors As Text</button>
+<button type="button" onclick="color_paste()">Paste Colors</button>
+<a id="colors"></a>
 </div>
       
 

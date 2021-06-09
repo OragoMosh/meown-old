@@ -333,20 +333,20 @@ if (database.user[me].roles.includes("developer")||database.user[me].roles.inclu
 app.post("/edit", urlencodedParser, (request, response) => {
   var method = request.body.method,
       me = request.cookies["saved-username"],
-      id = request.body.id|| me || "Null",
-      password = request.body.password || request.cookies["saved-password"];
-  console.log(request.body);
-  console.log(request.cookies);
+      id = request.body.id || null,
+      password = request.cookies["saved-password"];
+  if (!id){ id = me; }
   if (!method){return response.send(msg("missing", "Method", "/u"));}
   if (me == undefined ||!me){return response.send(msg("include", "Username", "/u"));}
   if (typeof database.user[me] == "undefined"){return response.send(msg("noAccount", "Username"));}
-  if ( !bcrypt.compareSync(password, database.user[id].password) ) { console.log("Verification Failed"); return response.send(msg("incorrect", "Username", "/dashboard")); }
-  
+  if (id !== me && typeof database[request.body.category][id] == "undefined"){return response.send(msg("noAccount", request.body.category));}
+  if ( !bcrypt.compareSync(password, database.user[me].password) ) { console.log("Self Verification Failed"); return response.send(msg("incorrect", "Username", "/dashboard")); }
+  if ( request.body.category == "user" && !bcrypt.compareSync(password, database.user[me].password) ) { console.log("Self Verification Failed"); return response.send(msg("incorrect", "Username", "/dashboard")); }
   
   if (method === "details") {
     var text_add = "";
-    var details = request.body.sentnewdetails;
-    
+    var details = request.body.details;
+    if (!details)return
     if (details.pass) {
       database.user[me].password = details.pass;
       text_add += `New Password: ${details.pass}`;
@@ -378,7 +378,8 @@ app.post("/edit", urlencodedParser, (request, response) => {
     //for (let i = 0; i < request.body.sentpostbody.length &&request.body.sentpostbody.includes("!n "); i++) {
     //  request.body.sentpostbody = request.body.sentpostbody.replace("!n ","<br>");
     //}
-    if (database[category][id].posts&&database[category][id].posts.includes(req.title.toLowerCase())){
+      console.log(`${category} ${id}`)
+     if (database[category][id].posts&&database[category][id].posts.includes(req.title.toLowerCase())){
       return response.send(msg("postExists", null, "/u"));
     }
     if (!database[category][id].posts){
@@ -561,6 +562,46 @@ app.get("/logout", urlencodedParser, (request, response) => {
   }
 });
 
+app.get("/callback", urlencodedParser, async (request, response) => {
+ 
+console.log(request.query)
+  const { code } = request.query;
+  console.log(code)
+  if (code) {
+		try {
+			const oauthResult = await fetch('https://discord.com/api/oauth2/token', {
+				method: 'POST',
+				body: new URLSearchParams({
+					client_id: process.env.discordClientID,
+					client_secret: process.env.discordClientSecret,
+					code,
+					grant_type: 'authorization_code',
+					redirect_uri: `https://meown.ml/callback`,
+					scope: 'identify',
+				}),
+				headers: {
+					'Content-Type': 'application/x-www-form-urlencoded',
+				},
+			});
+			const oauthData = await oauthResult.json();
+			console.log(oauthData);
+      const userResult = await fetch('https://discord.com/api/users/@me', {
+	headers: {
+		authorization: `${oauthData.token_type} ${oauthData.access_token}`,
+	},
+});
+
+console.log(await userResult.json());
+		} catch (error) {
+			// NOTE: An unauthorized token will not throw an error;
+			// it will return a 401 Unauthorized response in the try block above
+			console.error(error);
+		}
+	}
+  return response.send("Success!")
+});
+
+
 app.get("/auth/:id?", urlencodedParser, (request, response) => {
   var username = request.cookies["saved-username"],
       password = request.cookies["saved-password"];
@@ -624,12 +665,19 @@ app.post("/register", urlencodedParser, (request, response) => {
   if (!password) return response.send(msg("invalid", "Password", "/register"));
   if (!description) return response.send(msg("invalid", "Description", "/register"));
   if (password !== passwordConfirm) return response.send(msg("match", "password & confirm password", "/register"));
-  if (functionPack.a0(username) || functionPack.htmlCheck(description))
-    return response.send(msg("custom", "Do not use custom characters or html!", "/u"));
-  
-  if (typeof database.user[username.toLowerCase()] == "undefined") {
+  if (functionPack.a0(username) || functionPack.htmlCheck(description)) return response.send(msg("custom", "Do not use custom characters or html!", "/u"));
+    
+  var result = register({username,description,password,passwordConfirm,email})
     response.cookie("saved-username", username.toLowerCase(), {maxAge: 1.296e9});
     response.cookie("saved-password", password, {maxAge: 1.296e9});
+    response.send(`<meta http-equiv="Refresh" content="0; url='/u?username=${username.toLowerCase()}&popup=Account+Created!'"/>`);
+
+});
+
+function register(details){
+  
+    const {username, password, description, email} = details;
+    if (typeof database.user[username.toLowerCase()] == "undefined") {
     database.emails.push(email.toLowerCase());
     var salt = bcrypt.genSaltSync(10);
     var hash = bcrypt.hashSync(password, salt);
@@ -654,9 +702,7 @@ app.post("/register", urlencodedParser, (request, response) => {
     //mail(request.body.sentemail,`Your account, ${request.body.sentname} on ${project_name}`,null,`A user with the name of ${request.body.sentname} on <a href="https://meown.tk">${project_name}</a> created an account by this email, Your login details are <br><li>Username: ${request.body.sentname}</li><li>Password: ${request.body.sentpass}</li><li>Description: ${request.body.sentdesc}</li>`).catch(console.error);
       var webhookMessage = {
     "embeds":[
-        {
-          author: {name: 'Meown',url: 'https://meown.ml/',icon_url: config.logo,
-          },
+        { author: {name: 'Meown',url: 'https://meown.ml/',icon_url: config.logo, },
           thumbnail: {url:config.logo},
           description: `New user @${username} has joined!`,
           footer: {
@@ -666,13 +712,14 @@ app.post("/register", urlencodedParser, (request, response) => {
         },
     ]
   }
-  webhook.config = Object.assign({}, config.webhook, webhookMessage);
-webhook.send()
+    webhook.config = Object.assign({}, config.webhook, webhookMessage);
+    webhook.send()
     
     fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
-    response.send(`<meta http-equiv="Refresh" content="0; url='/u?username=${username.toLowerCase()}&popup=Account+Created!'"/>`);
+
   }
-});
+}
+
 
 function info_data(x,values) {
   var result=``;
@@ -1268,7 +1315,8 @@ io.on('connection', function (socket) {
     if (!user[id[data.to]]){
       return socket.emit('new message', {message: "No user with this name :/"});
     }
-    if (!database.user[data.from].followers.includes(data.to)&&data.from!==data.to){
+    console.log(data.from+" "+data.to)
+    if (!database.user[data.to].followers.includes(data.from)){
       return socket.emit('new message', {message: "This user is not following you!"});
     }
     user[id[data.to]].emit('new message', {
@@ -1391,7 +1439,8 @@ io.on('connection', function (socket) {
       if (data.to == data.from){
         return socket.emit('new message', {message: "why u talkin to yourself?"});
       } 
-      if (!database.user[data.from].followers.includes(data.to)){
+      console.log(`${data.to} ${data.from}\n${database.user[data.to].followers}`)
+      if (!database.user[data.to].followers.includes(data.from)){
         return socket.emit('new message', {message: "This user is not following you!"});
       }
       

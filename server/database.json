@@ -188,8 +188,8 @@
           "comments": []
         },
         {
-          "title": "Video testing!",
-          "body": "!v https://www.w3schools.com/tags/mov_bbb.mp4 v!",
+          "title": "image testing",
+          "body": "omg roblox bad O.o https://cdn.discordapp.com/attachments/817601227390451722/849528293395922964/unknown.png",
           "likes": [],
           "comments": []
         }
@@ -203,7 +203,7 @@
         "aouab",
         "orago",
         "sus",
-        "testing"
+        "tombstone"
       ],
       "followers": [
         "kind",
@@ -369,7 +369,7 @@
       ],
       "creation_date": 1609753066800
     },
-    "tumstone": {
+    "tombstone": {
       "password": "$2a$10$eLFBfBr6oE1n9HBgwYrwBuEGXLmFRWl4DOFNPnb2qtu4iXVEQ52iO",
       "email": "Theoldtombstone@gmail.com",
       "coins": 50,
@@ -377,12 +377,23 @@
       "background": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
       "banner": "https://th.bing.com/th/id/OIP.wNTfurfJeTEB8wRa4iwqYAAAAA",
       "description": "my dog meows",
-      "avatar": "https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png",
-      "following": [],
-      "followers": [],
+      "avatar": "https://cdn.discordapp.com/attachments/840882105264111626/849337734693781574/dizzy.png",
+      "following": [
+        "orago"
+      ],
+      "followers": [
+        "orago"
+      ],
       "communities": [],
       "codes": [],
-      "posts": [],
+      "posts": [
+        {
+          "title": "ea",
+          "body": "sports ",
+          "likes": [],
+          "comments": []
+        }
+      ],
       "roles": [],
       "creation_date": 1610645250268
     },
@@ -892,6 +903,13 @@
         {
           "title": "White Theme v2",
           "body": "```{\"0\":\"black\",\"1\":\"#ffffff\",\"2\":\"#a3a3a3\",\"3\":\"#dc5555\",\"4\":\"#45b9f7\",\"5\":\"#dc5555\",\"6\":\"#ffffff\",\"7\":\"#cb3837\",\"8\":\"#e4e5e8\",\"9\":\"#3a4b53\",\"10\":\"#303e45\",\"11\":\"#f0f2f5\",\"12\":\"#383838\",\"13\":\"#292929\",\"14\":\"#545454\",\"15\":\"#ff5252\"}```",
+          "likes": [],
+          "comments": [],
+          "username": "orago"
+        },
+        {
+          "title": "Dark Theme v1",
+          "body": "```{\"0\":\"black\",\"1\":\"#404040\",\"2\":\"#865050\",\"3\":\"#dc5555\",\"4\":\"#45b9f7\",\"5\":\"#dc5555\",\"6\":\"#5a5a5a\",\"7\":\"#cb3837\",\"8\":\"#464646\",\"9\":\"#3a4b53\",\"10\":\"#303e45\",\"11\":\"#323232\",\"12\":\"#383838\",\"13\":\"#a5a5a5\",\"14\":\"#cfcfcf\",\"15\":\"#ff5252\"}```",
           "likes": [],
           "comments": [],
           "username": "orago"

@@ -45,7 +45,7 @@
     <div class="simple-col m7 simple-theme-text-1">
       
       <div class="simple-theme-l5 simple-theme-border simple-card simple-round simple-container simple-margin">
-        <p class="crenzo center simple-center simple-theme-text-1 simple-text-large" id="title">dLogin</p>
+        <p class="crenzo center simple-center simple-theme-text-1 simple-text-large" id="title">Meown Forms</p>
       </div>
       
 <div class="simple-theme-l5 simple-theme-border simple-card simple-round simple-container simple-margin">
@@ -78,7 +78,7 @@
     <div class="simple-col m2 simple-theme-text-1">
       
       <div class="simple-theme-l5 simple-theme-border simple-card simple-round simple-padding-16 simple-center">
-      <p id="time" >Open Time<br>(May cause lag)</p>
+      <p> </p>
       </div>
       
       <br>
@@ -151,7 +151,7 @@ function setupPage(values){
   document.getElementById("form").setAttribute("action",values.connect)
   
   values.form.inputs.forEach((e)=>{
-    document.getElementById("formInputs").innerHTML += `<input type="text" name="${e.id}" placeholder="${e.name||"Null"}" class="simple-theme-input simple-theme-border simple-padding simple-round" style="width:100%" required>  <br><br>`;
+    document.getElementById("formInputs").innerHTML += `<input type="${e.type || "text"}" name="${e.id}" placeholder="${e.name||"Null"}" class="simple-theme-input simple-theme-border simple-padding simple-round" style="width:100%" required>  <br><br>`;
     
   });
   values.form.buttons.forEach((e)=>{
@@ -172,7 +172,7 @@ function checkPage(){
       "form":{
         "inputs":[
           { id:"username", name:"Username", required:true },
-          { id:"password", name:"Password", required:true }
+          { id:"password", type:"password", name:"Password", required:true }
         ],
         "buttons":[
           { name:"Login" , function:"connect()"}
@@ -187,8 +187,8 @@ function checkPage(){
         "inputs":[
           { id:"username", name:"Username", required:true },
           { id:"description", name:"Description", required:true },
-          { id:"password", name:"Password", required:true },
-          { id:"passwordconfirm", name:"Confirm Password", required:true },
+          { id:"password", type:"password", name:"Password", required:true },
+          { id:"passwordconfirm", type:"password", name:"Confirm Password", required:true },
           { id:"email", name:"Email", required:true }
         ],
         "buttons":[

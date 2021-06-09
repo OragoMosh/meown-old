@@ -78,13 +78,31 @@ input=input.replace(e,matchesResult[e])
 return input;
 }
 
-function getUrl(url){
+function getUrlv1(url){
 var parser = document.createElement('a');
 parser.href = url;
 parser.path = parser.pathname.substring(0, parser.pathname.lastIndexOf('/')) + "/";
 return parser;
 }
 
+function getUrlv2(url){
+var parser = document.createElement('a');
+parser.href = url;
+parser.isValid = parser.valid = /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?/g.test(url);
+
+parser.path = parser.pathname.substring(0, parser.pathname.lastIndexOf('/')) + "/";
+
+return parser;
+}
+function getUrl(url){
+var parser = document.createElement('a');
+parser.href = url;
+parser.isValid = parser.valid = /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?/g.test(url);
+
+parser.path = parser.pathname.substring(0, parser.pathname.lastIndexOf('/')) + "/";
+
+return parser;
+}
 function search(param){
   let paramQuery = (new URL(document.location)).searchParams;
   function getUrl(url){ var parser = document.createElement('a'); parser.href = url; parser.path = parser.pathname.substring(0, parser.pathname.lastIndexOf('/')) + "/"; return parser; }

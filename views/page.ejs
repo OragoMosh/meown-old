@@ -1,43 +1,32 @@
 <!DOCTYPE html>
-<html lang="en">
-<head id="header">
-
-  <title>Meown | Users!</title>
-  <meta property="og:title" content="Meown | Users!" />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://meown.ml" />
-  <meta property="og:image" content="https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png?v=1594354728664" />
-  <meta property="og:description" content="A small social media made by one person" />
-  <meta name="theme-color" content="#cb3837">
-  <meta name="twitter:card" content="summary_large_image">
-  <link rel="icon" type="image/png" href="https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie32bfull.png">
-  <link id="favicon" rel="icon" href="https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie32bfull.png" type="image/x-icon">
-  <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="manifest" href="/manifest.json">
-
-  <script>
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("/service-worker.js");
-        navigator.registerProtocolHandler(
-      "web+meown", "https://meown.ml/custom/%s", "Meown"
-    );
-    }
-  </script>
-
-  <meta charset="UTF-8">
-  <meta name="keywords" content="Social media, meown, meown.ml, meown.tk" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <link href="/assets/css/tools.css" rel="stylesheet" >
-  <script src="/tools/functionpack.js"></script>
-  <script src="/assets/js/tools.js"></script>
-  <script src="/assets/js/meown.js"></script>
-  <link rel="stylesheet" href="/assets/css/simple.css">
-  <link rel="stylesheet" href="/assets/css/meown.css">
-  <link rel="stylesheet" href="/assets/css/simple-theme.css">
-</head>
+  <html lang="en">
+  <head id="header">
+    <title>Meown | Users!</title>
+    <meta property="og:title" content="Meown | Users!" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://meown.ml" />
+    <meta property="og:image" content="https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie-2048px.png?v=1594354728664" />
+    <meta property="og:description" content="A small social media made by one person" />
+    <meta name="theme-color" content="#cb3837">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" type="image/png" href="https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie32bfull.png">
+    <link id="favicon" rel="icon" href="https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2Fboxie32bfull.png" type="image/x-icon">
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="manifest" href="/manifest.json">
+    <meta charset="UTF-8">
+    <meta name="keywords" content="Social media, meown, meown.ml, meown.tk" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="/assets/css/tools.css" rel="stylesheet" >
+    <script src="/tools/functionpack.js"></script>
+    <script src="/assets/js/tools.js"></script>
+    <script src="/assets/js/meown.js"></script>
+    <link rel="stylesheet" href="/assets/css/simple.css">
+    <link rel="stylesheet" href="/assets/css/meown.css">
+    <link rel="stylesheet" href="/assets/css/simple-theme.css">
+  </head>
 <style>html, body, h1, h2, h3, h4, h5 {font-family: "Open Sans", sans-serif}</style>
 <body class="simple-theme-background" >
 <!-- Navbar -->
@@ -172,7 +161,7 @@
             "false":`document.getElementById("uploadAvatar").style.opacity = 0;`
           });
           document.getElementById("uploadAvatar").setAttribute("onclick",`
-          (function() {var u = prompt('Change avatar url? (Click cancel to not change the url)');if (!u)return;post('/edit', {method: 'details',sentnewavatar:u}).then((e)=>{location.reload();});})()
+          (function() {var u = prompt('Change avatar url? (Click cancel to not change the url)');if (!u)return;post('/edit', {method: 'details', details: {avatar:u} }).then((e)=>{location.reload();});})()
           `);
          };
       });
@@ -192,14 +181,15 @@
         <div class="simple-white">
           <button onclick="javascript:toggleClass(document.getElementById('Demo1'),'simple-show');" class="simple-theme-l1 simple-theme-text-2 simple-button simple-block simple-left-align">
             <i class="fa fa-shield fa-fw simple-margin-right"></i>
-            Roles
+            <span>Roles</span>
           </button>
           <div id="Demo1" class="simple-hide simple-container simple-theme-border">
             <p>Roles: <span id="myroles"></span></p>
           </div>
           <button onclick="javascript:toggleClass(document.getElementById('Demo2'),'simple-show');" class="simple-theme-l1 simple-theme-text-2 simple-button simple-block simple-left-align">
             <i class="fa fa-heart fa-fw simple-margin-right"></i>
-            Follows
+            <span>Follows</span>
+            <!--<i class="fa fa-heart fa-fw simple-margin-right"></i>Follows-->
           </button>
           <div id="Demo2" class="simple-hide simple-container simple-theme-border">
             <p>Followers: <span id="followers"></span></p>
@@ -276,7 +266,7 @@
       });
      </script>
         
-<div class="simple-container simple-card simple-round simple-margin simple-theme-border" style="background-image: linear-gradient(45deg, rgba(255,255,255,0.3), rgba(255,255,255,0.3) );">
+<div class="simple-container simple-card simple-round simple-margin simple-theme-border simple-theme-text-2" style="background-image: linear-gradient(45deg, rgba(255,255,255,0.3), rgba(255,255,255,0.3) );">
         <h4>[About me]</h4><br>
         <p id="description">"None"</p>
   <script>window.addEventListener("load", async function () {document.getElementById("description").innerHTML=await MeownApi(`${category}/${id}`).then((res)=>{return res.description||"Error";})});</script>
@@ -288,7 +278,7 @@
   <h6 class="simple-opacity">New Post</h6>
   <input type="text" name="sentposttitle" id="postTitle" class="simple-round-xxlarge simple-theme-input simple-theme-border simple-padding" placeholder="Post Title" required>
   <input type="text" name="sentpostbody" id="postBody" class="simple-round-xxlarge simple-theme-input simple-theme-border simple-padding" placeholder="Post Body" required><br>
-  <button class="simple-button simple-round-xlarge simple-theme-button" onclick="sendPost();"><i class="fa fa-pencil"></i> Send</button>
+  <button class="simple-button simple-round-xlarge simple-theme-button simple-theme-text-2" onclick="sendPost();"><i class="fa fa-pencil"></i> <span>Send</span></button>
     <script>
     function sendPost(){
       var details = {
@@ -378,34 +368,34 @@ var video,
     menu({
       title:`Video Loaded!`,
       body:videoEl.outerHTML+`
-      <button onclick="toggleVideo(this);" toggled="true" class="simple-round-xxlarge simple-button simple-theme-button">Pause</button>
-      <button onclick="toggleButtons(this);" class="simple-round-xxlarge simple-button simple-theme-button">Buttons</button>
-      <button id="videoPIP" class="simple-round-xxlarge simple-button simple-theme-button">Toggle PIP</button>
+      <button onclick="toggleVideo(this);" toggled="true" class="simple-round-xxlarge simple-button simple-theme-button"><i class="fa fa-pause"></i></button>
+      <button onclick="toggleButtons(this);" class="simple-round-xxlarge simple-button simple-theme-button"><i class="fa fa-bars"></i></button>
+      <button id="videoPIP" class="simple-round-xxlarge simple-button simple-theme-button"><i class="fa fa-object-ungroup"></i></button>
       `
     });
     video = document.getElementById("mainVideo");
     togglePipButton = document.getElementById("videoPIP");
     
     togglePipButton.addEventListener('click', async function(event) {
-  console.log('Toggling Picture-in-Picture...');
-  togglePipButton.disabled = true;
-  try {
-    if (video !== document.pictureInPictureElement) await video.requestPictureInPicture();
-    else await document.exitPictureInPicture();
-  }
-  catch(error) { console.log(`> Argh! ${error}`); }
-  finally { togglePipButton.disabled = false; }
-});
+      console.log('Toggling Picture-in-Picture...');
+      togglePipButton.disabled = true;
+      try {
+        if (video !== document.pictureInPictureElement){ await video.requestPictureInPicture(); }
+        else { await document.exitPictureInPicture(); }
+      }
+      catch(error) { console.log(`> Argh! ${error}`); }
+      finally { togglePipButton.disabled = false; }
+    });
 
 video.addEventListener('enterpictureinpicture', function(event) {
-  console.log(`> Window size is ${pipWindow.width}x${pipWindow.height}`); console.log('> Video entered Picture-in-Picture');
   pipWindow = event.pictureInPictureWindow;
   pipWindow.addEventListener('resize', onPipWindowResize);
+  //console.log(`> Window size is ${pipWindow.width}x${pipWindow.height}`); console.log('> Video entered Picture-in-Picture');
 });
 
 video.addEventListener('leavepictureinpicture', function(event) {
-  console.log('> Video left Picture-in-Picture');
   pipWindow.removeEventListener('resize', onPipWindowResize);
+  console.log('> Video left Picture-in-Picture');
 });
     
 if ('pictureInPictureEnabled' in document) {
@@ -415,7 +405,7 @@ if ('pictureInPictureEnabled' in document) {
 } else {
   togglePipButton.hidden = true;
 }
-    setTimeout(function(){ 
+    setTimeout(function(){
       video.play();
     }, 500);
   }
@@ -432,7 +422,7 @@ if ('pictureInPictureEnabled' in document) {
     function toggleVideo(El){
       if ( !El || !El.getAttribute("toggled") ) return
       var status = El.getAttribute("toggled") == "true";
-      El.innerHTML = status ? "Play" : "Pause";
+      El.innerHTML = status ? `<i class="fa fa-play"></i>` : `<i class="fa fa-pause"></i>`;
       El.setAttribute("toggled", status ? "false" : "true");
       status ? video.pause() : video.play();
     }
@@ -442,9 +432,7 @@ if ('pictureInPictureEnabled' in document) {
     }
   
   async function MeownApi(input){
-    var o=o||"";
-    var r = await fetch(`/api/${input}`).then(l => l.json()).then(l => l.response)
-    return r;
+    return await fetch(`/api/${input}`).then(l => l.json()).then(l => l.response);
   }
   
   
@@ -503,9 +491,9 @@ MeownApi(`${category}/${id}?includeposts=true`).then(async data => {
       values.body = changeSymbols(values.body);
       
       var postTemplate = `
-      <div class="simple-theme-l5 simple-theme-border simple-theme-text-1 simple-container simple-card simple-round simple-margin" id="post-3"><br>
+      <div class="simple-theme-l5 simple-theme-border simple-theme-text-1 simple-container simple-card simple-round simple-margin" id="post-${index}"><br>
         <img src="${await MeownApi(`/user/${values.id}/`).then(function(response){return response.avatar})}" alt="User_Avatar" class="simple-circle" style="width:90px;height:90px"> 
-        <button class="simple-right simple-button simple-theme-button simple-round-xxlarge" style="" onclick="postMenu(${JSON.stringify(values).replace(/\"/g,"\'")})"><i class="fa fa-bars"></i></button>
+        <button class="simple-right simple-button simple-theme-button simple-round-xxlarge simple-theme-text-2" onclick="postMenu(${JSON.stringify(values).replace(/\"/g,"\'")})"><i class="fa fa-bars"></i></button>
         <span class="simple-right simple-opacity">
         #${index} 
         <i class="fa fa-heart"></i>:${values?.likes?.length?values.likes:0||0}</span>&nbsp;
@@ -513,8 +501,12 @@ MeownApi(`${category}/${id}?includeposts=true`).then(async data => {
         <br><b style="font-size: 2em;color:#e3c522;">&nbsp;${values.id||"unknown"}: </b>
         <a style="font-size: 1.5em;">${values.title}</a><br>
         <hr class="simple-clear">
-        <p>${values.body}</p>
-      </div>
+        <p class="simple-typewriter">${values.body}</p>
+        <button onclick="javascript:toggleClass(document.getElementById('comments_${values.index}'),'simple-show');" class="simple-button simple-round-xlarge simple-block simple-theme-l1 simple-theme-text-2 simple-left-align"><i class="fa fa-shield fa-fw simple-margin-right"></i> Comments</button>
+        <div id="comments_${values.index}" class="simple-hide simple-container">
+          <p>${console.log(values)}</p>
+        </div>
+  </div>
       `;
         postList.innerHTML+=postTemplate;
     }
@@ -527,12 +519,12 @@ function postMenu(values){
   <input type="hidden" name="id" value="${values.id}"> 
   <input type="hidden" name="number" value="${values.index}"> 
   <input type="hidden" name="category" value="${category||"user"}">
-  <button type="submit">Delete Post</button>
+  <button type="submit" class="simple-button simple-theme-button simple-round-xxlarge simple-theme-text-2">Delete Post</button>
   </form>
-  <button onclick="copy("https://${location.hostname}/u/${values.id||"unknown"}#post-${values.index};");notification("Link Copied!");">Copy URL <i class="fa fa-link">
+  <button class="simple-button simple-theme-button simple-round-xxlarge simple-theme-text-2" onclick="copy("https://${location.hostname}/u/${values.id||"unknown"}#post-${values.index};");notification("Link Copied!");">Copy URL <i class="fa fa-link">
   </i>&nbsp;
   </button>
-  ${values.likes?`<form method="post" action="/edit" style="display:inline-block;"> <input type="hidden" name="method" value="like"> <input type="hidden" name="type" value="posts"> <input type="hidden" name="sentname" value="${values.id}"> <input type="hidden" name="sentid" value="${values.number}"><button type="submit" onclick="notification("<3!")">Likes: <i class="fa fa-heart" ></i>${values?.likes?.length?values.likes:0||0}</button></form>`:""}`});
+  ${values.likes?`<form method="post" action="/edit" style="display:inline-block;"> <input type="hidden" name="method" value="like"> <input type="hidden" name="type" value="posts"> <input type="hidden" name="sentname" value="${values.id}"> <input type="hidden" name="sentid" value="${values.number}"><button type="submit" class="simple-button simple-theme-button simple-round-xxlarge simple-theme-text-2" onclick="notification("<3!")">Likes: <i class="fa fa-heart" ></i>${values?.likes?.length?values.likes:0||0}</button></form>`:""}`});
 } 
   
 function menu(values){
@@ -548,7 +540,7 @@ function menu(values){
   overlay.body.innerHTML=values.body||"";
 }
   function closeMenu(){
-    if (!!document.getElementById("mainVideo")){
+    if (!!document.getElementById("mainVideo") && video !== document.pictureInPictureElement){
       document.getElementById("mainVideo").pause();
     }
     document.getElementById('overlay').style.display='none';
