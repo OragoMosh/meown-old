@@ -282,6 +282,7 @@ MeownApi(`${category}/${id}?includeposts=true`).then(async data => {
     async function addPost(values,index){
       values = values || {}
       values.index=index;
+      values.username = values.author;
       var postTemplate = `
       <div class="simple-theme-l5 simple-theme-border simple-container simple-card simple-round simple-margin" id="post-${index}"><br>
         <img src="${await MeownApi(`user/${values.username}/?includeposts=true`).then(function(response){return response.avatar})}" alt="User_Avatar" class="simple-circle" style="width:90px;height:90px"> 
@@ -294,6 +295,8 @@ MeownApi(`${category}/${id}?includeposts=true`).then(async data => {
         <a style="font-size: 1.5em;" class="simple-theme-text-1">${values.title}</a><br>
         <hr class="simple-clear">
         <p class="simple-theme-text-2">${values.body}</p>
+        <hr class="simple-clear">
+        <p class="simple-typewriter"> Date: ${typeof values.date !== "undefined" ? Date(values.date) : "Not Recorded"} </p>
       </div>
       `
       postList.innerHTML+=postTemplate;

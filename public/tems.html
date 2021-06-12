@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<body>
+තƘᅪ
+<p>List all array items, with keys and values:</p>
+
+<p id="demo"></p>
+<hr>
+<a id="sh"></a>
+<script>
+var size = 21
+var length = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'.length;
+var array = [];
+function newRandomString(array, size, length){
+resultString = randomString(newSlot(size, length));
+	if (array.includes(resultString)){
+  		newRandomString(array, size, length);
+  	}
+  	else return resultString;
+}
+
+function newSlot(size, length){
+var result;
+  
+  if ( ( size / length  ).toString().indexOf( ".") == -1)
+    result = size / length;
+  else
+  	result = Math.floor( size / length ) > 0 ? Math.floor( size / length ) : 1;
+  console.log(result)
+  return result;
+}
+
+function randomString(length, chars) {
+	var chars = chars || '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
+    result = '';
+    for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)];
+    return result;
+}
+
+
+  document.getElementById("demo").innerHTML += newRandomString(array, size, length);
+</script>
+
+</body>
+</html>

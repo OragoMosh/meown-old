@@ -13,8 +13,13 @@ const express = require("express"),
 
 var database_location=__dirname+"/database.json",
     database = JSON.parse(fs.readFileSync(database_location)),
+    
+    posts_location = __dirname+"/posts.json",
+    posts = JSON.parse(fs.readFileSync(posts_location)),
+    
     config_location=__dirname+"/config.json",
     config = JSON.parse(fs.readFileSync(config_location)),
+    
     changelogs = config.changelogs||config.changelog||{"Error":["Idk why its not working rn sry"]};
 
 const app = express();
@@ -63,6 +68,11 @@ var time = variablePack.time;
 do_am_pm();
 
 var am_pm;
+
+function saveDB(){
+  fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
+  fs.writeFileSync(posts_location, JSON.stringify(posts, null, 2));
+}
 
 function do_am_pm() {if (date.getHours() - 4 < 12) {am_pm = "AM";} else if (date.getHours() - 4 > 12) {am_pm = "PM";} else {am_pm = "broken??";}}
 function deleteUser(id){
@@ -114,7 +124,7 @@ var fake_user = {
     };
 
 setInterval(function(){ 
-  fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
+  saveDB();
   console.log(`Saving Database on bot server!`);
 }, 180000);
 
@@ -329,6 +339,55 @@ if (database.user[me].roles.includes("developer")||database.user[me].roles.inclu
   }
   response.render("dashboard.ejs", { database: database, values: values });
 });
+function createPost(values){
+  var type = values.type,
+      author = values.author,
+      category = values.category,
+      title = values.title,
+      body = values.body,
+      canComment = values.canComment;
+  var likes = [],
+      comments = [],
+      date = Date.now()
+  
+  if (!type){ return console.log("Critical Error Missing Post Type"); };
+  if (!author){ return console.log("Critical Error Missing  Author or ID"); };
+  if (!category){ return console.log("Missing Category"); };
+  if (!title || !body){ return console.log("Missing Title / Body"); };
+  if (!canComment){ canComment = true; }
+  
+  if (!database[category][author].posts){
+    database[category][author].posts = [];
+  }
+  
+  var postID = functionPack.newRandomString(Object.keys(posts), Object.keys(posts).length, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'.length);
+  
+  var details={
+    type: "post",
+    author: author,
+    title: title,
+    body: body,
+    likes: [],
+    comments: [],
+    date: Date.now(),
+    canComment: canComment
+  }
+
+  if (values.parent && Object.keys(posts).includes(values.parent) && posts[values.parent] && posts[values.parent].canComment == true){
+    details.parent = values.parent;
+    posts[values.parent].comments.push(postID);
+    console.log("Has comment perms.")
+  }else{
+    console.log("Does not have comment perms.")
+  }
+  if (database[category][author].posts){
+    posts[postID] = details;
+    database[category][author].posts.push(postID);
+  }
+  else {
+    console.log("err")
+  }
+}
 
 app.post("/edit", urlencodedParser, (request, response) => {
   var method = request.body.method,
@@ -358,7 +417,7 @@ app.post("/edit", urlencodedParser, (request, response) => {
       if (details.background){database.user[me].background = details.background;}
       if (details.banner){database.user[me].banner = details.banner;}
     }
-    fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
+    saveDB();
     return response.send(msg("edited", "Username", "/u"));
   } else 
     
@@ -382,21 +441,21 @@ app.post("/edit", urlencodedParser, (request, response) => {
      if (database[category][id].posts&&database[category][id].posts.includes(req.title.toLowerCase())){
       return response.send(msg("postExists", null, "/u"));
     }
-    if (!database[category][id].posts){
-      database[category][id].posts = [];
-    }
-    var details={
+    var values = {
+      type: "post",
+      author: id,
+      category: category,
       title: req.title,
       body: req.body,
-      likes: [],
-      comments: [],
-      date: Date.now,
+      canComment:true
     }
-    if (category==="community") {details.username = me;}
-    database[category][id].posts.push(details);
+    createPost(values);
+
+    //console.log(database[category][id].posts)
+    //database[category][id].posts.push(details);
     //database.user[me].coins += 1;
     //database.user[me].xp += 1;
-    fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
+    saveDB();
     return response.send(msg("postCreated","Username",`/${category[0]}`,`&username=${me}#${database[category][id].posts.length - 1}`));
   } else 
     
@@ -421,16 +480,22 @@ app.post("/edit", urlencodedParser, (request, response) => {
   
       if (!category||category!=="user"&&category!=="community"){ console.log(`Error unknown post category! (${category})`); return response.send(msg("custom", `Error unknown post category! (${category})`, "/u")); }
 
-    if (!database[category][id].posts[req.number]){ console.log(`"post_does_not_exist"`); return response.send(msg("post_does_not_exist", "", "/u")); }
 
     
     if (category === "user"){
       if (!permission(1,me)&&id!==me) { console.log(`Not Your Post! ${permission(1,me)} !== ${id!==me}`); return response.send(`Not Your Post! ${permission(1,me)} !== ${id!==me}`);}
       if (!logs.changes[id]){logs.changes[id] = [];}
-      if (logs.changes[id]){logs.changes[id].push(`Post #${req.number} Deleted "${database[category][id].posts[req.number]}"`);}
+      if (logs.changes[id]){logs.changes[id].push(`Post #${req.index} Deleted "${database[category][id].posts[req.index]}"`);}
       else if (!logs.changes[id]) {logs.changes[id] = [];}
     }
-      database[category][id].posts.splice(req.number,1);
+      
+      if (!database[category][id].posts.includes(req.index) || !Object.keys(posts).includes(req.index)){ console.log(`"post_does_not_exist"`); return response.send(msg("post_does_not_exist", "", "/u")); }
+      
+      if (database[category][id].posts.includes(req.index) && Object.keys(posts).includes(req.index)){
+         if (!posts[req.index]||id !== posts[req.index].author) return;
+        database[category][id].posts.splice(database[category][id].posts.indexOf(req.index),1);
+        delete posts[req.index];
+      }
       console.log("Post Deleted")
     return response.send(msg("post_deleted","Username",`/u/${id}#${database[category][id].posts.length - 1}`));
   } else 
@@ -455,10 +520,21 @@ app.post("/edit", urlencodedParser, (request, response) => {
     if (database.user[me].posts &&database.user[me].posts[req.commentid].comments&&database.user[me].posts[req.commentid].comments.includes(req.comment.toLowerCase())){return response.send(msg("postExists", null, "/u"));}
     if (!database.user[me].posts){database.user[me].posts = [];}
     if (functionPack.htmlCheck(req.comment.toLowerCase())) return response.send(msg("custom","No HTML Plez"));
-      
-    database.user[me].posts[req.commentid].comments.push({ username: me, text: req.comment });
+    
+      var details = {
+      author: me,
+      title: req.title,
+      parent: req.commentid,
+      type:"comment",
+      body: req.body,
+      likes: [],
+      comments: [],
+      date: Date.now(),
+      canComment:true
+    }
+    database.user[me].posts[req.commentid].comments.push(details);
     database.user[me].xp += 0.05;
-    fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
+    saveDB();
     return response.send(msg("postCreated","Username",`/u/${me}#${database.user[me].posts.length - 1}`));
   } 
   else 
@@ -486,7 +562,7 @@ app.post("/edit", urlencodedParser, (request, response) => {
         creation_date: Date.now()
       };
 
-      fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
+      saveDB();
       response.send(msg("custom", "", `/c/${community}`));
     }
   }  else {
@@ -511,11 +587,9 @@ app.get("/connect/:method?/:id?", urlencodedParser, (request, response) => {
     if (!database.user[me].following.includes(id)) {
       database.user[me].following.push(id);
       database.user[id].followers.push(me);
-      fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
       return response.send(`<meta http-equiv="Refresh" content="0; url='/u/${me}&popup=User+Followed!'"/>`);
     } else {
       database.user[me].following = database.user[me].following.filter(item => item !== id);
-      fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
       return response.send(
         `<meta http-equiv="Refresh" content="0; url='/u/${
           request.cookies["saved-username"]
@@ -526,12 +600,10 @@ app.get("/connect/:method?/:id?", urlencodedParser, (request, response) => {
     if (!database.user[me].following.includes(id)) {
       database.community[id].members.push(me);
       database.user[me].communities.push(id);
-      fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
       return response.send(`<meta http-equiv="Refresh" content="0; url='/u/${me}&popup=User+Followed!'"/>`);
     } else {
       database.community[id].members = database.community[id].members.filter(item => item !== me);
       database.user[me].communities = database.user[me].communities.filter(item => item !== id);
-      fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
       return response.send(`<meta http-equiv="Refresh" content="0; url='/u/${me}&popup=User+Unfollowed!'"/>`);
     }
   }
@@ -715,7 +787,7 @@ function register(details){
     webhook.config = Object.assign({}, config.webhook, webhookMessage);
     webhook.send()
     
-    fs.writeFileSync(database_location, JSON.stringify(database, null, 2));
+    saveDB();
 
   }
 }
@@ -772,7 +844,21 @@ app.get("/wallet/:id?", urlencodedParser, (request, response) => {
   return response.send(`Owner: ${wallet.owner},<br>Admins: ${wallet.admin&&wallet.admin[0]&&wallet.admin||"None"},<br>Coins: ${wallet.amount||0}`);
 });
 
-
+function loadPosts(category,  id){
+  if (!database[category][id] || typeof database[category][id] == "undefined" || !database[category][id].posts) return;
+  var resultPosts = [],
+      tempid = database[category][id],
+      resultid;
+  
+  tempid.posts.forEach( (post, index) => {
+    if (!posts[post]) return;
+    const clone = Object.assign({}, posts[post])||"error";
+    clone.PID = post;
+    resultPosts.push(clone)
+  })
+  
+  return resultPosts;
+}
 app.get("/api/:method?/:search?", cors(), (request, response) => {
   var search = request.params.search||request.query.search,
       method = request.params.method||request.query.method,
@@ -783,15 +869,16 @@ app.get("/api/:method?/:search?", cors(), (request, response) => {
     if (method === "user") {
       if (!search) return response.json({ status:200, [res]: "name/id/variant" });
       if (typeof database.user[search] == "undefined"){return response.json({status:200, [res]: "id_from_database", "id":search});}
-      var user = database.user[search];
+      var baseUser = database.user[search];
       
-      const cloneuser = Object.assign({}, user)||"error";
+      const clone = Object.assign({}, baseUser)||"error";
       
-      delete cloneuser.password;
-      delete cloneuser.email;
+      delete clone.password;
+      delete clone.email;
       
-      if (request.query.includeposts!=="true")delete cloneuser.posts;
-      return response.json({status:200,[res]:cloneuser});
+      clone.posts = loadPosts("user", search);
+      if (request.query.includeposts!=="true")delete clone.posts;
+      return response.json({status:200,[res]:clone});
     } 
     
     else if (method === "users"){
@@ -806,7 +893,7 @@ app.get("/api/:method?/:search?", cors(), (request, response) => {
     }
     
     else if (method === "communities"){
-      var id=Object.keys(database.community),
+      var id = Object.keys(database.community),
           vals = {
         communities:id,
         size:id.length
@@ -819,10 +906,10 @@ app.get("/api/:method?/:search?", cors(), (request, response) => {
       if (typeof database.community[search] == "undefined") return response.json({ error: "community_from_database", "id":search});
       var community = database.community[search]||"error";
     
-      const clonecommunity = Object.assign({}, community)||"error";
-    
-      if (request.query.includeposts!=="true"&&clonecommunity!=="error"){delete clonecommunity.posts;}
-      return response.json({status:200,[res]:clonecommunity});
+      const clone = Object.assign({}, community)||"error";
+      clone.posts = loadPosts("community", search);
+      if (request.query.includeposts!=="true"&&clone!=="error"){delete clone.posts;}
+      return response.json({status:200,[res]:clone});
     } 
     
     else if (method === "changelogs") {

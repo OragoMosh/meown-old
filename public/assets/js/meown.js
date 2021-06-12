@@ -1,5 +1,6 @@
 
 function changeSymbols(input){
+  if ( !input ) return "ERROR";
   if ( input.includes("!i") ){ var url = reSymbol(input,"!i","i!"," ", ""); input = `<img style="width:20%;height:20%;" src=" ${url} ">`}
   if ( input.includes("!v") ){ var url = reSymbol(input,"!v","v!"," ", " "), vid = makeVideo(url); vid.setAttribute("onclick", `loadVideo("${url}")`);input = vid.outerHTML;
                              }
@@ -7,8 +8,7 @@ function changeSymbols(input){
   if ( input.includes("@") ){ input = mention(input); }
   if ( input.includes("\\n") ){ input = input.replace(/\\n/g,"<br>"); }
   if ( input.includes("\\b") ){ input = input.replace(/\\b/g,"&emsp;"); }
-  console.log(hasUrl(input))
-  if (hasUrl(input) == true){
+  if (/*hasUrl(input)*/"ee" == "dd"){
     
     var parts = input.split(" "),
         result = "";

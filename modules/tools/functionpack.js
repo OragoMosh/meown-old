@@ -39,9 +39,31 @@ function mention(input,user){var regex = new RegExp(`@\s*(.*?)\s* `, "g"),matche
 
 function forEvery( index, length, evaluate ){ if ( ( index / length ).toString().indexOf( ".") == -1){ eval( evaluate ) }; };
 
-function getUrl(url){ var parser = document.createElement('a'); parser.href = url; parser.isValid = parser.valid = /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?/g.test(url); parser.path = parser.pathname.substring(0, parser.pathname.lastIndexOf('/')) + "/"; return parser; };
+function getUrl(url){
+	url = url || window.location.href;
+	var parser = document.createElement('a');
+    parser.href = url;
+    parser.isValid = parser.valid = /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?/g.test(url);
+    parser.pathold = parser.pathname.substring(0, parser.pathname.lastIndexOf('/')) + "/";
+    parser.params = (new URL(url)).searchParams;
+    parser.paths = parser.pathname.startsWith("/") ? parser.pathname.replace("/", "").split("/") : parser.pathname.split("/");
+    parser.pathsnf = [];
+    parser.paths.forEach( (item, index) => {
+    	if (item.includes("."))return; parser.pathsnf.push(item)
+    });
+    
+    parser.all = JSON.stringify({...parser, href: parser.href, host: parser.host, pathname: parser.pathname, search: parser.search, port: parser.port, protocol: parser.protocol});
+    return parser; };
 
 function search(param){ let paramQuery = (new URL(document.location)).searchParams; function getUrl(url){ var parser = document.createElement('a'); parser.href = url; parser.path = parser.pathname.substring(0, parser.pathname.lastIndexOf('/')) + "/"; return parser; } var result = {}; if ( paramQuery.get( param ) !== null) result.query = paramQuery.get( param ); if ( getUrl(window.location.href).hash !== null) result.hash = getUrl(window.location.href).hash; if ( getUrl(window.location.href).protocol !== null) result.protocol = getUrl(window.location.href).protocol; if ( getUrl(window.location.href).pathname !== null){ var items = getUrl(window.location.href).pathname.split("/"); items.forEach((e,i)=>{ if (e.length <=0) items.splice(i,1) }); result.path = items; } return result; }
 
 function hasUrl(url){ var regexUrl = /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?/g; return regexUrl.test(url) }
-module.exports = {a0,htmlCheck,max,fixEnd,caps,newEl,loop,pon,ipon,integ,mergeArrays,reSymbol,mention,forEvery,getUrl, search};
+
+function newRandomString(array, size, length){ var resultString = randomString(newSlot(size, length));  if (array.includes(resultString)){ newRandomString(array, size, length); } else return resultString; }
+
+function newSlot(size, length){ var result; if ( ( size / length  ).toString().indexOf( ".") == -1){ result = size / length; } else { result = Math.floor( size / length ) > 0 ? Math.floor( size / length ) : 1; } return result; }
+
+function randomString(length, chars) { var chars = chars || '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'; var result = ''; for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)]; return result;}
+
+
+module.exports = {a0,htmlCheck,max,fixEnd,caps,newEl,loop,pon,ipon,integ,mergeArrays,reSymbol,mention,forEvery,getUrl, search, randomString, newRandomString, newSlot};

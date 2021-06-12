@@ -47,152 +47,25 @@
       "description": "Hello My name is Orago, I am a game & web developer also Creator of Meown!",
       "creation_date": "-62106700000000",
       "posts": [
-        {
-          "title": "V0.01, Welcome to Meown!",
-          "body": "Welcome to meown a social media platform that may be abandoned, maybe not but enjoy the ride!",
-          "likes": [
-            "yay",
-            "guest",
-            "kind",
-            "empty",
-            "orago"
-          ],
-          "comments": [
-            {
-              "sender": "orago",
-              "text": "Hello :p"
-            }
-          ]
-        },
-        {
-          "title": "V0.02, Comments and details!",
-          "body": "yay creating and deleting posts has just been added",
-          "likes": [
-            "orago"
-          ],
-          "comments": [
-            {
-              "username": "orago",
-              "text": "e"
-            }
-          ]
-        },
-        {
-          "title": "V0.03, Comments and details!",
-          "body": "Added id #'s to each post",
-          "likes": [],
-          "comments": []
-        },
-        {
-          "title": "V0.04, Discord Bot!",
-          "body": "Made a discord bot that co-exists with the chat/blogging program and now you can earn coins by connecting your discord acccount and playing mini-games with the bot (Might be removed later).",
-          "likes": [],
-          "comments": []
-        },
-        {
-          "title": "V0.05, Security Should Be First!",
-          "body": "<!--<a href=\"/u?aouab\">@aouab</a> helped a ton with hashing passwords, --> I added hashing which helps make the website super secure!",
-          "likes": [],
-          "comments": []
-        },
-        {
-          "title": "V0.06, Comments and details!",
-          "body": "I am glad to say that Posts now Can have titles, body (detailed) text, and comments!",
-          "likes": [],
-          "comments": [
-            {
-              "sender": "orago",
-              "text": "See. Comments!"
-            }
-          ]
-        },
-        {
-          "title": "Sub-forums / categories?",
-          "body": "Working on making sub-forums / categories, This may not be permanent but I am hoping for the best.",
-          "likes": [],
-          "comments": [
-            {
-              "sender": "orago",
-              "text": "I need friends lol"
-            }
-          ]
-        },
-        {
-          "title": "v0.08 New theme and possibly upcoming themes!",
-          "body": "Normally Meown would be a blue color but it is currently orange-ish red, I am hoping that it will be possible to add custom themes, along with a few other bits but if you would like to see what Meown used to look like here is a before and after <br> Before: <img onclick='window.open(this.src), `_blank`' src='https://cdn.glitch.com/0322d62f-81b5-4f06-9b33-557687636cec%2FScreenshot%202020-12-08%20at%205.10.28%20PM.png' alt='Theme Before' width='50%' height='50%'><br> After: <img onclick='window.open(this.src), `_blank`' src='https://cdn.glitch.com/0322d62f-81b5-4f06-9b33-557687636cec%2FScreenshot%202020-12-08%20at%205.10.36%20PM.png' alt='Theme After' width='50%' height='50%'>",
-          "likes": [
-            "orago"
-          ],
-          "comments": []
-        },
-        {
-          "title": "v0.085 custom themes are finally here!",
-          "body": "Meown is now fully customizable meaning that you can change every single color including text, along with this you can import and export themes to text to share with your friends, make sure to be careful on what you copy and import though.<br><br>Stay safe everyone, Orago.",
-          "likes": [],
-          "comments": []
-        },
-        {
-          "title": "Black Theme",
-          "body": "{\"0\":\"black\",\"1\":\"#a6a6a6\",\"2\":\"#dfe5e8\",\"3\":\"#becbd2\",\"4\":\"#9eb1bb\",\"5\":\"#3f4040\",\"6\":\"#57707d\",\"7\":\"#1e1f1f\",\"8\":\"#435761\",\"9\":\"#3a4b53\",\"10\":\"#191a1a\",\"11\":\"#141414\",\"12\":\"#3b3e3f\",\"13\":\"#000000\",\"14\":\"#ffffff\",\"15\":\"#ff5252\"}",
-          "likes": [
-            "orago"
-          ],
-          "comments": []
-        },
-        {
-          "title": "Test",
-          "body": "https://www.w3schools.com/code/tryit.asp?filename=GOVKXNEYERGL",
-          "likes": [],
-          "comments": []
-        },
-        {
-          "title": "Song",
-          "body": "https://cdn.glitch.com/65f81ac1-5972-4a88-a61a-62585d79cfc0%2F(SOFTWILLY%20OUTRO)%20Hentai%20Girl%204%20Me320kbps.mp3?v=1598495005532",
-          "likes": [],
-          "comments": []
-        },
-        {
-          "title": "fribaynightdunkin",
-          "body": "https://v6p9d9t4.ssl.hwcdn.net/html/2876359-359162/index.html",
-          "likes": [],
-          "comments": []
-        },
-        {
-          "title": "woahh yankee wit no brimm  and new theme?",
-          "body": "{\"0\":\"red\",\"1\":\"url(https://raw.githubusercontent.com/Orago/assets/main/meown/images/Panel%20Image.png) repeat\",\"2\":\"url(https://preview.redd.it/is37020g4a631.png?auto=webp&s=37f09687f944410a8ddab83afb2b101614eda754) repeat\",\"3\":\"url(https://raw.githubusercontent.com/Orago/assets/main/meown/images/Button.png)\",\"4\":\"#9eb1bb\",\"5\":\"url(https://wallpaperaccess.com/full/3053366.png)\",\"6\":\"url(https://raw.githubusercontent.com/Orago/assets/main/meown/images/Input%20Field.png)\",\"7\":\"url(https://raw.githubusercontent.com/Orago/assets/main/meown/images/NavBar.png) repeat\",\"8\":\"#6575ae\",\"9\":\"#3a4b53\",\"10\":\"#303e45\",\"11\":\"url(https://raw.githubusercontent.com/Orago/assets/main/meown/images/Background.png)\",\"12\":\"#7289da\",\"13\":\"#000000\",\"14\":\"#ffffff\",\"15\":\"#ff5252\"}",
-          "likes": [],
-          "comments": []
-        },
-        {
-          "title": "this is a test",
-          "body": "``` Testing testing hello! ``` hmm lets see",
-          "likes": [],
-          "comments": []
-        },
-        {
-          "title": "Less gooo images are now working on posts using !i {image url} i! to display it",
-          "body": "Sheesh !i https://cdn.glitch.com/0322d62f-81b5-4f06-9b33-557687636cec%2Fboxie-512px.png i!",
-          "likes": [],
-          "comments": []
-        },
-        {
-          "title": "testing mentions rn",
-          "body": "hows it going @sus !",
-          "likes": [],
-          "comments": []
-        },
-        {
-          "title": "test",
-          "body": "is this a next line?\\nor how about tabs?\\nyeees??\\n\\b how about next line and tab too!",
-          "likes": [],
-          "comments": []
-        },
-        {
-          "title": "image testing",
-          "body": "omg roblox bad O.o https://cdn.discordapp.com/attachments/817601227390451722/849528293395922964/unknown.png",
-          "likes": [],
-          "comments": []
-        }
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "11",
+        "12",
+        "13",
+        "14",
+        "15",
+        "16",
+        "17",
+        "18",
+        "19"
       ],
       "codes": [
         "Merry",
@@ -618,7 +491,9 @@
           "body": "{\"0\":\"red\",\"1\":\"url(https://raw.githubusercontent.com/Orago/assets/main/meown/images/Stripey%203000x2000%20sharp.png) repeat fixed\",\"2\":\"url(https://raw.githubusercontent.com/Orago/assets/main/meown/images/boxieNotif.png) repeat\",\"3\":\"url(https://raw.githubusercontent.com/Orago/assets/main/meown/images/Button.png)\",\"4\":\"#9eb1bb\",\"5\":\"url(https://raw.githubusercontent.com/Orago/assets/main/meown/images/Status%20Buttons%20100x.png)\",\"6\":\"url(https://raw.githubusercontent.com/Orago/assets/main/meown/images/Input%20Field.png)\",\"7\":\"url(https://raw.githubusercontent.com/Orago/assets/main/meown/images/NavBar.png) repeat\",\"8\":\"#6575ae\",\"9\":\"#3a4b53\",\"10\":\"#303e45\",\"11\":\"url(https://raw.githubusercontent.com/Orago/assets/main/meown/images/Background.png)\",\"12\":\"#7289da\",\"13\":\"#000000\",\"14\":\"#ffffff\",\"15\":\"#ff5252\"}",
           "likes": [],
           "comments": []
-        }
+        },
+        "Y",
+        "b"
       ],
       "roles": [],
       "creation_date": 1620536378683
@@ -913,7 +788,8 @@
           "likes": [],
           "comments": [],
           "username": "orago"
-        }
+        },
+        "f"
       ]
     },
     "general": {

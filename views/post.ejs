@@ -355,11 +355,10 @@
 <br>
 <input id="cb" type="text" hidden>
 <script>
-  const url = window.location.href;
-  const me = getCookie("saved-username")||"guest";
-  const id = getUrl(window.location.href).pathsnf[1] || getUrl(window.location.href).params.get("search") || me || "meown";
-  const category = "user";
-  const connectType = "follow";
+  var me = getCookie("saved-username")||"guest";
+  var id = "<%- values.id %>";
+  var category = "user";
+  var connectType = "follow";
   var posts = [],
       postsLength = 0,
       postsProgress = 0;
