@@ -94,7 +94,7 @@ parser.path = parser.pathname.substring(0, parser.pathname.lastIndexOf('/')) + "
 
 return parser;
 }
-function getUrl(url){
+function getUrlv3(url){
 var parser = document.createElement('a');
 parser.href = url;
 parser.isValid = parser.valid = /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?/g.test(url);
@@ -103,6 +103,73 @@ parser.path = parser.pathname.substring(0, parser.pathname.lastIndexOf('/')) + "
 
 return parser;
 }
+function getUrl4(url){
+	var parser = document.createElement('a');
+    parser.href = url;
+    parser.isValid = parser.valid = /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?/g.test(url);
+    parser.pathold = parser.pathname.substring(0, parser.pathname.lastIndexOf('/')) + "/";
+    parser.all = JSON.stringify({...parser, href: parser.href, host: parser.host, pathname: parser.pathname, search: parser.search, port: parser.port, protocol: parser.protocol});
+    return parser; };
+
+function getUrl5(url){
+	var parser = document.createElement('a');
+    parser.href = url;
+    parser.isValid = parser.valid = /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?/g.test(url);
+    parser.pathold = parser.pathname.substring(0, parser.pathname.lastIndexOf('/')) + "/";
+    parser.pathtree = parser.pathname.startsWith("/") ? parser.pathname.replace("/", "").split("/") : parser.pathname.split("/");
+    parser.pathtreenf = [];
+    parser.pathtree.forEach( (item, index) => {
+    	if (item.includes("."))return; parser.pathtreenf.push(item)
+    });
+    
+    parser.all = JSON.stringify({...parser, href: parser.href, host: parser.host, pathname: parser.pathname, search: parser.search, port: parser.port, protocol: parser.protocol});
+    return parser; };
+
+function getUrl6(url){
+	var parser = document.createElement('a');
+    parser.href = url;
+    parser.isValid = parser.valid = /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?/g.test(url);
+    parser.pathold = parser.pathname.substring(0, parser.pathname.lastIndexOf('/')) + "/";
+    parser.params = (new URL(url)).searchParams;
+    parser.pathtree = parser.pathname.startsWith("/") ? parser.pathname.replace("/", "").split("/") : parser.pathname.split("/");
+    parser.pathtreenf = [];
+    parser.pathtree.forEach( (item, index) => {
+    	if (item.includes("."))return; parser.pathtreenf.push(item)
+    });
+    
+    parser.all = JSON.stringify({...parser, href: parser.href, host: parser.host, pathname: parser.pathname, search: parser.search, port: parser.port, protocol: parser.protocol});
+    return parser; };
+
+function getUrl7(url){
+	url = url || window.location.href;
+	var parser = document.createElement('a');
+    parser.href = url;
+    parser.isValid = parser.valid = /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?/g.test(url);
+    parser.pathold = parser.pathname.substring(0, parser.pathname.lastIndexOf('/')) + "/";
+    parser.params = (new URL(url)).searchParams;
+    parser.pathtree = parser.pathname.startsWith("/") ? parser.pathname.replace("/", "").split("/") : parser.pathname.split("/");
+    parser.pathtreenf = [];
+    parser.pathtree.forEach( (item, index) => {
+    	if (item.includes("."))return; parser.pathtreenf.push(item)
+    });
+    
+    parser.all = JSON.stringify({...parser, href: parser.href, host: parser.host, pathname: parser.pathname, search: parser.search, port: parser.port, protocol: parser.protocol});
+    return parser; };
+
+function getUrl(url){
+	url = url || window.location.href;
+	var parser = document.createElement('a');
+    parser.href = url;
+    parser.isValid = parser.valid = /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?/g.test(url);
+    parser.pathold = parser.pathname.substring(0, parser.pathname.lastIndexOf('/')) + "/";
+    parser.params = (new URL(url)).searchParams;
+    parser.paths = parser.pathname.startsWith("/") ? parser.pathname.replace("/", "").split("/") : parser.pathname.split("/");
+    parser.pathsnf = [];
+    parser.paths.forEach( (item, index) => { if (item.includes("."))return; parser.pathsnf.push(item); });
+    
+    parser.all = JSON.stringify({...parser, href: parser.href, host: parser.host, pathname: parser.pathname, search: parser.search, port: parser.port, protocol: parser.protocol});
+    return parser; };
+
 function search(param){
   let paramQuery = (new URL(document.location)).searchParams;
   function getUrl(url){ var parser = document.createElement('a'); parser.href = url; parser.path = parser.pathname.substring(0, parser.pathname.lastIndexOf('/')) + "/"; return parser; }

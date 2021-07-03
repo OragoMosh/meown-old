@@ -13,7 +13,7 @@
     "ejs": "^3.1.6",
     "cookie-parser": "^1.4.5",
     "bcryptjs": "latest",
-    "nodemailer": "latest",
+    "nodemailer": "^6.6.1",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "formidable": "^1.2.2",
